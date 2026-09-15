@@ -39,7 +39,7 @@
   <script>
     // Set this to the public URL of deploy/backend when it is deployed.
     // Example: const CHAT_API_URL = 'https://your-service.onrender.com/chat';
-    const CHAT_API_URL = window.ROTI_CHAT_API_URL || 'https://REPLACE-WITH-YOUR-RENDER-URL.onrender.com/chat';
+    const CHAT_API_URL = window.ROTI_CHAT_API_URL || 'https://roti-canai-project.onrender.com/chat';
     const chatbox=document.getElementById('chatbox'),chatMessages=document.getElementById('chatMessages'),chatInput=document.getElementById('chatInput');
     function addChat(text,who='bot'){const row=document.createElement('div');row.className='message '+who;const bubble=document.createElement('div');bubble.className='bubble';bubble.textContent=text;row.appendChild(bubble);chatMessages.appendChild(row);chatMessages.scrollTop=chatMessages.scrollHeight;return row}
     function toggleChat(force){const open=force===undefined?!chatbox.classList.contains('open'):force;chatbox.classList.toggle('open',open);document.getElementById('chatFab').textContent=open?'×':'💬';if(open&&!chatMessages.children.length)addChat('Hello! I’m the Roti Helper. Ask me about our menu, prices, delivery or how to prepare your roti.');if(open)chatInput.focus()}
