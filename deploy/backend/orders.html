@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Roti Canai Orders</title>
+<title>RotiCanai Orders</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,10 +34,10 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'Work Sans',-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}
-.app{max-width:520px;margin:0 auto;padding:0 16px 40px}
-header{position:sticky;top:0;background:var(--bg);padding:18px 0 12px;z-index:10;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.brand h1{font-size:21px;color:var(--accent-deep)}
+.app{max-width:100%;margin:0 auto}
+header{position:sticky;top:0;background:var(--bg);padding:14px 16px 10px;z-index:10;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.brand h1{font-size:20px;color:var(--accent-deep)}
 .brand h1 span{color:var(--text)}
 .conn{font-size:11px;color:var(--text-mute);display:flex;align-items:center;gap:5px}
 .conn .dot{width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block}
@@ -47,10 +47,12 @@ header{position:sticky;top:0;background:var(--bg);padding:18px 0 12px;z-index:10
 .tab.active{background:var(--surface);color:var(--accent-deep);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
 section{display:none}
 section.active{display:block}
+.entry-wrap{padding:0 16px 40px;max-width:520px;margin:0 auto}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:16px}
 label{display:block;font-size:12.5px;font-weight:600;color:var(--text-soft);margin:14px 0 5px}
 label:first-child{margin-top:0}
-input[type=text],input[type=tel],textarea,select{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit}
+input[type=text],input[type=tel],input[type=datetime-local],textarea,select{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit}
+input[type=datetime-local]{color-scheme:light dark}
 input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);outline-offset:1px}
 textarea{resize:vertical;min-height:50px}
 .item-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--border)}
@@ -75,22 +77,45 @@ textarea{resize:vertical;min-height:50px}
 .order{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}
 .order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
 .order-name{font-weight:600;font-size:15px}
-.order-meta{font-size:12.5px;color:var(--text-mute);margin-top:2px}
+.order-meta{font-size:12px;color:var(--text-mute);margin-top:2px}
+.order-time{font-size:11.5px;color:var(--text-mute);margin-top:3px;display:flex;flex-direction:column;gap:2px}
+.order-time .pickup-time{color:var(--gold-deep);font-weight:600}
 .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
 .badge-new{background:var(--surface-2);color:var(--gold-deep)}
 .badge-preparing{background:color-mix(in srgb, var(--accent) 15%, var(--surface));color:var(--accent-deep)}
 .badge-packed{background:color-mix(in srgb, var(--gold) 20%, var(--surface));color:var(--gold-deep)}
 .badge-done{background:var(--success-bg);color:var(--success)}
-.order-items{font-size:13.5px;color:var(--text-soft);margin:10px 0}
-.order-note{font-size:12.5px;color:var(--text-mute);font-style:italic;margin:6px 0 0}
-.order-actions{display:flex;gap:8px;margin-top:10px}
-.btn-advance{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:9px;padding:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-.btn-advance:active{transform:scale(0.98)}
+.order-items{font-size:13.5px;color:var(--text-soft);margin:8px 0}
+.order-note{font-size:12px;color:var(--text-mute);font-style:italic;margin:4px 0 0}
 .empty{text-align:center;padding:40px 10px;color:var(--text-mute)}
 .empty .icon{font-size:32px;margin-bottom:8px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-
-/* ── PIN Lock Screen ── */
+.filter-bar{display:flex;gap:6px;padding:12px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filter-bar::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:99px;padding:5px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+#kitchenView{padding-bottom:40px}
+.kanban-scroll{display:flex;gap:10px;padding:12px 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:flex-start}
+.kanban-scroll::-webkit-scrollbar{display:none}
+.kanban-col{flex:0 0 240px;background:var(--surface-2);border-radius:14px;padding:10px}
+.kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px}
+.kanban-col-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-soft)}
+.kanban-count{font-size:11px;font-weight:700;background:var(--surface);border-radius:99px;padding:1px 8px;color:var(--text-mute)}
+.kanban-col .empty{padding:20px 8px;font-size:12.5px}
+.kanban-col .empty .icon{font-size:22px;margin-bottom:4px}
+.k-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:8px}
+.k-card:last-child{margin-bottom:0}
+.k-name{font-weight:700;font-size:14px}
+.k-meta{font-size:11.5px;color:var(--text-mute);margin-top:1px}
+.k-items{font-size:12.5px;color:var(--text-soft);margin:7px 0 4px}
+.k-times{font-size:11px;color:var(--text-mute);display:flex;flex-direction:column;gap:2px;margin-bottom:7px}
+.k-times .k-pickup{color:var(--gold-deep);font-weight:600}
+.k-note{font-size:11.5px;color:var(--text-mute);font-style:italic;margin-bottom:6px}
+.k-actions{display:flex;gap:5px}
+.k-advance{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;padding:7px 6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center}
+.k-advance:active{transform:scale(0.97)}
+.k-undo{border:1px solid var(--border);background:transparent;color:var(--text-mute);border-radius:8px;padding:7px 8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.k-undo:active{transform:scale(0.97)}
 #pinOverlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
 #pinOverlay .pin-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;color:var(--accent-deep);margin-bottom:8px}
 #pinOverlay .pin-logo span{color:var(--text)}
@@ -107,7 +132,6 @@ textarea{resize:vertical;min-height:50px}
 </head>
 <body>
 
-<!-- PIN Lock Overlay -->
 <div id="pinOverlay">
   <div class="pin-logo">Roti<span>Canai</span> Orders</div>
   <div class="pin-subtitle">Enter your PIN to continue</div>
@@ -127,7 +151,7 @@ textarea{resize:vertical;min-height:50px}
     <button class="pin-key" data-v="7">7</button>
     <button class="pin-key" data-v="8">8</button>
     <button class="pin-key" data-v="9">9</button>
-    <button class="pin-key del" data-v="del">⌫</button>
+    <button class="pin-key del" data-v="del">&#9003;</button>
     <button class="pin-key" data-v="0">0</button>
     <div></div>
   </div>
@@ -148,58 +172,99 @@ textarea{resize:vertical;min-height:50px}
 
 <main>
   <section id="entryView" class="active">
-    <h2 class="sr-only">New order entry form for logging confirmed customer orders</h2>
-    <form class="card" id="orderForm">
-      <label for="custName">Customer name</label>
-      <input type="text" id="custName" placeholder="Nana" required>
+    <h2 class="sr-only">New order entry form</h2>
+    <div class="entry-wrap">
+      <form class="card" id="orderForm">
+        <label for="custName">Customer name</label>
+        <input type="text" id="custName" placeholder="Nana" required>
 
-      <label for="custPhone">Phone / WhatsApp</label>
-      <input type="tel" id="custPhone" placeholder="+601X-XXXXXXX" required>
+        <label for="custPhone">Phone / WhatsApp</label>
+        <input type="tel" id="custPhone" placeholder="+601X-XXXXXXX" required>
 
-      <label style="margin-top:16px">Items</label>
-      <div class="item-row">
-        <div><div class="item-name">Signature</div><div class="item-price">RM8 · 5 pieces</div></div>
-        <div class="stepper">
-          <button type="button" data-item="signature" data-delta="-1" aria-label="Decrease Signature quantity">−</button>
-          <span id="qty-signature">0</span>
-          <button type="button" data-item="signature" data-delta="1" aria-label="Increase Signature quantity">+</button>
+        <label style="margin-top:16px">Items</label>
+        <div class="item-row">
+          <div><div class="item-name">Signature</div><div class="item-price">RM8 - 5 pieces</div></div>
+          <div class="stepper">
+            <button type="button" data-item="signature" data-delta="-1">-</button>
+            <span id="qty-signature">0</span>
+            <button type="button" data-item="signature" data-delta="1">+</button>
+          </div>
         </div>
-      </div>
-      <div class="item-row">
-        <div><div class="item-name">Beef</div><div class="item-price">RM14 · 2 pieces</div></div>
-        <div class="stepper">
-          <button type="button" data-item="beef" data-delta="-1" aria-label="Decrease Beef quantity">−</button>
-          <span id="qty-beef">0</span>
-          <button type="button" data-item="beef" data-delta="1" aria-label="Increase Beef quantity">+</button>
+        <div class="item-row">
+          <div><div class="item-name">Beef</div><div class="item-price">RM14 - 2 pieces</div></div>
+          <div class="stepper">
+            <button type="button" data-item="beef" data-delta="-1">-</button>
+            <span id="qty-beef">0</span>
+            <button type="button" data-item="beef" data-delta="1">+</button>
+          </div>
         </div>
-      </div>
 
-      <label style="margin-top:16px">Fulfilment</label>
-      <div class="radio-group" id="fulfilGroup">
-        <label class="checked"><input type="radio" name="fulfil" value="pickup" checked> Self pickup</label>
-        <label><input type="radio" name="fulfil" value="delivery"> Delivery</label>
-      </div>
+        <label style="margin-top:16px">Fulfilment</label>
+        <div class="radio-group" id="fulfilGroup">
+          <label class="checked"><input type="radio" name="fulfil" value="pickup" checked> Self pickup</label>
+          <label><input type="radio" name="fulfil" value="delivery"> Delivery</label>
+        </div>
 
-      <div id="addressField" style="display:none">
-        <label for="custAddress">Delivery address</label>
-        <input type="text" id="custAddress" placeholder="Jalan Putra Bahagia...">
-      </div>
+        <div id="addressField" style="display:none">
+          <label for="custAddress">Delivery address</label>
+          <input type="text" id="custAddress" placeholder="Jalan Putra Bahagia...">
+        </div>
 
-      <label for="custNotes">Notes (optional)</label>
-      <textarea id="custNotes" placeholder="Preferred time, special request..."></textarea>
+        <label for="pickupTime">Pickup / delivery time (optional)</label>
+        <input type="datetime-local" id="pickupTime">
 
-      <div class="total-row"><span>Total</span><span id="totalOut">RM0</span></div>
-      <div id="formError" class="error-text" style="display:none"></div>
-      <button type="submit" class="btn btn-primary" id="saveBtn">Save order</button>
-    </form>
+        <label for="custNotes">Notes (optional)</label>
+        <textarea id="custNotes" placeholder="Special request..."></textarea>
 
-    <div class="list-title">Today's orders</div>
-    <div id="entryList"><div class="empty"><div class="icon">🫓</div>No orders logged yet today.</div></div>
+        <div class="total-row"><span>Total</span><span id="totalOut">RM0</span></div>
+        <div id="formError" class="error-text" style="display:none"></div>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Save order</button>
+      </form>
+
+      <div class="list-title">Today orders</div>
+      <div id="entryList"><div class="empty"><div class="icon">&#129379;</div>No orders logged yet today.</div></div>
+    </div>
   </section>
 
   <section id="kitchenView">
-    <h2 class="sr-only">Kitchen dashboard showing all active and completed orders</h2>
-    <div id="kitchenList"><div class="empty"><div class="icon">🍳</div>No orders yet. New confirmed orders will appear here.</div></div>
+    <h2 class="sr-only">Kitchen Kanban board</h2>
+    <div class="filter-bar" id="filterBar">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="new">New</button>
+      <button class="chip" data-filter="preparing">Preparing</button>
+      <button class="chip" data-filter="packed">Packed</button>
+      <button class="chip" data-filter="done">Done</button>
+    </div>
+    <div class="kanban-scroll" id="kanbanBoard">
+      <div class="kanban-col" id="col-new">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title">New</span>
+          <span class="kanban-count" id="count-new">0</span>
+        </div>
+        <div id="cards-new"><div class="empty"><div class="icon">&#128203;</div>No new orders</div></div>
+      </div>
+      <div class="kanban-col" id="col-preparing">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title">Preparing</span>
+          <span class="kanban-count" id="count-preparing">0</span>
+        </div>
+        <div id="cards-preparing"><div class="empty"><div class="icon">&#127859;</div>Nothing cooking</div></div>
+      </div>
+      <div class="kanban-col" id="col-packed">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title">Packed</span>
+          <span class="kanban-count" id="count-packed">0</span>
+        </div>
+        <div id="cards-packed"><div class="empty"><div class="icon">&#128230;</div>Nothing packed</div></div>
+      </div>
+      <div class="kanban-col" id="col-done">
+        <div class="kanban-col-header">
+          <span class="kanban-col-title">Done</span>
+          <span class="kanban-count" id="count-done">0</span>
+        </div>
+        <div id="cards-done"><div class="empty"><div class="icon">&#9989;</div>No completed orders</div></div>
+      </div>
+    </div>
   </section>
 </main>
 </div>
@@ -220,36 +285,48 @@ const db = firebase.firestore();
 const ordersRef = db.collection("orders");
 
 const PRICES = { signature: { name: "Signature", price: 8 }, beef: { name: "Beef", price: 14 } };
+const STATUS_FLOW = ["new","preparing","packed","done"];
+const STATUS_LABEL = { new: "New", preparing: "Preparing", packed: "Packed" };
 let qty = { signature: 0, beef: 0 };
+let activeFilter = "all";
+let allOrders = [];
 
 const connStatus = document.getElementById("connStatus");
-const connLabel = document.getElementById("connLabel");
+const connLabel  = document.getElementById("connLabel");
 function setConn(ok){ connStatus.classList.toggle("offline", !ok); connLabel.textContent = ok ? "Live" : "Reconnecting"; }
 
 document.getElementById("tabEntry").addEventListener("click", () => switchTab("entry"));
 document.getElementById("tabKitchen").addEventListener("click", () => switchTab("kitchen"));
 function switchTab(which){
   const isEntry = which === "entry";
-  document.getElementById("tabEntry").classList.toggle("active", isEntry);
-  document.getElementById("tabKitchen").classList.toggle("active", !isEntry);
-  document.getElementById("tabEntry").setAttribute("aria-selected", isEntry);
-  document.getElementById("tabKitchen").setAttribute("aria-selected", !isEntry);
+  ["tabEntry","tabKitchen"].forEach((id,i) => {
+    const el = document.getElementById(id);
+    el.classList.toggle("active", i === 0 ? isEntry : !isEntry);
+    el.setAttribute("aria-selected", i === 0 ? isEntry : !isEntry);
+  });
   document.getElementById("entryView").classList.toggle("active", isEntry);
   document.getElementById("kitchenView").classList.toggle("active", !isEntry);
 }
 
+document.getElementById("filterBar").addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if (!chip) return;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  activeFilter = chip.dataset.filter;
+  renderKanban(allOrders);
+});
+
 document.querySelectorAll(".stepper button").forEach(btn => {
   btn.addEventListener("click", () => {
     const item = btn.dataset.item;
-    const delta = Number(btn.dataset.delta);
-    qty[item] = Math.max(0, qty[item] + delta);
+    qty[item] = Math.max(0, qty[item] + Number(btn.dataset.delta));
     document.getElementById("qty-" + item).textContent = qty[item];
     updateTotal();
   });
 });
 function updateTotal(){
-  const total = qty.signature * PRICES.signature.price + qty.beef * PRICES.beef.price;
-  document.getElementById("totalOut").textContent = "RM" + total;
+  document.getElementById("totalOut").textContent = "RM" + (qty.signature * 8 + qty.beef * 14);
 }
 
 document.querySelectorAll('input[name="fulfil"]').forEach(radio => {
@@ -259,34 +336,37 @@ document.querySelectorAll('input[name="fulfil"]').forEach(radio => {
   });
 });
 
-function showError(msg){
-  const el = document.getElementById("formError");
-  el.textContent = msg; el.style.display = "block";
-}
+function showError(msg){ const el = document.getElementById("formError"); el.textContent = msg; el.style.display = "block"; }
 function clearError(){ document.getElementById("formError").style.display = "none"; }
 
-document.getElementById("orderForm").addEventListener("submit", async (e) => {
+document.getElementById("orderForm").addEventListener("submit", async e => {
   e.preventDefault();
   clearError();
-  const name = document.getElementById("custName").value.trim();
-  const phone = document.getElementById("custPhone").value.trim();
-  const fulfil = document.querySelector('input[name="fulfil"]:checked').value;
+  const name    = document.getElementById("custName").value.trim();
+  const phone   = document.getElementById("custPhone").value.trim();
+  const fulfil  = document.querySelector('input[name="fulfil"]:checked').value;
   const address = document.getElementById("custAddress").value.trim();
-  const notes = document.getElementById("custNotes").value.trim();
-  const items = Object.entries(qty).filter(([,q]) => q > 0).map(([id,q]) => ({ id, name: PRICES[id].name, price: PRICES[id].price, qty: q }));
+  const notes   = document.getElementById("custNotes").value.trim();
+  const pickup  = document.getElementById("pickupTime").value;
+  const items   = Object.entries(qty).filter(([,q]) => q > 0).map(([id,q]) => ({ id, name: PRICES[id].name, price: PRICES[id].price, qty: q }));
 
-  if (!name){ showError("Enter the customer's name first."); return; }
-  if (!phone){ showError("Enter a phone number first."); return; }
-  if (!items.length){ showError("Add at least one item first."); return; }
-  if (fulfil === "delivery" && !address){ showError("Enter a delivery address first."); return; }
+  if (!name)  { showError("Enter the customer name first."); return; }
+  if (!phone) { showError("Enter a phone number first."); return; }
+  if (!items.length) { showError("Add at least one item first."); return; }
+  if (fulfil === "delivery" && !address) { showError("Enter a delivery address first."); return; }
 
   const total = items.reduce((s,i) => s + i.price * i.qty, 0);
   const saveBtn = document.getElementById("saveBtn");
   saveBtn.disabled = true; saveBtn.textContent = "Saving...";
   try {
     await ordersRef.add({
-      customerName: name, phone, items, fulfilment: fulfil, address: fulfil === "delivery" ? address : "",
-      notes, total, status: "new", createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      customerName: name, phone, items,
+      fulfilment: fulfil,
+      address: fulfil === "delivery" ? address : "",
+      notes, total,
+      pickupTime: pickup || null,
+      status: "new",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
     document.getElementById("orderForm").reset();
     qty = { signature: 0, beef: 0 };
@@ -296,168 +376,151 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
     document.querySelectorAll("#fulfilGroup label").forEach((l,i) => l.classList.toggle("checked", i === 0));
     updateTotal();
   } catch (err) {
-    showError("Couldn't save the order. Check your connection and try again.");
+    showError("Could not save the order. Check your connection and try again.");
   } finally {
     saveBtn.disabled = false; saveBtn.textContent = "Save order";
   }
 });
 
-const STATUS_FLOW = ["new","preparing","packed","done"];
-const STATUS_LABEL = { new: "New", preparing: "Preparing", packed: "Packed" };
-function doneLabel(order){ return order.fulfilment === "delivery" ? "Delivered" : "Picked up"; }
-function nextStatus(current){
-  const i = STATUS_FLOW.indexOf(current);
-  return i >= 0 && i < STATUS_FLOW.length - 1 ? STATUS_FLOW[i+1] : null;
+function escapeHtml(str){
+  return String(str||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-function advanceLabel(order){
-  const next = nextStatus(order.status || "new");
-  if (next === "preparing") return "Mark preparing";
-  if (next === "packed") return "Mark packed";
-  if (next === "done") return "Mark " + doneLabel(order).toLowerCase();
+function doneLabel(o){ return o.fulfilment === "delivery" ? "Delivered" : "Picked up"; }
+function nextStatus(s){ const i = STATUS_FLOW.indexOf(s); return i>=0 && i<STATUS_FLOW.length-1 ? STATUS_FLOW[i+1] : null; }
+function prevStatus(s){ const i = STATUS_FLOW.indexOf(s); return i>0 ? STATUS_FLOW[i-1] : null; }
+function advanceLabel(o){
+  const n = nextStatus(o.status||"new");
+  if(n==="preparing") return "Start preparing";
+  if(n==="packed")    return "Mark packed";
+  if(n==="done")      return doneLabel(o);
   return null;
 }
-
-function formatItems(items){
-  return items.map(i => i.qty + "x " + i.name).join(", ");
+function undoLabel(o){
+  const p = prevStatus(o.status||"new");
+  if(!p) return null;
+  return "Undo to " + (STATUS_LABEL[p] || p);
 }
-function badgeClass(status){
-  if (status === "preparing") return "badge-preparing";
-  if (status === "packed") return "badge-packed";
-  if (status === "done") return "badge-done";
-  return "badge-new";
+function badgeClass(s){ return {preparing:"badge-preparing",packed:"badge-packed",done:"badge-done"}[s]||"badge-new"; }
+function badgeLabel(o){ return o.status==="done" ? doneLabel(o) : STATUS_LABEL[o.status]||"New"; }
+function fmtTime(ts){
+  if(!ts) return null;
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true}) + " - " + d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});
 }
-function badgeLabel(order){
-  if (order.status === "done") return doneLabel(order);
-  return STATUS_LABEL[order.status] || "New";
-}
-
-function renderKitchen(orders){
-  const list = document.getElementById("kitchenList");
-  if (!orders.length){
-    list.innerHTML = '<div class="empty"><div class="icon">🍳</div>No orders yet. New confirmed orders will appear here.</div>';
-    return;
-  }
-  list.innerHTML = orders.map(o => {
-    const label = advanceLabel(o);
-    return '<div class="order">'
-      + '<div class="order-top"><div><div class="order-name">' + escapeHtml(o.customerName) + '</div>'
-      + '<div class="order-meta">' + (o.fulfilment === "delivery" ? "Delivery" : "Self pickup") + (o.address ? " · " + escapeHtml(o.address) : "") + '</div></div>'
-      + '<span class="badge ' + badgeClass(o.status) + '">' + badgeLabel(o) + '</span></div>'
-      + '<div class="order-items">' + escapeHtml(formatItems(o.items)) + ' · RM' + o.total + '</div>'
-      + (o.notes ? '<div class="order-note">' + escapeHtml(o.notes) + '</div>' : '')
-      + (label ? '<div class="order-actions"><button class="btn-advance" data-id="' + o.id + '">' + label + '</button></div>' : '')
-      + '</div>';
-  }).join("");
-  list.querySelectorAll(".btn-advance").forEach(btn => {
-    btn.addEventListener("click", async () => {
-      const order = orders.find(o => o.id === btn.dataset.id);
-      const next = nextStatus(order.status || "new");
-      if (!next) return;
-      btn.disabled = true;
-      try { await ordersRef.doc(order.id).update({ status: next }); }
-      catch(e) { btn.disabled = false; }
-    });
-  });
+function fmtPickup(iso){
+  if(!iso) return null;
+  const d = new Date(iso);
+  return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true}) + " - " + d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});
 }
 
 function renderEntryList(orders){
   const list = document.getElementById("entryList");
-  if (!orders.length){
-    list.innerHTML = '<div class="empty"><div class="icon">🫓</div>No orders logged yet today.</div>';
-    return;
-  }
-  list.innerHTML = orders.slice(0, 20).map(o =>
-    '<div class="order"><div class="order-top"><div><div class="order-name">' + escapeHtml(o.customerName) + '</div>'
-    + '<div class="order-meta">' + (o.fulfilment === "delivery" ? "Delivery" : "Self pickup") + '</div></div>'
-    + '<span class="badge ' + badgeClass(o.status) + '">' + badgeLabel(o) + '</span></div>'
-    + '<div class="order-items">' + escapeHtml(formatItems(o.items)) + ' · RM' + o.total + '</div></div>'
-  ).join("");
+  if(!orders.length){ list.innerHTML='<div class="empty"><div class="icon">&#129379;</div>No orders logged yet today.</div>'; return; }
+  list.innerHTML = orders.slice(0,30).map(o => {
+    const created = fmtTime(o.createdAt);
+    const pickup  = fmtPickup(o.pickupTime);
+    return '<div class="order">'
+      +'<div class="order-top"><div>'
+      +'<div class="order-name">'+escapeHtml(o.customerName)+'</div>'
+      +'<div class="order-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+'</div>'
+      +'<div class="order-time">'
+      +(created?'<span>Ordered: '+created+'</span>':'')
+      +(pickup?'<span class="pickup-time">Pickup: '+pickup+'</span>':'')
+      +'</div></div>'
+      +'<span class="badge '+badgeClass(o.status)+'">'+badgeLabel(o)+'</span>'
+      +'</div>'
+      +'<div class="order-items">'+escapeHtml(o.items.map(i=>i.qty+"x "+i.name).join(", "))+' - RM'+o.total+'</div>'
+      +(o.notes?'<div class="order-note">'+escapeHtml(o.notes)+'</div>':'')
+      +'</div>';
+  }).join("");
 }
 
-function escapeHtml(str){
-  return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function renderKanban(orders){
+  const filtered = activeFilter==="all" ? orders : orders.filter(o=>(o.status||"new")===activeFilter);
+  STATUS_FLOW.forEach(status => {
+    const col   = filtered.filter(o=>(o.status||"new")===status);
+    const count = document.getElementById("count-"+status);
+    const cards = document.getElementById("cards-"+status);
+    if(count) count.textContent = col.length;
+    if(!cards) return;
+    const emptyMsgs = {new:"No new orders",preparing:"Nothing cooking",packed:"Nothing packed yet",done:"No completed orders"};
+    if(!col.length){ cards.innerHTML='<div class="empty"><div class="icon"></div>'+emptyMsgs[status]+'</div>'; return; }
+    cards.innerHTML = col.map(o => {
+      const al = advanceLabel(o);
+      const ul = undoLabel(o);
+      const created = fmtTime(o.createdAt);
+      const pickup  = fmtPickup(o.pickupTime);
+      return '<div class="k-card">'
+        +'<div class="k-name">'+escapeHtml(o.customerName)+'</div>'
+        +'<div class="k-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+(o.address?' - '+escapeHtml(o.address):'')+'</div>'
+        +'<div class="k-times">'
+        +(created?'<span>Ordered: '+created+'</span>':'')
+        +(pickup?'<span class="k-pickup">Pickup: '+pickup+'</span>':'')
+        +'</div>'
+        +'<div class="k-items">'+escapeHtml(o.items.map(i=>i.qty+"x "+i.name).join(", "))+' - RM'+o.total+'</div>'
+        +(o.notes?'<div class="k-note">'+escapeHtml(o.notes)+'</div>':'')
+        +((al||ul)?'<div class="k-actions">'
+          +(al?'<button class="k-advance" data-id="'+o.id+'">'+al+'</button>':'')
+          +(ul?'<button class="k-undo" data-id="'+o.id+'">'+ul+'</button>':'')
+          +'</div>':'')
+        +'</div>';
+    }).join("");
+    cards.querySelectorAll(".k-advance").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const o = orders.find(x=>x.id===btn.dataset.id);
+        const n = nextStatus(o.status||"new");
+        if(!n) return;
+        btn.disabled=true;
+        try{ await ordersRef.doc(o.id).update({status:n}); }catch(e){btn.disabled=false;}
+      });
+    });
+    cards.querySelectorAll(".k-undo").forEach(btn=>{
+      btn.addEventListener("click", async ()=>{
+        const o = orders.find(x=>x.id===btn.dataset.id);
+        const p = prevStatus(o.status||"new");
+        if(!p) return;
+        btn.disabled=true;
+        try{ await ordersRef.doc(o.id).update({status:p}); }catch(e){btn.disabled=false;}
+      });
+    });
+  });
 }
 
-let unsub = null;
-function startListening(){
-  unsub = ordersRef.orderBy("createdAt", "desc").limit(100).onSnapshot(
-    snapshot => {
-      setConn(true);
-      const orders = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderEntryList(orders);
-      const active = orders.filter(o => o.status !== "done").reverse();
-      const completedToday = orders.filter(o => o.status === "done");
-      renderKitchen(active.concat(completedToday.slice(0,10)));
-    },
-    err => { setConn(false); }
-  );
-}
-startListening();
-window.addEventListener("online", () => setConn(true));
-window.addEventListener("offline", () => setConn(false));
+ordersRef.orderBy("createdAt","desc").limit(100).onSnapshot(
+  snapshot => {
+    setConn(true);
+    allOrders = snapshot.docs.map(d=>({id:d.id,...d.data()}));
+    renderEntryList(allOrders);
+    renderKanban(allOrders);
+  },
+  ()=>setConn(false)
+);
+window.addEventListener("online", ()=>setConn(true));
+window.addEventListener("offline",()=>setConn(false));
 </script>
 
 <script>
-// ── PIN Lock Logic ──
 (function(){
-  const CORRECT = "6768";
-  const STORE_KEY = "rc_unlocked";
-
-  function unlock(){
-    document.getElementById("pinOverlay").style.display = "none";
-    document.getElementById("mainApp").style.display = "";
-  }
-
-  // Already unlocked on this device? Skip PIN screen.
-  if(localStorage.getItem(STORE_KEY) === "1"){ unlock(); return; }
-
-  let entered = "";
-
-  function updateDots(){
-    for(let i = 0; i < 4; i++){
-      document.getElementById("d" + i).classList.toggle("filled", i < entered.length);
-    }
-  }
-
+  const CORRECT="6768", KEY="rc_unlocked";
+  function unlock(){ document.getElementById("pinOverlay").style.display="none"; document.getElementById("mainApp").style.display=""; }
+  if(localStorage.getItem(KEY)==="1"){ unlock(); return; }
+  let entered="";
+  function updateDots(){ for(let i=0;i<4;i++) document.getElementById("d"+i).classList.toggle("filled",i<entered.length); }
   function shake(){
-    const overlay = document.getElementById("pinOverlay");
-    overlay.style.transition = "transform 0.05s";
-    const steps = [12, -10, 8, -6, 4, 0];
-    let i = 0;
-    const next = () => {
-      if(i >= steps.length){ overlay.style.transform = ""; return; }
-      overlay.style.transform = "translateX(" + steps[i++] + "px)";
-      setTimeout(next, 50);
-    };
-    next();
+    const el=document.getElementById("pinOverlay");
+    [12,-10,8,-6,4,0].reduce((p,x,i)=>p.then(()=>new Promise(r=>{el.style.transform="translateX("+x+"px)";setTimeout(r,50);})),Promise.resolve()).then(()=>el.style.transform="");
   }
-
-  document.getElementById("pinKeypad").addEventListener("click", function(e){
-    const key = e.target.closest(".pin-key");
+  document.getElementById("pinKeypad").addEventListener("click",function(e){
+    const key=e.target.closest(".pin-key");
     if(!key) return;
-    const val = key.dataset.v;
-    const errEl = document.getElementById("pinError");
-
-    if(val === "del"){
-      entered = entered.slice(0, -1);
-      errEl.textContent = "";
-    } else {
-      if(entered.length >= 4) return;
-      entered += val;
-    }
-
+    const val=key.dataset.v;
+    const err=document.getElementById("pinError");
+    if(val==="del"){ entered=entered.slice(0,-1); err.textContent=""; }
+    else{ if(entered.length>=4) return; entered+=val; }
     updateDots();
-
-    if(entered.length === 4){
-      if(entered === CORRECT){
-        localStorage.setItem(STORE_KEY, "1");
-        unlock();
-      } else {
-        errEl.textContent = "Wrong PIN. Try again.";
-        shake();
-        entered = "";
-        updateDots();
-      }
+    if(entered.length===4){
+      if(entered===CORRECT){ localStorage.setItem(KEY,"1"); unlock(); }
+      else{ err.textContent="Wrong PIN. Try again."; shake(); entered=""; updateDots(); }
     }
   });
 })();
