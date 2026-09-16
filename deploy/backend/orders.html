@@ -89,10 +89,52 @@ textarea{resize:vertical;min-height:50px}
 .empty{text-align:center;padding:40px 10px;color:var(--text-mute)}
 .empty .icon{font-size:32px;margin-bottom:8px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ── PIN Lock Screen ── */
+#pinOverlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+#pinOverlay .pin-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;color:var(--accent-deep);margin-bottom:8px}
+#pinOverlay .pin-logo span{color:var(--text)}
+#pinOverlay .pin-subtitle{font-size:13px;color:var(--text-mute);margin-bottom:32px}
+#pinDots{display:flex;gap:14px;margin-bottom:32px}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:background 0.15s}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent)}
+#pinKeypad{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
+.pin-key{height:72px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:22px;font-weight:600;font-family:'Fraunces',serif;cursor:pointer;transition:background 0.12s}
+.pin-key:active{background:var(--surface-2)}
+.pin-key.del{font-family:'Work Sans',sans-serif;font-size:16px;font-weight:700;color:var(--text-soft)}
+#pinError{color:var(--accent);font-size:13px;height:18px;margin-top:12px;text-align:center}
 </style>
 </head>
 <body>
-<div class="app">
+
+<!-- PIN Lock Overlay -->
+<div id="pinOverlay">
+  <div class="pin-logo">Roti<span>Canai</span> Orders</div>
+  <div class="pin-subtitle">Enter your PIN to continue</div>
+  <div id="pinDots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div id="pinKeypad">
+    <button class="pin-key" data-v="1">1</button>
+    <button class="pin-key" data-v="2">2</button>
+    <button class="pin-key" data-v="3">3</button>
+    <button class="pin-key" data-v="4">4</button>
+    <button class="pin-key" data-v="5">5</button>
+    <button class="pin-key" data-v="6">6</button>
+    <button class="pin-key" data-v="7">7</button>
+    <button class="pin-key" data-v="8">8</button>
+    <button class="pin-key" data-v="9">9</button>
+    <button class="pin-key del" data-v="del">⌫</button>
+    <button class="pin-key" data-v="0">0</button>
+    <div></div>
+  </div>
+  <div id="pinError"></div>
+</div>
+
+<div class="app" id="mainApp" style="display:none">
 <header>
   <div class="brand">
     <h1>Roti<span>Canai</span> Orders</h1>
@@ -353,6 +395,72 @@ function startListening(){
 startListening();
 window.addEventListener("online", () => setConn(true));
 window.addEventListener("offline", () => setConn(false));
+</script>
+
+<script>
+// ── PIN Lock Logic ──
+(function(){
+  const CORRECT = "6768";
+  const STORE_KEY = "rc_unlocked";
+
+  function unlock(){
+    document.getElementById("pinOverlay").style.display = "none";
+    document.getElementById("mainApp").style.display = "";
+  }
+
+  // Already unlocked on this device? Skip PIN screen.
+  if(localStorage.getItem(STORE_KEY) === "1"){ unlock(); return; }
+
+  let entered = "";
+
+  function updateDots(){
+    for(let i = 0; i < 4; i++){
+      document.getElementById("d" + i).classList.toggle("filled", i < entered.length);
+    }
+  }
+
+  function shake(){
+    const overlay = document.getElementById("pinOverlay");
+    overlay.style.transition = "transform 0.05s";
+    const steps = [12, -10, 8, -6, 4, 0];
+    let i = 0;
+    const next = () => {
+      if(i >= steps.length){ overlay.style.transform = ""; return; }
+      overlay.style.transform = "translateX(" + steps[i++] + "px)";
+      setTimeout(next, 50);
+    };
+    next();
+  }
+
+  document.getElementById("pinKeypad").addEventListener("click", function(e){
+    const key = e.target.closest(".pin-key");
+    if(!key) return;
+    const val = key.dataset.v;
+    const errEl = document.getElementById("pinError");
+
+    if(val === "del"){
+      entered = entered.slice(0, -1);
+      errEl.textContent = "";
+    } else {
+      if(entered.length >= 4) return;
+      entered += val;
+    }
+
+    updateDots();
+
+    if(entered.length === 4){
+      if(entered === CORRECT){
+        localStorage.setItem(STORE_KEY, "1");
+        unlock();
+      } else {
+        errEl.textContent = "Wrong PIN. Try again.";
+        shake();
+        entered = "";
+        updateDots();
+      }
+    }
+  });
+})();
 </script>
 </body>
 </html>
