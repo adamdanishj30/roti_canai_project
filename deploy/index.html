@@ -478,7 +478,7 @@
     <div class="hero-visual reveal" style="animation-delay:0.1s;">
       <div class="floating-badge">
         <div class="badge-icon">NEW</div>
-        <div class="badge-text"><b>Beef Roti</b>Introductory price, RM7 each</div>
+        <div class="badge-text"><b>Beef Roti</b>RM14 per pack</div>
       </div>
 
       <!-- Curry-leaf accents -->
@@ -539,7 +539,7 @@
         <h3>Frozen Roti Canai Beef</h3>
         <p class="sub">Traditional Chinese beef recipe</p>
         <div class="price-row">
-          <span class="price">RM7 <span style="font-size:12px; color:var(--ink-soft); font-family:'Work Sans',sans-serif; font-weight:500;">each</span></span>
+          <span class="price">RM14 <span style="font-size:12px; color:var(--ink-soft); font-family:'Work Sans',sans-serif; font-weight:500;">per pack</span></span>
           <a class="cart-fab" href="https://wa.me/60198858627?text=Hi!%20I'd%20like%20to%20order%20the%20Beef%20Roti%20Canai." target="_blank" rel="noopener" aria-label="Order Beef Roti Canai on WhatsApp">🛒</a>
         </div>
       </div>
@@ -758,10 +758,11 @@
 </div>
 
 <script>
-  // ⚠️ IMPORTANT: Replace the URL below with your actual Render backend URL
-  // after you deploy the backend. It will look like:
-  // "https://roti-canai-chatbot.onrender.com/chat"
-  const API_URL = "https://roti-canai-chatbot.onrender.com/chat";
+  const API_URL = "https://roti-canai-project.onrender.com/chat";
+  const HEALTH_URL = "https://roti-canai-project.onrender.com/";
+
+  // Jumpstart: silently wake up Render backend as soon as user opens page
+  fetch(HEALTH_URL).catch(() => {});
 
   const fab = document.getElementById("chat-fab");
   const widget = document.getElementById("chat-widget");
