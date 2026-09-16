@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -8,52 +8,49 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#F7EFE1; --surface:#FFFFFF; --surface-2:#F0E4CE;
-  --text:#2B2118; --text-soft:#5A4E40; --text-mute:#8A7B68;
-  --accent:#C7401F; --accent-deep:#A5341A; --gold:#D9A24B; --gold-deep:#B97F2E;
-  --success:#5B7A4E; --success-bg:#E3ECDE;
-  --border:#EADFCB; --radius:14px;
-}
-:root:not([data-theme="light"]){
-  @media (prefers-color-scheme: dark){
-    --bg:#1C1712; --surface:#2A2117; --surface-2:#33291D;
-    --text:#F3EBDD; --text-soft:#CBBBA4; --text-mute:#9C8C76;
-    --accent:#E2703A; --accent-deep:#C7401F; --gold:#E6B96A; --gold-deep:#D9A24B;
-    --success:#8FAE81; --success-bg:#2E3B29;
-    --border:#453623;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#1C1712; --surface:#2A2117; --surface-2:#33291D;
-  --text:#F3EBDD; --text-soft:#CBBBA4; --text-mute:#9C8C76;
-  --accent:#E2703A; --accent-deep:#C7401F; --gold:#E6B96A; --gold-deep:#D9A24B;
-  --success:#8FAE81; --success-bg:#2E3B29;
-  --border:#453623;
-}
+:root{--bg:#F7EFE1;--surface:#FFFFFF;--surface-2:#F0E4CE;--text:#2B2118;--text-soft:#5A4E40;--text-mute:#8A7B68;--accent:#C7401F;--accent-deep:#A5341A;--gold:#D9A24B;--gold-deep:#B97F2E;--success:#5B7A4E;--success-bg:#E3ECDE;--border:#EADFCB;--radius:14px;}
+:root:not([data-theme="light"]){@media(prefers-color-scheme:dark){--bg:#1C1712;--surface:#2A2117;--surface-2:#33291D;--text:#F3EBDD;--text-soft:#CBBBA4;--text-mute:#9C8C76;--accent:#E2703A;--accent-deep:#C7401F;--gold:#E6B96A;--gold-deep:#D9A24B;--success:#8FAE81;--success-bg:#2E3B29;--border:#453623;}}
+:root[data-theme="dark"]{--bg:#1C1712;--surface:#2A2117;--surface-2:#33291D;--text:#F3EBDD;--text-soft:#CBBBA4;--text-mute:#9C8C76;--accent:#E2703A;--accent-deep:#C7401F;--gold:#E6B96A;--gold-deep:#D9A24B;--success:#8FAE81;--success-bg:#2E3B29;--border:#453623;}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:'Work Sans',-apple-system,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
 h1,h2,h3{font-family:'Fraunces',Georgia,serif;margin:0}
 .app{max-width:100%;margin:0 auto}
-header{position:sticky;top:0;background:var(--bg);padding:14px 16px 10px;z-index:10;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.brand h1{font-size:20px;color:var(--accent-deep)}
+
+/* ── Header ── */
+header{position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px solid var(--border)}
+.header-main{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+.brand h1{font-size:20px;color:var(--accent-deep);margin:0}
 .brand h1 span{color:var(--text)}
 .conn{font-size:11px;color:var(--text-mute);display:flex;align-items:center;gap:5px}
 .conn .dot{width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block}
 .conn.offline .dot{background:var(--accent)}
+
+/* ── Action bar (shown when a card is selected) ── */
+#actionBar{display:none;align-items:center;gap:10px;padding:8px 16px;background:color-mix(in srgb,var(--accent) 8%,var(--surface));border-bottom:1px solid color-mix(in srgb,var(--accent) 20%,var(--border))}
+#actionBar.visible{display:flex}
+#actionBarLabel{flex:1;font-size:13px;font-weight:600;color:var(--accent-deep)}
+.action-btn{border:1.5px solid var(--border);background:var(--surface);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;color:var(--text-soft)}
+.action-btn:active{transform:scale(.96)}
+.action-btn.edit{color:var(--accent-deep);border-color:var(--accent)}
+.action-btn.del{color:#C0392B;border-color:#C0392B}
+#actionBarClose{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-mute);padding:4px}
+
+/* ── Tabs ── */
+.tabs-wrap{padding:0 16px 10px}
 .tabs{display:flex;gap:8px;background:var(--surface-2);padding:4px;border-radius:12px}
 .tab{flex:1;padding:9px 0;text-align:center;border:none;background:none;border-radius:9px;font-size:13.5px;font-weight:600;color:var(--text-soft);cursor:pointer;font-family:inherit}
-.tab.active{background:var(--surface);color:var(--accent-deep);box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.tab.active{background:var(--surface);color:var(--accent-deep);box-shadow:0 1px 3px rgba(0,0,0,.08)}
 section{display:none}
 section.active{display:block}
+
+/* ── Entry form ── */
 .entry-wrap{padding:0 16px 40px;max-width:520px;margin:0 auto}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:16px}
 label{display:block;font-size:12.5px;font-weight:600;color:var(--text-soft);margin:14px 0 5px}
 label:first-child{margin-top:0}
-input[type=text],input[type=tel],input[type=datetime-local],textarea,select{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit}
+input[type=text],input[type=tel],input[type=datetime-local],textarea{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit}
 input[type=datetime-local]{color-scheme:light dark}
-input:focus,textarea:focus,select:focus{outline:2px solid var(--gold);outline-offset:1px}
+input:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:1px}
 textarea{resize:vertical;min-height:50px}
 .item-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--border)}
 .item-row:first-of-type{border-top:none}
@@ -61,70 +58,122 @@ textarea{resize:vertical;min-height:50px}
 .item-price{font-size:12.5px;color:var(--text-mute)}
 .stepper{display:flex;align-items:center;gap:10px}
 .stepper button{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:16px;font-weight:600;cursor:pointer}
-.stepper button:active{transform:scale(0.94)}
+.stepper button:active{transform:scale(.94)}
 .stepper span{min-width:18px;text-align:center;font-weight:600}
 .radio-group{display:flex;gap:8px}
 .radio-group label{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13.5px;font-weight:600;color:var(--text-soft);margin:0;cursor:pointer}
 .radio-group input{width:auto;margin:0}
-.radio-group label.checked{border-color:var(--accent);color:var(--accent-deep);background:color-mix(in srgb, var(--accent) 8%, var(--surface))}
+.radio-group label.checked{border-color:var(--accent);color:var(--accent-deep);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
 .total-row{display:flex;justify-content:space-between;align-items:center;padding-top:14px;margin-top:14px;border-top:1px solid var(--border);font-family:'Fraunces',serif;font-size:19px;font-weight:600}
 .btn{width:100%;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:14px}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:active{background:var(--accent-deep)}
-.btn-primary:disabled{opacity:0.5;cursor:not-allowed}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
 .error-text{color:var(--accent);font-size:12.5px;margin-top:4px}
-.list-title{font-size:13px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:0.03em;margin:22px 0 10px}
-.order{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}
-.order-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.list-title{font-size:13px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.03em;margin:22px 0 10px}
+
+/* ── Entry list cards ── */
+.order{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s}
+.order.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 4%,var(--surface))}
+.order-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px}
 .order-name{font-weight:600;font-size:15px}
 .order-meta{font-size:12px;color:var(--text-mute);margin-top:2px}
-.order-time{font-size:11.5px;color:var(--text-mute);margin-top:3px;display:flex;flex-direction:column;gap:2px}
-.order-time .pickup-time{color:var(--gold-deep);font-weight:600}
+.order-times{font-size:11.5px;color:var(--text-mute);margin-top:3px;display:flex;flex-direction:column;gap:2px}
+.order-times .pickup-time{color:var(--gold-deep);font-weight:600}
 .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
 .badge-new{background:var(--surface-2);color:var(--gold-deep)}
-.badge-preparing{background:color-mix(in srgb, var(--accent) 15%, var(--surface));color:var(--accent-deep)}
-.badge-packed{background:color-mix(in srgb, var(--gold) 20%, var(--surface));color:var(--gold-deep)}
+.badge-preparing{background:color-mix(in srgb,var(--accent) 15%,var(--surface));color:var(--accent-deep)}
+.badge-packed{background:color-mix(in srgb,var(--gold) 20%,var(--surface));color:var(--gold-deep)}
 .badge-done{background:var(--success-bg);color:var(--success)}
 .order-items{font-size:13.5px;color:var(--text-soft);margin:8px 0}
 .order-note{font-size:12px;color:var(--text-mute);font-style:italic;margin:4px 0 0}
+.order-actions{display:flex;gap:8px;margin-top:10px}
+.btn-advance{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:9px;padding:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-advance:active{transform:scale(.98)}
+.btn-undo{border:1px solid var(--border);background:transparent;color:var(--text-mute);border-radius:9px;padding:9px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.btn-undo:active{transform:scale(.98)}
 .empty{text-align:center;padding:40px 10px;color:var(--text-mute)}
 .empty .icon{font-size:32px;margin-bottom:8px}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ── Filter chips ── */
 .filter-bar{display:flex;gap:6px;padding:12px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .filter-bar::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:99px;padding:5px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ── Kanban ── */
 #kitchenView{padding-bottom:40px}
 .kanban-scroll{display:flex;gap:10px;padding:12px 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:flex-start}
 .kanban-scroll::-webkit-scrollbar{display:none}
-.kanban-col{flex:0 0 240px;background:var(--surface-2);border-radius:14px;padding:10px}
+.kanban-col{flex:0 0 240px;background:var(--surface-2);border-radius:14px;padding:10px;transition:opacity .2s}
+/* When a specific filter is active, columns not matching are hidden */
+.kanban-col.hidden{display:none}
 .kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding:0 2px}
-.kanban-col-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-soft)}
+.kanban-col-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft)}
 .kanban-count{font-size:11px;font-weight:700;background:var(--surface);border-radius:99px;padding:1px 8px;color:var(--text-mute)}
 .kanban-col .empty{padding:20px 8px;font-size:12.5px}
 .kanban-col .empty .icon{font-size:22px;margin-bottom:4px}
-.k-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:8px}
+
+/* Kanban card */
+.k-card{background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:11px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
 .k-card:last-child{margin-bottom:0}
-.k-name{font-weight:700;font-size:14px}
-.k-meta{font-size:11.5px;color:var(--text-mute);margin-top:1px}
-.k-items{font-size:12.5px;color:var(--text-soft);margin:7px 0 4px}
-.k-times{font-size:11px;color:var(--text-mute);display:flex;flex-direction:column;gap:2px;margin-bottom:7px}
+.k-card.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 4%,var(--surface))}
+.k-name{font-weight:700;font-size:13.5px}
+.k-meta{font-size:11px;color:var(--text-mute);margin-top:1px;margin-bottom:5px}
+.k-items{font-size:12px;color:var(--text-soft);margin:5px 0 3px}
+.k-times{font-size:10.5px;color:var(--text-mute);display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
 .k-times .k-pickup{color:var(--gold-deep);font-weight:600}
-.k-note{font-size:11.5px;color:var(--text-mute);font-style:italic;margin-bottom:6px}
+.k-note{font-size:11px;color:var(--text-mute);font-style:italic;margin-bottom:6px}
 .k-actions{display:flex;gap:5px}
-.k-advance{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;padding:7px 6px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center}
-.k-advance:active{transform:scale(0.97)}
-.k-undo{border:1px solid var(--border);background:transparent;color:var(--text-mute);border-radius:8px;padding:7px 8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
-.k-undo:active{transform:scale(0.97)}
+.k-advance{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;padding:6px 5px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;text-align:center}
+.k-advance:active{transform:scale(.97)}
+.k-undo{border:1px solid var(--border);background:transparent;color:var(--text-mute);border-radius:8px;padding:6px 8px;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.k-undo:active{transform:scale(.97)}
+
+/* ── Confirmation sheet ── */
+#confirmSheet{position:fixed;inset:0;z-index:200;display:none}
+#confirmSheet.open{display:flex;flex-direction:column;justify-content:flex-end}
+.sheet-scrim{position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.sheet-box{position:relative;background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px 36px;z-index:1}
+.sheet-title{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:6px}
+.sheet-subtitle{font-size:13.5px;color:var(--text-mute);margin-bottom:22px}
+.sheet-btns{display:flex;gap:10px}
+.sheet-cancel{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.sheet-confirm{flex:1;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;color:#fff}
+.sheet-confirm.ok{background:var(--accent)}
+.sheet-confirm.red{background:#C0392B}
+
+/* ── Edit sheet ── */
+#editSheet{position:fixed;inset:0;z-index:200;display:none}
+#editSheet.open{display:flex;flex-direction:column;justify-content:flex-end}
+.edit-box{position:relative;background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px 36px;z-index:1;max-height:92vh;overflow-y:auto}
+.edit-box h3{font-family:'Fraunces',serif;font-size:18px;margin-bottom:16px}
+.edit-box label{font-size:12.5px;font-weight:600;color:var(--text-soft);margin:12px 0 4px;display:block}
+.edit-box input[type=text],.edit-box input[type=tel],.edit-box input[type=datetime-local],.edit-box textarea{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:10px 12px;font-size:15px;font-family:inherit}
+.edit-box .radio-group{display:flex;gap:8px}
+.edit-box .radio-group label{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--border);border-radius:10px;padding:10px;font-size:13px;font-weight:600;color:var(--text-soft);margin:0;cursor:pointer}
+.edit-box .radio-group label.checked{border-color:var(--accent);color:var(--accent-deep);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.edit-box .item-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--border)}
+.edit-box .item-row:first-of-type{border-top:none}
+.edit-box .stepper{display:flex;align-items:center;gap:10px}
+.edit-box .stepper button{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:16px;font-weight:600;cursor:pointer}
+.edit-box .stepper span{min-width:20px;text-align:center;font-weight:700}
+.edit-save-btns{display:flex;gap:10px;margin-top:20px}
+.edit-cancel{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.edit-save{flex:1;border:none;background:var(--accent);color:#fff;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.edit-save:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── PIN ── */
 #pinOverlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-#pinOverlay .pin-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;color:var(--accent-deep);margin-bottom:8px}
+#pinOverlay .pin-logo{font-family:'Fraunces',serif;font-size:22px;color:var(--accent-deep);margin-bottom:8px}
 #pinOverlay .pin-logo span{color:var(--text)}
 #pinOverlay .pin-subtitle{font-size:13px;color:var(--text-mute);margin-bottom:32px}
 #pinDots{display:flex;gap:14px;margin-bottom:32px}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:background 0.15s}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:background .15s}
 .pin-dot.filled{background:var(--accent);border-color:var(--accent)}
 #pinKeypad{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
-.pin-key{height:72px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:22px;font-weight:600;font-family:'Fraunces',serif;cursor:pointer;transition:background 0.12s}
+.pin-key{height:72px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:22px;font-weight:600;font-family:'Fraunces',serif;cursor:pointer;transition:background .12s}
 .pin-key:active{background:var(--surface-2)}
 .pin-key.del{font-family:'Work Sans',sans-serif;font-size:16px;font-weight:700;color:var(--text-soft)}
 #pinError{color:var(--accent);font-size:13px;height:18px;margin-top:12px;text-align:center}
@@ -132,102 +181,114 @@ textarea{resize:vertical;min-height:50px}
 </head>
 <body>
 
+<!-- PIN -->
 <div id="pinOverlay">
   <div class="pin-logo">Roti<span>Canai</span> Orders</div>
   <div class="pin-subtitle">Enter your PIN to continue</div>
   <div id="pinDots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
+    <div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div>
   </div>
   <div id="pinKeypad">
-    <button class="pin-key" data-v="1">1</button>
-    <button class="pin-key" data-v="2">2</button>
-    <button class="pin-key" data-v="3">3</button>
-    <button class="pin-key" data-v="4">4</button>
-    <button class="pin-key" data-v="5">5</button>
-    <button class="pin-key" data-v="6">6</button>
-    <button class="pin-key" data-v="7">7</button>
-    <button class="pin-key" data-v="8">8</button>
-    <button class="pin-key" data-v="9">9</button>
-    <button class="pin-key del" data-v="del">&#9003;</button>
-    <button class="pin-key" data-v="0">0</button>
-    <div></div>
+    <button class="pin-key" data-v="1">1</button><button class="pin-key" data-v="2">2</button><button class="pin-key" data-v="3">3</button>
+    <button class="pin-key" data-v="4">4</button><button class="pin-key" data-v="5">5</button><button class="pin-key" data-v="6">6</button>
+    <button class="pin-key" data-v="7">7</button><button class="pin-key" data-v="8">8</button><button class="pin-key" data-v="9">9</button>
+    <button class="pin-key del" data-v="del">&#9003;</button><button class="pin-key" data-v="0">0</button><div></div>
   </div>
   <div id="pinError"></div>
 </div>
 
+<!-- Confirmation sheet -->
+<div id="confirmSheet">
+  <div class="sheet-scrim" id="confirmScrim"></div>
+  <div class="sheet-box">
+    <div class="sheet-title" id="confirmTitle"></div>
+    <div class="sheet-subtitle" id="confirmSubtitle"></div>
+    <div class="sheet-btns">
+      <button class="sheet-cancel" id="confirmCancel">Cancel</button>
+      <button class="sheet-confirm ok" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit sheet -->
+<div id="editSheet">
+  <div class="sheet-scrim" id="editScrim"></div>
+  <div class="edit-box">
+    <h3>Edit order</h3>
+    <label>Customer name</label><input type="text" id="editName" placeholder="Nana">
+    <label>Phone / WhatsApp</label><input type="tel" id="editPhone" placeholder="+601X-XXXXXXX">
+    <label>Items</label>
+    <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price">RM8</div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-signature">0</span><button type="button" data-item="signature" data-delta="1" class="edit-stepper">+</button></div></div>
+    <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price">RM14</div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-beef">0</span><button type="button" data-item="beef" data-delta="1" class="edit-stepper">+</button></div></div>
+    <label>Fulfilment</label>
+    <div class="radio-group" id="editFulfilGroup">
+      <label class="checked"><input type="radio" name="editFulfil" value="pickup" checked> Self pickup</label>
+      <label><input type="radio" name="editFulfil" value="delivery"> Delivery</label>
+    </div>
+    <div id="editAddressField" style="display:none"><label>Delivery address</label><input type="text" id="editAddress" placeholder="Jalan Putra Bahagia..."></div>
+    <label>Pickup / delivery time (optional)</label><input type="datetime-local" id="editPickupTime">
+    <label>Notes (optional)</label><textarea id="editNotes" placeholder="Special request..."></textarea>
+    <div class="edit-save-btns">
+      <button class="edit-cancel" id="editCancel">Cancel</button>
+      <button class="edit-save" id="editSave">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main App -->
 <div class="app" id="mainApp" style="display:none">
 <header>
-  <div class="brand">
-    <h1>Roti<span>Canai</span> Orders</h1>
+  <!-- Normal header -->
+  <div class="header-main" id="headerMain">
+    <div class="brand"><h1>Roti<span>Canai</span> Orders</h1></div>
     <span class="conn" id="connStatus"><span class="dot"></span><span id="connLabel">Connecting</span></span>
   </div>
-  <div class="tabs" role="tablist">
-    <button class="tab active" id="tabEntry" role="tab" aria-selected="true">Order entry</button>
-    <button class="tab" id="tabKitchen" role="tab" aria-selected="false">Kitchen</button>
+  <!-- Action bar: appears when a card is selected -->
+  <div id="actionBar">
+    <button id="actionBarClose" title="Deselect">&#10005;</button>
+    <span id="actionBarLabel">1 selected</span>
+    <button class="action-btn edit" id="actionEditBtn">&#9998; Edit</button>
+    <button class="action-btn del" id="actionDeleteBtn">&#128465; Delete</button>
+  </div>
+  <!-- Tabs -->
+  <div class="tabs-wrap">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tabEntry" role="tab" aria-selected="true">Order entry</button>
+      <button class="tab" id="tabKitchen" role="tab" aria-selected="false">Kitchen</button>
+    </div>
   </div>
 </header>
 
 <main>
+  <!-- Entry tab -->
   <section id="entryView" class="active">
-    <h2 class="sr-only">New order entry form</h2>
     <div class="entry-wrap">
       <form class="card" id="orderForm">
-        <label for="custName">Customer name</label>
-        <input type="text" id="custName" placeholder="Nana" required>
-
-        <label for="custPhone">Phone / WhatsApp</label>
-        <input type="tel" id="custPhone" placeholder="+601X-XXXXXXX" required>
-
-        <label style="margin-top:16px">Items</label>
-        <div class="item-row">
-          <div><div class="item-name">Signature</div><div class="item-price">RM8 - 5 pieces</div></div>
-          <div class="stepper">
-            <button type="button" data-item="signature" data-delta="-1">-</button>
-            <span id="qty-signature">0</span>
-            <button type="button" data-item="signature" data-delta="1">+</button>
-          </div>
-        </div>
-        <div class="item-row">
-          <div><div class="item-name">Beef</div><div class="item-price">RM14 - 2 pieces</div></div>
-          <div class="stepper">
-            <button type="button" data-item="beef" data-delta="-1">-</button>
-            <span id="qty-beef">0</span>
-            <button type="button" data-item="beef" data-delta="1">+</button>
-          </div>
-        </div>
-
-        <label style="margin-top:16px">Fulfilment</label>
+        <label for="custName">Customer name</label><input type="text" id="custName" placeholder="Nana" required>
+        <label for="custPhone">Phone / WhatsApp</label><input type="tel" id="custPhone" placeholder="+601X-XXXXXXX" required>
+        <label>Items</label>
+        <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price">RM8 - 5 pieces</div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1">-</button><span id="qty-signature">0</span><button type="button" data-item="signature" data-delta="1">+</button></div></div>
+        <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price">RM14 - 2 pieces</div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1">-</button><span id="qty-beef">0</span><button type="button" data-item="beef" data-delta="1">+</button></div></div>
+        <label>Fulfilment</label>
         <div class="radio-group" id="fulfilGroup">
           <label class="checked"><input type="radio" name="fulfil" value="pickup" checked> Self pickup</label>
           <label><input type="radio" name="fulfil" value="delivery"> Delivery</label>
         </div>
-
-        <div id="addressField" style="display:none">
-          <label for="custAddress">Delivery address</label>
-          <input type="text" id="custAddress" placeholder="Jalan Putra Bahagia...">
-        </div>
-
-        <label for="pickupTime">Pickup / delivery time (optional)</label>
-        <input type="datetime-local" id="pickupTime">
-
-        <label for="custNotes">Notes (optional)</label>
-        <textarea id="custNotes" placeholder="Special request..."></textarea>
-
+        <div id="addressField" style="display:none"><label for="custAddress">Delivery address</label><input type="text" id="custAddress" placeholder="Jalan Putra Bahagia..."></div>
+        <label for="pickupTime">Pickup / delivery time (optional)</label><input type="datetime-local" id="pickupTime">
+        <label for="custNotes">Notes (optional)</label><textarea id="custNotes" placeholder="Special request..."></textarea>
         <div class="total-row"><span>Total</span><span id="totalOut">RM0</span></div>
         <div id="formError" class="error-text" style="display:none"></div>
         <button type="submit" class="btn btn-primary" id="saveBtn">Save order</button>
       </form>
-
       <div class="list-title">Today orders</div>
-      <div id="entryList"><div class="empty"><div class="icon">&#129379;</div>No orders logged yet today.</div></div>
+      <div id="entryList"><div class="empty"><div class="icon">&#129379;</div>No orders yet today.</div></div>
     </div>
   </section>
 
+  <!-- Kitchen tab -->
   <section id="kitchenView">
-    <h2 class="sr-only">Kitchen Kanban board</h2>
     <div class="filter-bar" id="filterBar">
       <button class="chip active" data-filter="all">All</button>
       <button class="chip" data-filter="new">New</button>
@@ -235,33 +296,21 @@ textarea{resize:vertical;min-height:50px}
       <button class="chip" data-filter="packed">Packed</button>
       <button class="chip" data-filter="done">Done</button>
     </div>
-    <div class="kanban-scroll" id="kanbanBoard">
-      <div class="kanban-col" id="col-new">
-        <div class="kanban-col-header">
-          <span class="kanban-col-title">New</span>
-          <span class="kanban-count" id="count-new">0</span>
-        </div>
+    <div class="kanban-scroll" id="kanbanScroll">
+      <div class="kanban-col" id="col-new" data-status="new">
+        <div class="kanban-col-header"><span class="kanban-col-title">New</span><span class="kanban-count" id="count-new">0</span></div>
         <div id="cards-new"><div class="empty"><div class="icon">&#128203;</div>No new orders</div></div>
       </div>
-      <div class="kanban-col" id="col-preparing">
-        <div class="kanban-col-header">
-          <span class="kanban-col-title">Preparing</span>
-          <span class="kanban-count" id="count-preparing">0</span>
-        </div>
+      <div class="kanban-col" id="col-preparing" data-status="preparing">
+        <div class="kanban-col-header"><span class="kanban-col-title">Preparing</span><span class="kanban-count" id="count-preparing">0</span></div>
         <div id="cards-preparing"><div class="empty"><div class="icon">&#127859;</div>Nothing cooking</div></div>
       </div>
-      <div class="kanban-col" id="col-packed">
-        <div class="kanban-col-header">
-          <span class="kanban-col-title">Packed</span>
-          <span class="kanban-count" id="count-packed">0</span>
-        </div>
+      <div class="kanban-col" id="col-packed" data-status="packed">
+        <div class="kanban-col-header"><span class="kanban-col-title">Packed</span><span class="kanban-count" id="count-packed">0</span></div>
         <div id="cards-packed"><div class="empty"><div class="icon">&#128230;</div>Nothing packed</div></div>
       </div>
-      <div class="kanban-col" id="col-done">
-        <div class="kanban-col-header">
-          <span class="kanban-col-title">Done</span>
-          <span class="kanban-count" id="count-done">0</span>
-        </div>
+      <div class="kanban-col" id="col-done" data-status="done">
+        <div class="kanban-col-header"><span class="kanban-col-title">Done</span><span class="kanban-count" id="count-done">0</span></div>
         <div id="cards-done"><div class="empty"><div class="icon">&#9989;</div>No completed orders</div></div>
       </div>
     </div>
@@ -272,256 +321,273 @@ textarea{resize:vertical;min-height:50px}
 <script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAi3neeFwR96ORrWxeRzuWnA7yYFtNl6mU",
-  authDomain: "roti-canai-project.firebaseapp.com",
-  projectId: "roti-canai-project",
-  storageBucket: "roti-canai-project.firebasestorage.app",
-  messagingSenderId: "416380583136",
-  appId: "1:416380583136:web:fdf2c2a8f6e7049273a485"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const ordersRef = db.collection("orders");
+firebase.initializeApp({apiKey:"AIzaSyAi3neeFwR96ORrWxeRzuWnA7yYFtNl6mU",authDomain:"roti-canai-project.firebaseapp.com",projectId:"roti-canai-project",storageBucket:"roti-canai-project.firebasestorage.app",messagingSenderId:"416380583136",appId:"1:416380583136:web:fdf2c2a8f6e7049273a485"});
+const db=firebase.firestore(),ordersRef=db.collection("orders");
+const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14}};
+const STATUS_FLOW=["new","preparing","packed","done"],STATUS_LABEL={new:"New",preparing:"Preparing",packed:"Packed"};
+let qty={signature:0,beef:0},activeFilter="all",allOrders=[],selectedId=null;
 
-const PRICES = { signature: { name: "Signature", price: 8 }, beef: { name: "Beef", price: 14 } };
-const STATUS_FLOW = ["new","preparing","packed","done"];
-const STATUS_LABEL = { new: "New", preparing: "Preparing", packed: "Packed" };
-let qty = { signature: 0, beef: 0 };
-let activeFilter = "all";
-let allOrders = [];
+/* ── Connection ── */
+function setConn(ok){document.getElementById("connStatus").classList.toggle("offline",!ok);document.getElementById("connLabel").textContent=ok?"Live":"Reconnecting";}
 
-const connStatus = document.getElementById("connStatus");
-const connLabel  = document.getElementById("connLabel");
-function setConn(ok){ connStatus.classList.toggle("offline", !ok); connLabel.textContent = ok ? "Live" : "Reconnecting"; }
-
-document.getElementById("tabEntry").addEventListener("click", () => switchTab("entry"));
-document.getElementById("tabKitchen").addEventListener("click", () => switchTab("kitchen"));
-function switchTab(which){
-  const isEntry = which === "entry";
-  ["tabEntry","tabKitchen"].forEach((id,i) => {
-    const el = document.getElementById(id);
-    el.classList.toggle("active", i === 0 ? isEntry : !isEntry);
-    el.setAttribute("aria-selected", i === 0 ? isEntry : !isEntry);
-  });
-  document.getElementById("entryView").classList.toggle("active", isEntry);
-  document.getElementById("kitchenView").classList.toggle("active", !isEntry);
+/* ── Tabs ── */
+document.getElementById("tabEntry").addEventListener("click",()=>switchTab("entry"));
+document.getElementById("tabKitchen").addEventListener("click",()=>switchTab("kitchen"));
+function switchTab(w){
+  const e=w==="entry";
+  ["tabEntry","tabKitchen"].forEach((id,i)=>{const el=document.getElementById(id);el.classList.toggle("active",i===0?e:!e);el.setAttribute("aria-selected",i===0?e:!e);});
+  document.getElementById("entryView").classList.toggle("active",e);
+  document.getElementById("kitchenView").classList.toggle("active",!e);
+  clearSelection();
 }
 
-document.getElementById("filterBar").addEventListener("click", e => {
-  const chip = e.target.closest(".chip");
-  if (!chip) return;
-  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+/* ── Selection & Action bar ── */
+function setSelected(id){
+  selectedId=id;
+  document.querySelectorAll(".order,.k-card").forEach(el=>el.classList.toggle("selected",el.dataset.id===id));
+  const bar=document.getElementById("actionBar");
+  if(id){bar.classList.add("visible");document.getElementById("actionBarLabel").textContent="1 selected";}
+  else bar.classList.remove("visible");
+}
+function clearSelection(){setSelected(null);}
+document.getElementById("actionBarClose").addEventListener("click",clearSelection);
+document.getElementById("actionEditBtn").addEventListener("click",()=>{
+  if(!selectedId)return;
+  const o=allOrders.find(x=>x.id===selectedId);
+  if(o)openEdit(o);
+});
+document.getElementById("actionDeleteBtn").addEventListener("click",async()=>{
+  if(!selectedId)return;
+  const o=allOrders.find(x=>x.id===selectedId);
+  if(!o)return;
+  const ok=await showConfirm("Delete this order?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "),true);
+  if(!ok)return;
+  try{await ordersRef.doc(o.id).delete();clearSelection();}catch{alert("Could not delete.");}
+});
+// Deselect when tapping background
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".order,.k-card,#actionBar,#editSheet,#confirmSheet")){clearSelection();}
+});
+
+/* ── Filter chips & column visibility ── */
+document.getElementById("filterBar").addEventListener("click",ev=>{
+  const chip=ev.target.closest(".chip");if(!chip)return;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
   chip.classList.add("active");
-  activeFilter = chip.dataset.filter;
-  renderKanban(allOrders);
+  activeFilter=chip.dataset.filter;
+  applyColumnVisibility();
+  clearSelection();
 });
+function applyColumnVisibility(){
+  document.querySelectorAll(".kanban-col").forEach(col=>{
+    const show=activeFilter==="all"||col.dataset.status===activeFilter;
+    col.classList.toggle("hidden",!show);
+  });
+}
 
-document.querySelectorAll(".stepper button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const item = btn.dataset.item;
-    qty[item] = Math.max(0, qty[item] + Number(btn.dataset.delta));
-    document.getElementById("qty-" + item).textContent = qty[item];
-    updateTotal();
+/* ── Entry form steppers ── */
+document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{
+  btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});
+});
+function updateTotal(){document.getElementById("totalOut").textContent="RM"+(qty.signature*8+qty.beef*14);}
+
+/* ── Fulfilment radio ── */
+document.querySelectorAll('input[name="fulfil"]').forEach(r=>{
+  r.addEventListener("change",()=>{
+    document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));
+    document.getElementById("addressField").style.display=r.value==="delivery"&&r.checked?"block":"none";
   });
 });
-function updateTotal(){
-  document.getElementById("totalOut").textContent = "RM" + (qty.signature * 8 + qty.beef * 14);
-}
 
-document.querySelectorAll('input[name="fulfil"]').forEach(radio => {
-  radio.addEventListener("change", () => {
-    document.querySelectorAll("#fulfilGroup label").forEach(l => l.classList.toggle("checked", l.querySelector("input").checked));
-    document.getElementById("addressField").style.display = radio.value === "delivery" && radio.checked ? "block" : "none";
-  });
-});
+/* ── Form errors ── */
+function showError(msg){const el=document.getElementById("formError");el.textContent=msg;el.style.display="block";}
+function clearError(){document.getElementById("formError").style.display="none";}
 
-function showError(msg){ const el = document.getElementById("formError"); el.textContent = msg; el.style.display = "block"; }
-function clearError(){ document.getElementById("formError").style.display = "none"; }
-
-document.getElementById("orderForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  clearError();
-  const name    = document.getElementById("custName").value.trim();
-  const phone   = document.getElementById("custPhone").value.trim();
-  const fulfil  = document.querySelector('input[name="fulfil"]:checked').value;
-  const address = document.getElementById("custAddress").value.trim();
-  const notes   = document.getElementById("custNotes").value.trim();
-  const pickup  = document.getElementById("pickupTime").value;
-  const items   = Object.entries(qty).filter(([,q]) => q > 0).map(([id,q]) => ({ id, name: PRICES[id].name, price: PRICES[id].price, qty: q }));
-
-  if (!name)  { showError("Enter the customer name first."); return; }
-  if (!phone) { showError("Enter a phone number first."); return; }
-  if (!items.length) { showError("Add at least one item first."); return; }
-  if (fulfil === "delivery" && !address) { showError("Enter a delivery address first."); return; }
-
-  const total = items.reduce((s,i) => s + i.price * i.qty, 0);
-  const saveBtn = document.getElementById("saveBtn");
-  saveBtn.disabled = true; saveBtn.textContent = "Saving...";
-  try {
-    await ordersRef.add({
-      customerName: name, phone, items,
-      fulfilment: fulfil,
-      address: fulfil === "delivery" ? address : "",
-      notes, total,
-      pickupTime: pickup || null,
-      status: "new",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    document.getElementById("orderForm").reset();
-    qty = { signature: 0, beef: 0 };
-    document.getElementById("qty-signature").textContent = 0;
-    document.getElementById("qty-beef").textContent = 0;
-    document.getElementById("addressField").style.display = "none";
-    document.querySelectorAll("#fulfilGroup label").forEach((l,i) => l.classList.toggle("checked", i === 0));
+/* ── Save new order ── */
+document.getElementById("orderForm").addEventListener("submit",async e=>{
+  e.preventDefault();clearError();
+  const name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),fulfil=document.querySelector('input[name="fulfil"]:checked').value,address=document.getElementById("custAddress").value.trim(),notes=document.getElementById("custNotes").value.trim(),pickup=document.getElementById("pickupTime").value,items=Object.entries(qty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));
+  if(!name){showError("Enter customer name.");return;}
+  if(!phone){showError("Enter phone number.");return;}
+  if(!items.length){showError("Add at least one item.");return;}
+  if(fulfil==="delivery"&&!address){showError("Enter delivery address.");return;}
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0),saveBtn=document.getElementById("saveBtn");
+  saveBtn.disabled=true;saveBtn.textContent="Saving...";
+  try{
+    await ordersRef.add({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,total,pickupTime:pickup||null,status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    document.getElementById("orderForm").reset();qty={signature:0,beef:0};
+    document.getElementById("qty-signature").textContent=0;document.getElementById("qty-beef").textContent=0;
+    document.getElementById("addressField").style.display="none";
+    document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));
     updateTotal();
-  } catch (err) {
-    showError("Could not save the order. Check your connection and try again.");
-  } finally {
-    saveBtn.disabled = false; saveBtn.textContent = "Save order";
-  }
+  }catch{showError("Could not save. Check connection.");}
+  finally{saveBtn.disabled=false;saveBtn.textContent="Save order";}
 });
 
-function escapeHtml(str){
-  return String(str||"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function doneLabel(o){ return o.fulfilment === "delivery" ? "Delivered" : "Picked up"; }
-function nextStatus(s){ const i = STATUS_FLOW.indexOf(s); return i>=0 && i<STATUS_FLOW.length-1 ? STATUS_FLOW[i+1] : null; }
-function prevStatus(s){ const i = STATUS_FLOW.indexOf(s); return i>0 ? STATUS_FLOW[i-1] : null; }
-function advanceLabel(o){
-  const n = nextStatus(o.status||"new");
-  if(n==="preparing") return "Start preparing";
-  if(n==="packed")    return "Mark packed";
-  if(n==="done")      return doneLabel(o);
-  return null;
-}
-function undoLabel(o){
-  const p = prevStatus(o.status||"new");
-  if(!p) return null;
-  return "Undo to " + (STATUS_LABEL[p] || p);
-}
-function badgeClass(s){ return {preparing:"badge-preparing",packed:"badge-packed",done:"badge-done"}[s]||"badge-new"; }
-function badgeLabel(o){ return o.status==="done" ? doneLabel(o) : STATUS_LABEL[o.status]||"New"; }
-function fmtTime(ts){
-  if(!ts) return null;
-  const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true}) + " - " + d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});
-}
-function fmtPickup(iso){
-  if(!iso) return null;
-  const d = new Date(iso);
-  return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true}) + " - " + d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});
-}
+/* ── Helpers ── */
+function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function doneLabel(o){return o.fulfilment==="delivery"?"Delivered":"Picked up";}
+function nextStatus(s){const i=STATUS_FLOW.indexOf(s);return i>=0&&i<STATUS_FLOW.length-1?STATUS_FLOW[i+1]:null;}
+function prevStatus(s){const i=STATUS_FLOW.indexOf(s);return i>0?STATUS_FLOW[i-1]:null;}
+function advLabel(o){const n=nextStatus(o.status||"new");if(n==="preparing")return"Start preparing";if(n==="packed")return"Mark packed";if(n==="done")return doneLabel(o);return null;}
+function undLabel(o){const p=prevStatus(o.status||"new");if(!p)return null;return"Undo to "+(STATUS_LABEL[p]||p);}
+function bdgClass(s){return{preparing:"badge-preparing",packed:"badge-packed",done:"badge-done"}[s]||"badge-new";}
+function bdgLabel(o){return o.status==="done"?doneLabel(o):STATUS_LABEL[o.status]||"New";}
+function fmtTime(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
+function fmtPickup(iso){if(!iso)return null;const d=new Date(iso);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
 
+/* ── Confirmation sheet ── */
+let confirmResolve=null;
+function showConfirm(title,subtitle,danger){return new Promise(resolve=>{confirmResolve=resolve;document.getElementById("confirmTitle").textContent=title;document.getElementById("confirmSubtitle").textContent=subtitle;document.getElementById("confirmOk").className="sheet-confirm "+(danger?"red":"ok");document.getElementById("confirmSheet").classList.add("open");});}
+function closeConfirm(val){document.getElementById("confirmSheet").classList.remove("open");if(confirmResolve){confirmResolve(val);confirmResolve=null;}}
+document.getElementById("confirmCancel").addEventListener("click",()=>closeConfirm(false));
+document.getElementById("confirmOk").addEventListener("click",()=>closeConfirm(true));
+document.getElementById("confirmScrim").addEventListener("click",()=>closeConfirm(false));
+
+/* ── Edit sheet ── */
+let editOrderId=null,editQty={signature:0,beef:0};
+document.querySelectorAll(".edit-stepper").forEach(btn=>{btn.addEventListener("click",()=>{editQty[btn.dataset.item]=Math.max(0,editQty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("edit-qty-"+btn.dataset.item).textContent=editQty[btn.dataset.item];});});
+document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editAddressField").style.display=r.value==="delivery"&&r.checked?"block":"none";});});
+function openEdit(order){
+  editOrderId=order.id;editQty={signature:0,beef:0};
+  (order.items||[]).forEach(i=>{if(editQty[i.id]!==undefined)editQty[i.id]=i.qty;});
+  document.getElementById("editName").value=order.customerName||"";
+  document.getElementById("editPhone").value=order.phone||"";
+  document.getElementById("edit-qty-signature").textContent=editQty.signature;
+  document.getElementById("edit-qty-beef").textContent=editQty.beef;
+  const isD=order.fulfilment==="delivery";
+  document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.checked=r.value===(isD?"delivery":"pickup");});
+  document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));
+  document.getElementById("editAddressField").style.display=isD?"block":"none";
+  document.getElementById("editAddress").value=order.address||"";
+  document.getElementById("editPickupTime").value=order.pickupTime||"";
+  document.getElementById("editNotes").value=order.notes||"";
+  document.getElementById("editSheet").classList.add("open");
+}
+function closeEdit(){document.getElementById("editSheet").classList.remove("open");editOrderId=null;}
+document.getElementById("editCancel").addEventListener("click",closeEdit);
+document.getElementById("editScrim").addEventListener("click",closeEdit);
+document.getElementById("editSave").addEventListener("click",async()=>{
+  if(!editOrderId)return;
+  const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,notes=document.getElementById("editNotes").value.trim(),items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));
+  if(!name||!phone||!items.length)return;
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0),saveBtn=document.getElementById("editSave");
+  saveBtn.disabled=true;saveBtn.textContent="Saving...";
+  try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,total,pickupTime:pickup||null});closeEdit();clearSelection();}
+  catch{alert("Could not save.");}
+  finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}
+});
+
+/* ── Render entry list ── */
 function renderEntryList(orders){
-  const list = document.getElementById("entryList");
-  if(!orders.length){ list.innerHTML='<div class="empty"><div class="icon">&#129379;</div>No orders logged yet today.</div>'; return; }
-  list.innerHTML = orders.slice(0,30).map(o => {
-    const created = fmtTime(o.createdAt);
-    const pickup  = fmtPickup(o.pickupTime);
-    return '<div class="order">'
-      +'<div class="order-top"><div>'
-      +'<div class="order-name">'+escapeHtml(o.customerName)+'</div>'
-      +'<div class="order-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+'</div>'
-      +'<div class="order-time">'
-      +(created?'<span>Ordered: '+created+'</span>':'')
-      +(pickup?'<span class="pickup-time">Pickup: '+pickup+'</span>':'')
-      +'</div></div>'
-      +'<span class="badge '+badgeClass(o.status)+'">'+badgeLabel(o)+'</span>'
+  const list=document.getElementById("entryList");
+  if(!orders.length){list.innerHTML='<div class="empty"><div class="icon">&#129379;</div>No orders yet today.</div>';return;}
+  list.innerHTML=orders.slice(0,30).map(o=>{
+    const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o);
+    const isSel=o.id===selectedId;
+    return '<div class="order'+(isSel?" selected":"")+'" data-id="'+o.id+'">'
+      +'<div class="order-header"><div>'
+        +'<div class="order-name">'+esc(o.customerName)+'</div>'
+        +'<div class="order-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+'</div>'
+        +'<div class="order-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="pickup-time">Pickup: '+pk+'</span>':'')+'</div>'
       +'</div>'
-      +'<div class="order-items">'+escapeHtml(o.items.map(i=>i.qty+"x "+i.name).join(", "))+' - RM'+o.total+'</div>'
-      +(o.notes?'<div class="order-note">'+escapeHtml(o.notes)+'</div>':'')
+      +'<span class="badge '+bdgClass(o.status)+'">'+bdgLabel(o)+'</span>'
+      +'</div>'
+      +'<div class="order-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'
+      +(o.notes?'<div class="order-note">'+esc(o.notes)+'</div>':'')
+      +((al||ul)?'<div class="order-actions">'+(al?'<button class="btn-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(ul?'<button class="btn-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')
       +'</div>';
   }).join("");
+  // Tap card to select
+  list.querySelectorAll(".order").forEach(card=>{
+    card.addEventListener("click",e=>{
+      if(e.target.closest(".adv-btn,.undo-btn"))return;
+      setSelected(card.dataset.id===selectedId?null:card.dataset.id);
+    });
+  });
+  wireActionButtons(list,orders);
 }
 
+/* ── Render Kanban ── */
 function renderKanban(orders){
-  const filtered = activeFilter==="all" ? orders : orders.filter(o=>(o.status||"new")===activeFilter);
-  STATUS_FLOW.forEach(status => {
-    const col   = filtered.filter(o=>(o.status||"new")===status);
-    const count = document.getElementById("count-"+status);
-    const cards = document.getElementById("cards-"+status);
-    if(count) count.textContent = col.length;
-    if(!cards) return;
-    const emptyMsgs = {new:"No new orders",preparing:"Nothing cooking",packed:"Nothing packed yet",done:"No completed orders"};
-    if(!col.length){ cards.innerHTML='<div class="empty"><div class="icon"></div>'+emptyMsgs[status]+'</div>'; return; }
-    cards.innerHTML = col.map(o => {
-      const al = advanceLabel(o);
-      const ul = undoLabel(o);
-      const created = fmtTime(o.createdAt);
-      const pickup  = fmtPickup(o.pickupTime);
-      return '<div class="k-card">'
-        +'<div class="k-name">'+escapeHtml(o.customerName)+'</div>'
-        +'<div class="k-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+(o.address?' - '+escapeHtml(o.address):'')+'</div>'
-        +'<div class="k-times">'
-        +(created?'<span>Ordered: '+created+'</span>':'')
-        +(pickup?'<span class="k-pickup">Pickup: '+pickup+'</span>':'')
-        +'</div>'
-        +'<div class="k-items">'+escapeHtml(o.items.map(i=>i.qty+"x "+i.name).join(", "))+' - RM'+o.total+'</div>'
-        +(o.notes?'<div class="k-note">'+escapeHtml(o.notes)+'</div>':'')
-        +((al||ul)?'<div class="k-actions">'
-          +(al?'<button class="k-advance" data-id="'+o.id+'">'+al+'</button>':'')
-          +(ul?'<button class="k-undo" data-id="'+o.id+'">'+ul+'</button>':'')
-          +'</div>':'')
+  STATUS_FLOW.forEach(status=>{
+    const col=orders.filter(o=>(o.status||"new")===status);
+    const cEl=document.getElementById("count-"+status),kEl=document.getElementById("cards-"+status);
+    if(cEl)cEl.textContent=col.length;
+    if(!kEl)return;
+    const em={new:"No new orders",preparing:"Nothing cooking",packed:"Nothing packed",done:"No completed orders"};
+    if(!col.length){kEl.innerHTML='<div class="empty"><div class="icon"></div>'+em[status]+'</div>';return;}
+    kEl.innerHTML=col.map(o=>{
+      const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o);
+      const isSel=o.id===selectedId;
+      return '<div class="k-card'+(isSel?" selected":"")+'" data-id="'+o.id+'">'
+        +'<div class="k-name">'+esc(o.customerName)+'</div>'
+        +'<div class="k-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+(o.address?" - "+esc(o.address):"")+'</div>'
+        +'<div class="k-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="k-pickup">Pickup: '+pk+'</span>':'')+'</div>'
+        +'<div class="k-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'
+        +(o.notes?'<div class="k-note">'+esc(o.notes)+'</div>':'')
+        +((al||ul)?'<div class="k-actions">'+(al?'<button class="k-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(ul?'<button class="k-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')
         +'</div>';
     }).join("");
-    cards.querySelectorAll(".k-advance").forEach(btn=>{
-      btn.addEventListener("click", async ()=>{
-        const o = orders.find(x=>x.id===btn.dataset.id);
-        const n = nextStatus(o.status||"new");
-        if(!n) return;
-        btn.disabled=true;
-        try{ await ordersRef.doc(o.id).update({status:n}); }catch(e){btn.disabled=false;}
+    kEl.querySelectorAll(".k-card").forEach(card=>{
+      card.addEventListener("click",e=>{
+        if(e.target.closest(".adv-btn,.undo-btn"))return;
+        setSelected(card.dataset.id===selectedId?null:card.dataset.id);
       });
     });
-    cards.querySelectorAll(".k-undo").forEach(btn=>{
-      btn.addEventListener("click", async ()=>{
-        const o = orders.find(x=>x.id===btn.dataset.id);
-        const p = prevStatus(o.status||"new");
-        if(!p) return;
-        btn.disabled=true;
-        try{ await ordersRef.doc(o.id).update({status:p}); }catch(e){btn.disabled=false;}
-      });
+    wireActionButtons(kEl,orders);
+  });
+  applyColumnVisibility();
+}
+
+/* ── Advance / Undo button wiring ── */
+function wireActionButtons(container,orders){
+  container.querySelectorAll(".adv-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;
+      const next=nextStatus(o.status||"new");if(!next)return;
+      const ok=await showConfirm(advLabel(o)+"?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "));
+      if(!ok)return;btn.disabled=true;
+      try{await ordersRef.doc(o.id).update({status:next});}catch{btn.disabled=false;}
+    });
+  });
+  container.querySelectorAll(".undo-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;
+      const prev=prevStatus(o.status||"new");if(!prev)return;
+      const ok=await showConfirm("Undo to "+STATUS_LABEL[prev]+"?",esc(o.customerName));
+      if(!ok)return;btn.disabled=true;
+      try{await ordersRef.doc(o.id).update({status:prev});}catch{btn.disabled=false;}
     });
   });
 }
 
+/* ── Live listener ── */
 ordersRef.orderBy("createdAt","desc").limit(100).onSnapshot(
-  snapshot => {
-    setConn(true);
-    allOrders = snapshot.docs.map(d=>({id:d.id,...d.data()}));
-    renderEntryList(allOrders);
-    renderKanban(allOrders);
-  },
+  snap=>{setConn(true);allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));renderEntryList(allOrders);renderKanban(allOrders);},
   ()=>setConn(false)
 );
-window.addEventListener("online", ()=>setConn(true));
+window.addEventListener("online",()=>setConn(true));
 window.addEventListener("offline",()=>setConn(false));
 </script>
 
 <script>
+/* ── PIN ── */
 (function(){
-  const CORRECT="6768", KEY="rc_unlocked";
-  function unlock(){ document.getElementById("pinOverlay").style.display="none"; document.getElementById("mainApp").style.display=""; }
-  if(localStorage.getItem(KEY)==="1"){ unlock(); return; }
-  let entered="";
-  function updateDots(){ for(let i=0;i<4;i++) document.getElementById("d"+i).classList.toggle("filled",i<entered.length); }
-  function shake(){
-    const el=document.getElementById("pinOverlay");
-    [12,-10,8,-6,4,0].reduce((p,x,i)=>p.then(()=>new Promise(r=>{el.style.transform="translateX("+x+"px)";setTimeout(r,50);})),Promise.resolve()).then(()=>el.style.transform="");
-  }
-  document.getElementById("pinKeypad").addEventListener("click",function(e){
-    const key=e.target.closest(".pin-key");
-    if(!key) return;
-    const val=key.dataset.v;
-    const err=document.getElementById("pinError");
-    if(val==="del"){ entered=entered.slice(0,-1); err.textContent=""; }
-    else{ if(entered.length>=4) return; entered+=val; }
-    updateDots();
-    if(entered.length===4){
-      if(entered===CORRECT){ localStorage.setItem(KEY,"1"); unlock(); }
-      else{ err.textContent="Wrong PIN. Try again."; shake(); entered=""; updateDots(); }
-    }
+  const C="6768",K="rc_unlocked";
+  function unlock(){document.getElementById("pinOverlay").style.display="none";document.getElementById("mainApp").style.display="";}
+  if(localStorage.getItem(K)==="1"){unlock();return;}
+  let e="";
+  function dots(){for(let i=0;i<4;i++)document.getElementById("d"+i).classList.toggle("filled",i<e.length);}
+  function shake(){const el=document.getElementById("pinOverlay");[12,-10,8,-6,4,0].reduce((p,x)=>p.then(()=>new Promise(r=>{el.style.transform="translateX("+x+"px)";setTimeout(r,50);})),Promise.resolve()).then(()=>el.style.transform="");}
+  document.getElementById("pinKeypad").addEventListener("click",function(ev){
+    const key=ev.target.closest(".pin-key");if(!key)return;
+    const v=key.dataset.v,err=document.getElementById("pinError");
+    if(v==="del"){e=e.slice(0,-1);err.textContent="";}else{if(e.length>=4)return;e+=v;}
+    dots();
+    if(e.length===4){if(e===C){localStorage.setItem(K,"1");unlock();}else{err.textContent="Wrong PIN. Try again.";shake();e="";dots();}}
   });
 })();
 </script>
