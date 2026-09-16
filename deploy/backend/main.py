@@ -6,8 +6,11 @@ FastAPI + Google Gemini (google-genai SDK)
 import os
 import logging
 
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
@@ -38,7 +41,7 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 SYSTEM_INSTRUCTION = """You are a friendly customer service assistant for a family-run frozen roti business.
 Menu:
 - Frozen Roti Canai (Signature): RM8 per pack (5 pieces).
-- Frozen Roti Canai Beef: RM7 each (traditional Chinese beef recipe, introductory launch price).
+- Frozen Roti Canai Beef: RM14 per pack (traditional Chinese beef recipe).
 Fulfillment: Self-pickup from our home, or doorstep delivery (delivery fee varies by location).
 Orders & inquiries: Call or WhatsApp +60198858627.
 
@@ -90,6 +93,14 @@ def health_check():
     return {"status": "ok", "service": "frozen-roti-chatbot", "model": MODEL_NAME}
 
 
+@app.get("/orders")
+def orders_page():
+    """Serves the internal family order-tracking app (mom/sis order entry
+    and dad's kitchen view). Not linked from the public site - share the
+    URL directly with family members."""
+    return FileResponse(Path(__file__).parent / "orders.html")
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
     """
@@ -110,6 +121,7 @@ def chat(request: ChatRequest):
                 system_instruction=SYSTEM_INSTRUCTION,
                 temperature=0.4,
                 max_output_tokens=1024,
+                thinking_config=types.ThinkingConfig(thinking_level="low"),
             ),
         )
 
