@@ -89,7 +89,6 @@ textarea{resize:vertical;min-height:50px}
 .btn-undo:active{transform:scale(.98)}
 .empty{text-align:center;padding:40px 10px;color:var(--text-mute)}
 .empty .icon{font-size:32px;margin-bottom:8px}
-.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 /* Filter chips */
 .filter-bar{display:flex;gap:6px;padding:12px 16px 4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .filter-bar::-webkit-scrollbar{display:none}
@@ -103,7 +102,6 @@ textarea{resize:vertical;min-height:50px}
 .kitchen-summary-empty{font-size:13px;color:var(--text-mute);font-style:italic}
 .notif-btn{margin-left:auto;border:1.5px solid var(--success);background:transparent;color:var(--success);border-radius:10px;padding:5px 12px;font-size:12.5px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
 .notif-btn:active{transform:scale(.96)}
-.notif-btn.granted{border-color:var(--gold);color:var(--gold-deep)}
 /* Kanban */
 .kanban-scroll{display:flex;gap:10px;padding:12px 16px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;align-items:flex-start}
 .kanban-scroll::-webkit-scrollbar{display:none}
@@ -128,55 +126,53 @@ textarea{resize:vertical;min-height:50px}
 .k-advance:active{transform:scale(.97)}
 .k-undo{border:1px solid var(--border);background:transparent;color:var(--text-mute);border-radius:8px;padding:6px 8px;font-size:10.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .k-undo:active{transform:scale(.97)}
-/* Timeline */
-#timelineView{padding:0 16px 40px}
-.tl-header{display:flex;align-items:center;gap:8px;padding:14px 0 10px;flex-wrap:wrap}
+/* ─── HORIZONTAL TIMELINE ─── */
+#timelineView{padding-bottom:40px}
+.tl-topbar{display:flex;align-items:center;gap:8px;padding:12px 16px 8px;flex-wrap:wrap}
 .date-nav{display:flex;align-items:center;gap:6px}
-.date-nav button{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;width:32px;height:32px;font-size:16px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center}
+.date-nav button{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .date-nav button:active{transform:scale(.93)}
 .date-nav input[type=date]{width:auto;padding:5px 10px;font-size:13.5px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);color-scheme:light dark}
 .today-btn{border:1.5px solid var(--accent);background:transparent;color:var(--accent-deep);border-radius:8px;padding:5px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
-.tl-summary{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
-.tl-summary-title{width:100%;font-size:11px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
-.tl-summary-pill{font-size:13px;font-weight:700;color:var(--text);background:var(--surface-2);border-radius:99px;padding:4px 14px;border:1px solid var(--border)}
-.tl-summary-pill.sig{border-color:var(--gold);color:var(--gold-deep)}
-.tl-summary-pill.beef{border-color:var(--accent);color:var(--accent-deep)}
-.tl-summary-empty{font-size:13px;color:var(--text-mute);font-style:italic}
-.tl-section-label{font-size:11px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 10px}
-.tl-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
-.tl-time{font-size:12px;font-weight:700;color:var(--text-mute);min-width:52px;padding-top:12px;text-align:right;flex-shrink:0}
-.tl-line{display:flex;flex-direction:column;align-items:center;flex-shrink:0;padding-top:10px}
-.tl-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border);background:var(--surface-2);flex-shrink:0}
-.tl-dot.new{background:var(--gold);border-color:var(--gold-deep)}
-.tl-dot.preparing{background:var(--accent);border-color:var(--accent-deep)}
-.tl-dot.packed{background:var(--gold-deep);border-color:var(--gold-deep)}
-.tl-dot.done{background:var(--success);border-color:var(--success)}
-.tl-stem{width:2px;background:var(--border);flex:1;margin-top:4px;min-height:10px}
-.tl-cards{flex:1;display:flex;flex-direction:column;gap:7px}
-.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px}
-.tl-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
-.tl-card-name{font-weight:700;font-size:13.5px}
-.tl-card-items{font-size:12px;color:var(--text-soft);margin-top:3px}
-.tl-card-meta{font-size:11px;color:var(--text-mute);margin-top:2px}
-.tl-no-time{background:var(--surface);border:1px dashed var(--border);border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-/* Sales tab */
+.zoom-ctrl{display:flex;align-items:center;gap:6px;margin-left:auto}
+.zoom-btn{border:1px solid var(--border);background:var(--surface-2);color:var(--text);border-radius:8px;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;font-weight:700}
+.zoom-btn:active{transform:scale(.93)}
+.zoom-label{font-size:12px;font-weight:700;color:var(--text-mute);min-width:28px;text-align:center}
+.tl-legend{display:flex;gap:14px;padding:0 16px 8px;flex-wrap:wrap}
+.tl-legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-mute)}
+.tl-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+/* The scroll container */
+.tl-scroll-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--border) transparent;cursor:grab;user-select:none}
+.tl-scroll-wrap:active{cursor:grabbing}
+.tl-scroll-wrap::-webkit-scrollbar{height:4px}
+.tl-scroll-wrap::-webkit-scrollbar-track{background:transparent}
+.tl-scroll-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+/* Canvas */
+.tl-canvas{position:relative;height:440px;background:var(--bg)}
+.tl-canvas-inner{position:absolute;inset:0}
+/* Events list below timeline */
+.tl-list{padding:0 16px}
+.tl-list-title{font-size:12px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px}
+.tl-list-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.tl-list-card-left{flex:1;min-width:0}
+.tl-list-card-name{font-weight:700;font-size:14px}
+.tl-list-card-sub{font-size:12px;color:var(--text-mute);margin-top:2px}
+.tl-list-card-time{font-size:11.5px;font-weight:600;margin-top:3px}
+.tl-list-empty{text-align:center;padding:30px 10px;color:var(--text-mute);font-size:13px}
+/* Sales */
 #salesView{padding:0 16px 40px}
 .sales-header{padding:14px 0 6px}
 .sales-header h2{font-size:17px;color:var(--text);margin:0 0 4px}
 .sales-header p{font-size:12.5px;color:var(--text-mute);margin:0}
-/* Period selector */
 .period-bar{display:flex;gap:6px;margin:12px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
 .period-bar::-webkit-scrollbar{display:none}
 .period-chip{flex-shrink:0;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:99px;padding:5px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .period-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-/* Summary pills */
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px}
 .summary-card .sc-label{font-size:11px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 .summary-card .sc-value{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent-deep)}
 .summary-card .sc-sub{font-size:11.5px;color:var(--text-mute);margin-top:3px}
-.summary-card.wide{grid-column:1/-1}
-/* Item breakdown */
 .item-breakdown{display:flex;gap:10px;margin-bottom:14px}
 .item-pill{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
 .item-pill .ip-qty{font-family:'Fraunces',serif;font-size:26px;font-weight:700}
@@ -184,7 +180,6 @@ textarea{resize:vertical;min-height:50px}
 .item-pill .ip-rev{font-size:11px;color:var(--text-mute)}
 .item-pill.sig .ip-qty{color:var(--gold-deep)}
 .item-pill.beef .ip-qty{color:var(--accent-deep)}
-/* Chart containers */
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
 .chart-card h3{font-family:'Fraunces',serif;font-size:14px;color:var(--text);margin:0 0 14px}
 .chart-wrap{position:relative;width:100%;height:200px}
@@ -299,6 +294,7 @@ textarea{resize:vertical;min-height:50px}
 </header>
 
 <main>
+  <!-- Entry -->
   <section id="entryView" class="active">
     <div class="entry-wrap">
       <form class="card" id="orderForm">
@@ -321,6 +317,7 @@ textarea{resize:vertical;min-height:50px}
     </div>
   </section>
 
+  <!-- Kitchen -->
   <section id="kitchenView">
     <div class="kitchen-summary" id="kitchenSummary">
       <span class="kitchen-summary-label">Today prep:</span>
@@ -342,77 +339,57 @@ textarea{resize:vertical;min-height:50px}
     </div>
   </section>
 
+  <!-- Timeline (horizontal, zoomable) -->
   <section id="timelineView">
-    <div id="tlWrap" style="padding:0 16px 40px">
-      <div class="tl-header">
-        <div class="date-nav">
-          <button id="tlPrev">&#8249;</button>
-          <input type="date" id="tlDate">
-          <button id="tlNext">&#8250;</button>
-        </div>
-        <button class="today-btn" id="tlToday">Today</button>
+    <!-- Top controls bar -->
+    <div class="tl-topbar">
+      <div class="date-nav">
+        <button id="tlPrev">&#8249;</button>
+        <input type="date" id="tlDate">
+        <button id="tlNext">&#8250;</button>
       </div>
-      <div class="tl-summary" id="tlSummary">
-        <div class="tl-summary-title">Totals for selected date</div>
-        <span class="tl-summary-empty">No orders on this date</span>
+      <button class="today-btn" id="tlToday">Today</button>
+      <div class="zoom-ctrl">
+        <button class="zoom-btn" id="tlZoomOut" title="Zoom out">&#8722;</button>
+        <span class="zoom-label" id="tlZoomLabel">1x</span>
+        <button class="zoom-btn" id="tlZoomIn" title="Zoom in">&#43;</button>
       </div>
-      <div id="tlChart"><div class="empty"><div class="icon">&#128197;</div>No orders on this date.</div></div>
     </div>
+    <!-- Legend -->
+    <div class="tl-legend">
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#6B7CB0"></div>Order placed</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#D9A24B"></div>Pickup</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#C7401F"></div>Delivery</div>
+    </div>
+    <!-- Scrollable canvas -->
+    <div class="tl-scroll-wrap" id="tlScrollWrap">
+      <div class="tl-canvas" id="tlCanvas">
+        <div class="tl-canvas-inner" id="tlCanvasInner"></div>
+      </div>
+    </div>
+    <!-- Orders list below -->
+    <div class="tl-list" id="tlList"></div>
   </section>
 
+  <!-- Sales -->
   <section id="salesView">
-    <div class="sales-header">
-      <h2>Sales Summary</h2>
-      <p>All confirmed orders</p>
-    </div>
-
-    <!-- Period selector -->
+    <div class="sales-header"><h2>Sales Summary</h2><p>All confirmed orders</p></div>
     <div class="period-bar" id="periodBar">
       <button class="period-chip active" data-period="month">This Month</button>
       <button class="period-chip" data-period="week">This Week</button>
       <button class="period-chip" data-period="today">Today</button>
       <button class="period-chip" data-period="all">All Time</button>
     </div>
-
-    <!-- Summary cards -->
-    <div class="summary-grid" id="salesSummaryGrid">
-      <div class="summary-card">
-        <div class="sc-label">Revenue</div>
-        <div class="sc-value" id="salesTotalRev">RM0</div>
-        <div class="sc-sub" id="salesTotalOrders">0 orders</div>
-      </div>
-      <div class="summary-card">
-        <div class="sc-label">Avg per order</div>
-        <div class="sc-value" id="salesAvg">RM0</div>
-        <div class="sc-sub" id="salesAvgSub">&nbsp;</div>
-      </div>
+    <div class="summary-grid">
+      <div class="summary-card"><div class="sc-label">Revenue</div><div class="sc-value" id="salesTotalRev">RM0</div><div class="sc-sub" id="salesTotalOrders">0 orders</div></div>
+      <div class="summary-card"><div class="sc-label">Avg per order</div><div class="sc-value" id="salesAvg">RM0</div><div class="sc-sub" id="salesAvgSub">&nbsp;</div></div>
     </div>
-
-    <!-- Item breakdown -->
-    <div class="item-breakdown" id="salesItemBreakdown">
-      <div class="item-pill sig">
-        <div class="ip-qty" id="salesSigQty">0</div>
-        <div class="ip-label">Signature</div>
-        <div class="ip-rev" id="salesSigRev">RM0</div>
-      </div>
-      <div class="item-pill beef">
-        <div class="ip-qty" id="salesBeefQty">0</div>
-        <div class="ip-label">Beef</div>
-        <div class="ip-rev" id="salesBeefRev">RM0</div>
-      </div>
+    <div class="item-breakdown">
+      <div class="item-pill sig"><div class="ip-qty" id="salesSigQty">0</div><div class="ip-label">Signature</div><div class="ip-rev" id="salesSigRev">RM0</div></div>
+      <div class="item-pill beef"><div class="ip-qty" id="salesBeefQty">0</div><div class="ip-label">Beef</div><div class="ip-rev" id="salesBeefRev">RM0</div></div>
     </div>
-
-    <!-- Chart: daily (this week / today) or monthly breakdown -->
-    <div class="chart-card" id="chartCard1">
-      <h3 id="chart1Title">Revenue by Day</h3>
-      <div class="chart-wrap"><canvas id="chart1"></canvas></div>
-    </div>
-
-    <!-- Chart: monthly trend (last 6 months) -->
-    <div class="chart-card" id="chartCard2">
-      <h3>Monthly Revenue Trend</h3>
-      <div class="chart-wrap"><canvas id="chart2"></canvas></div>
-    </div>
+    <div class="chart-card"><h3 id="chart1Title">Revenue by Day</h3><div class="chart-wrap"><canvas id="chart1"></canvas></div></div>
+    <div class="chart-card"><h3>Monthly Revenue Trend</h3><div class="chart-wrap"><canvas id="chart2"></canvas></div></div>
   </section>
 </main>
 </div>
@@ -428,7 +405,7 @@ const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14}};
 const STATUS_FLOW=["new","preparing","packed","done"],STATUS_LABEL={new:"New",preparing:"Preparing",packed:"Packed"};
 let qty={signature:0,beef:0},activeFilter="all",allOrders=[],selectedId=null;
 
-/* ── Helpers ── */
+/* ── Utils ── */
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function doneLabel(o){return o.fulfilment==="delivery"?"Delivered":"Picked up";}
 function nextStatus(s){const i=STATUS_FLOW.indexOf(s);return i>=0&&i<STATUS_FLOW.length-1?STATUS_FLOW[i+1]:null;}
@@ -439,11 +416,11 @@ function bdgClass(s){return{preparing:"badge-preparing",packed:"badge-packed",do
 function bdgLabel(o){return o.status==="done"?doneLabel(o):STATUS_LABEL[o.status]||"New";}
 function fmtTime(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
 function fmtPickup(iso){if(!iso)return null;const d=new Date(iso);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
-function fmtHour(iso){if(!iso)return null;const d=new Date(iso);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true});}
-function toDateStr(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toISOString().slice(0,10);}
-function isoToDateStr(iso){return iso?iso.slice(0,10):null;}
-function computeTotals(orders){const t={};orders.forEach(o=>(o.items||[]).forEach(i=>{t[i.name]=(t[i.name]||0)+i.qty;}));return t;}
 function getOrderDate(o){if(!o.createdAt)return null;return o.createdAt.toDate?o.createdAt.toDate():new Date(o.createdAt);}
+function toDateStr(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toISOString().slice(0,10);}
+function isoDateStr(iso){return iso?iso.slice(0,10):null;}
+function computeTotals(orders){const t={};orders.forEach(o=>(o.items||[]).forEach(i=>{t[i.name]=(t[i.name]||0)+i.qty;}));return t;}
+function fmtHHMM(d){return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true});}
 
 /* ── Connection ── */
 function setConn(ok){document.getElementById("connStatus").classList.toggle("offline",!ok);document.getElementById("connLabel").textContent=ok?"Live":"Reconnecting";}
@@ -454,15 +431,9 @@ document.getElementById("tabEntry").addEventListener("click",()=>switchTab("entr
 document.getElementById("tabKitchen").addEventListener("click",()=>switchTab("kitchen"));
 document.getElementById("tabTimeline").addEventListener("click",()=>{switchTab("timeline");renderTimeline();});
 document.getElementById("tabSales").addEventListener("click",()=>{switchTab("sales");renderSales();});
-function switchTab(w){
-  Object.keys(TAB_MAP).forEach(k=>{
-    document.getElementById("tab"+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle("active",k===w);
-    document.getElementById(TAB_MAP[k]).classList.toggle("active",k===w);
-  });
-  clearSelection();
-}
+function switchTab(w){Object.keys(TAB_MAP).forEach(k=>{document.getElementById("tab"+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle("active",k===w);document.getElementById(TAB_MAP[k]).classList.toggle("active",k===w);});clearSelection();}
 
-/* ── Selection & Action bar ── */
+/* ── Selection ── */
 function setSelected(id){selectedId=id;document.querySelectorAll(".order,.k-card").forEach(el=>el.classList.toggle("selected",el.dataset.id===id));const bar=document.getElementById("actionBar");id?bar.classList.add("visible"):bar.classList.remove("visible");}
 function clearSelection(){setSelected(null);}
 document.getElementById("actionBarClose").addEventListener("click",clearSelection);
@@ -475,13 +446,10 @@ document.getElementById("filterBar").addEventListener("click",ev=>{const chip=ev
 function applyColumnVisibility(){document.querySelectorAll(".kanban-col").forEach(col=>{col.classList.toggle("hidden",activeFilter!=="all"&&col.dataset.status!==activeFilter);});}
 
 /* ── Notifications ── */
-document.getElementById("notifBtn").addEventListener("click",async()=>{if(!("Notification" in window)){alert("Notifications not supported.");return;}if(Notification.permission==="denied"){alert("Notifications blocked. Allow them in browser settings.");return;}let granted=Notification.permission==="granted";if(!granted){const p=await Notification.requestPermission();granted=p==="granted";}if(!granted)return;sendPrepReminder(allOrders);});
-function sendPrepReminder(orders){const today=new Date().toDateString();const pending=orders.filter(o=>{if(o.status==="done")return false;if(!o.createdAt)return true;return getOrderDate(o).toDateString()===today;});const t=computeTotals(pending);const entries=Object.entries(t);const msg=entries.length?entries.map(([n,q])=>q+"x "+n).join(", "):"No pending orders today";try{new Notification("RotiCanai Prep \uD83E\uDD53",{body:"Pending today: "+msg});}catch{alert("Prep reminder:\n"+msg);}updateNotifBtn();}
-function updateNotifBtn(){const btn=document.getElementById("notifBtn");if(!("Notification" in window)){btn.style.display="none";return;}btn.classList.toggle("granted",Notification.permission==="granted");}
+document.getElementById("notifBtn").addEventListener("click",async()=>{if(!("Notification" in window)){alert("Notifications not supported.");return;}if(Notification.permission==="denied"){alert("Notifications blocked. Please allow in browser settings.");return;}let ok=Notification.permission==="granted";if(!ok){const p=await Notification.requestPermission();ok=p==="granted";}if(!ok)return;sendPrepReminder(allOrders);});
+function sendPrepReminder(orders){const today=new Date().toDateString();const pending=orders.filter(o=>{if(o.status==="done")return false;if(!o.createdAt)return true;return getOrderDate(o).toDateString()===today;});const t=computeTotals(pending);const entries=Object.entries(t);const msg=entries.length?entries.map(([n,q])=>q+"x "+n).join(", "):"No pending orders today";try{new Notification("RotiCanai Prep \uD83E\uDD53",{body:"Pending: "+msg});}catch{alert("Prep reminder:\n"+msg);}if(!("Notification" in window))document.getElementById("notifBtn").style.display="none";}
 let prevOrderCount=0;
-function checkNewOrders(orders){if(orders.length>prevOrderCount&&prevOrderCount>0&&Notification.permission==="granted"){const newest=orders[0];if(newest)try{new Notification("New order! \uD83E\uDD53",{body:esc(newest.customerName)+" - "+newest.items.map(i=>i.qty+"x "+i.name).join(", ")});}catch{}}prevOrderCount=orders.length;}
-
-/* ── Kitchen summary ── */
+function checkNewOrders(orders){if(orders.length>prevOrderCount&&prevOrderCount>0&&Notification.permission==="granted"){const n=orders[0];if(n)try{new Notification("New order! \uD83E\uDD53",{body:esc(n.customerName)+" - "+n.items.map(i=>i.qty+"x "+i.name).join(", ")});}catch{}}prevOrderCount=orders.length;}
 function updateKitchenSummary(orders){const today=new Date().toDateString();const pending=orders.filter(o=>{if(o.status==="done")return false;if(!o.createdAt)return true;return getOrderDate(o).toDateString()===today;});const t=computeTotals(pending);const entries=Object.entries(t);const el=document.getElementById("summaryItems");if(!entries.length){el.innerHTML='<span class="kitchen-summary-empty">No pending orders today</span>';return;}el.innerHTML=entries.map(([n,q])=>'<span class="kitchen-summary-item">'+q+"x "+n+'</span>').join("");}
 
 /* ── Entry form ── */
@@ -510,179 +478,219 @@ document.getElementById("editCancel").addEventListener("click",closeEdit);
 document.getElementById("editScrim").addEventListener("click",closeEdit);
 document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,notes=document.getElementById("editNotes").value.trim(),items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const total=items.reduce((s,i)=>s+i.price*i.qty,0),saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,total,pickupTime:pickup||null});closeEdit();clearSelection();}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
 
-/* ── Render entry list ── */
+/* ── Entry list ── */
 function renderEntryList(orders){const list=document.getElementById("entryList");if(!orders.length){list.innerHTML='<div class="empty"><div class="icon">&#129379;</div>No orders yet today.</div>';return;}list.innerHTML=orders.slice(0,30).map(o=>{const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o),isSel=o.id===selectedId;return'<div class="order'+(isSel?" selected":"")+'" data-id="'+o.id+'"><div class="order-header"><div><div class="order-name">'+esc(o.customerName)+'</div><div class="order-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+'</div><div class="order-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="pickup-time">Pickup: '+pk+'</span>':'')+'</div></div><span class="badge '+bdgClass(o.status)+'">'+bdgLabel(o)+'</span></div><div class="order-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.notes?'<div class="order-note">'+esc(o.notes)+'</div>':'')+((al||ul)?'<div class="order-actions">'+(al?'<button class="btn-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(ul?'<button class="btn-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')+'</div>';}).join("");list.querySelectorAll(".order").forEach(card=>{card.addEventListener("click",e=>{if(e.target.closest(".adv-btn,.undo-btn"))return;setSelected(card.dataset.id===selectedId?null:card.dataset.id);});});wireButtons(list,orders);}
 
-/* ── Render Kanban ── */
+/* ── Kanban ── */
 function renderKanban(orders){STATUS_FLOW.forEach(status=>{const col=orders.filter(o=>(o.status||"new")===status),cEl=document.getElementById("count-"+status),kEl=document.getElementById("cards-"+status);if(cEl)cEl.textContent=col.length;if(!kEl)return;const em={new:"No new orders",preparing:"Nothing cooking",packed:"Nothing packed",done:"No completed orders"};if(!col.length){kEl.innerHTML='<div class="empty"><div class="icon"></div>'+em[status]+'</div>';return;}kEl.innerHTML=col.map(o=>{const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o),isSel=o.id===selectedId;return'<div class="k-card'+(isSel?" selected":"")+'" data-id="'+o.id+'"><div class="k-name">'+esc(o.customerName)+'</div><div class="k-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+(o.address?" - "+esc(o.address):"")+'</div><div class="k-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="k-pickup">Pickup: '+pk+'</span>':'')+'</div><div class="k-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.notes?'<div class="k-note">'+esc(o.notes)+'</div>':'')+((al||ul)?'<div class="k-actions">'+(al?'<button class="k-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(ul?'<button class="k-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')+'</div>';}).join("");kEl.querySelectorAll(".k-card").forEach(card=>{card.addEventListener("click",e=>{if(e.target.closest(".adv-btn,.undo-btn"))return;setSelected(card.dataset.id===selectedId?null:card.dataset.id);});});wireButtons(kEl,orders);});applyColumnVisibility();}
 
 /* ── Advance/Undo ── */
 function wireButtons(c,orders){c.querySelectorAll(".adv-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const next=nextStatus(o.status||"new");if(!next)return;const ok=await showConfirm(advLabel(o)+"?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "));if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({status:next});}catch{btn.disabled=false;}});});c.querySelectorAll(".undo-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const prev=prevStatus(o.status||"new");if(!prev)return;const ok=await showConfirm("Undo to "+STATUS_LABEL[prev]+"?",esc(o.customerName));if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({status:prev});}catch{btn.disabled=false;}});});}
 
-/* ── Timeline ── */
+/* ════════════════════════════════════════
+   HORIZONTAL TIMELINE (PowerPoint style)
+   ════════════════════════════════════════ */
 let tlDateStr=new Date().toISOString().slice(0,10);
-(function(){const inp=document.getElementById("tlDate");inp.value=tlDateStr;inp.addEventListener("change",()=>{tlDateStr=inp.value;renderTimeline();});document.getElementById("tlPrev").addEventListener("click",()=>{const d=new Date(tlDateStr+"T00:00:00");d.setDate(d.getDate()-1);tlDateStr=d.toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});document.getElementById("tlNext").addEventListener("click",()=>{const d=new Date(tlDateStr+"T00:00:00");d.setDate(d.getDate()+1);tlDateStr=d.toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});document.getElementById("tlToday").addEventListener("click",()=>{tlDateStr=new Date().toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});})();
-function renderTimeline(){const orders=allOrders.filter(o=>{const created=toDateStr(o.createdAt),pickup=isoToDateStr(o.pickupTime);return created===tlDateStr||pickup===tlDateStr;});const summEl=document.getElementById("tlSummary");const t=computeTotals(orders);const entries=Object.entries(t);if(!entries.length){summEl.innerHTML='<div class="tl-summary-title">Totals for selected date</div><span class="tl-summary-empty">No orders on this date</span>';}else{summEl.innerHTML='<div class="tl-summary-title">Totals for selected date</div>'+entries.map(([n,q])=>'<span class="tl-summary-pill '+(n==="Signature"?"sig":"beef")+'">'+q+"x "+n+'</span>').join("");}const chart=document.getElementById("tlChart");if(!orders.length){chart.innerHTML='<div class="empty"><div class="icon">&#128197;</div>No orders on this date.</div>';return;}const withTime=orders.filter(o=>o.pickupTime).sort((a,b)=>new Date(a.pickupTime)-new Date(b.pickupTime));const noTime=orders.filter(o=>!o.pickupTime);const byHour={};withTime.forEach(o=>{const hKey=new Date(o.pickupTime).toISOString().slice(0,13);if(!byHour[hKey])byHour[hKey]=[];byHour[hKey].push(o);});const hours=Object.keys(byHour).sort();let html="";if(hours.length){html+='<div class="tl-section-label">By pickup time</div>';hours.forEach((hk,hi)=>{const hOrders=byHour[hk];const hLabel=new Date(hk+":00:00").toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true});const isLast=hi===hours.length-1&&!noTime.length;html+='<div class="tl-row"><div class="tl-time">'+hLabel+'</div><div class="tl-line"><div class="tl-dot '+(hOrders[0].status||"new")+'"></div>'+(isLast?'':'<div class="tl-stem"></div>')+'</div><div class="tl-cards">'+hOrders.map(o=>'<div class="tl-card"><div class="tl-card-top"><div><div class="tl-card-name">'+esc(o.customerName)+'</div><div class="tl-card-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.pickupTime&&o.pickupTime.slice(0,10)===tlDateStr?'<div class="tl-card-meta">Pickup: '+fmtHour(o.pickupTime)+'</div>':'')+'</div><span class="badge '+bdgClass(o.status)+'">'+bdgLabel(o)+'</span></div>'+(o.notes?'<div class="tl-card-meta" style="margin-top:4px;font-style:italic">'+esc(o.notes)+'</div>':'')+'</div>').join("")+'</div></div>';});}if(noTime.length){html+='<div class="tl-section-label">No pickup time set</div>'+noTime.map(o=>'<div class="tl-no-time"><div><div class="tl-card-name">'+esc(o.customerName)+'</div><div class="tl-card-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.notes?'<div class="tl-card-meta" style="font-style:italic">'+esc(o.notes)+'</div>':'')+'</div><span class="badge '+bdgClass(o.status)+'">'+bdgLabel(o)+'</span></div>').join("");}chart.innerHTML=html;}
+let tlZoom=80; // px per hour
+const TL_ZOOM_STEPS=[40,60,80,110,150,200,280];
+let tlZoomIdx=2; // default 80px/hr
+const TL_START=6,TL_END=22; // 6am – 10pm shown
+const TL_CANVAS_H=440,TL_AXIS_Y=210;
+// Above: levels (distance from axis). Alternate between them.
+const ABOVE_DIST=[80,160];
+const BELOW_DIST=[80,160];
+const DOT_COLORS={created:"#6B7CB0",pickup:"#D9A24B",delivery:"#C7401F"};
+
+// Date nav
+(function(){
+  const inp=document.getElementById("tlDate");
+  inp.value=tlDateStr;
+  inp.addEventListener("change",()=>{tlDateStr=inp.value;renderTimeline();});
+  document.getElementById("tlPrev").addEventListener("click",()=>{const d=new Date(tlDateStr+"T00:00:00");d.setDate(d.getDate()-1);tlDateStr=d.toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});
+  document.getElementById("tlNext").addEventListener("click",()=>{const d=new Date(tlDateStr+"T00:00:00");d.setDate(d.getDate()+1);tlDateStr=d.toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});
+  document.getElementById("tlToday").addEventListener("click",()=>{tlDateStr=new Date().toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});
+})();
+
+// Zoom controls
+document.getElementById("tlZoomIn").addEventListener("click",()=>{if(tlZoomIdx<TL_ZOOM_STEPS.length-1){tlZoomIdx++;tlZoom=TL_ZOOM_STEPS[tlZoomIdx];updateZoomLabel();renderTimeline();}});
+document.getElementById("tlZoomOut").addEventListener("click",()=>{if(tlZoomIdx>0){tlZoomIdx--;tlZoom=TL_ZOOM_STEPS[tlZoomIdx];updateZoomLabel();renderTimeline();}});
+function updateZoomLabel(){const ratios=["0.5x","0.75x","1x","1.4x","1.9x","2.5x","3.5x"];document.getElementById("tlZoomLabel").textContent=ratios[tlZoomIdx]||tlZoom+"px";}
+
+// Drag-to-scroll on the timeline wrap
+(function(){
+  const wrap=document.getElementById("tlScrollWrap");
+  let dragging=false,startX=0,scrollLeft=0;
+  wrap.addEventListener("mousedown",e=>{dragging=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;wrap.style.cursor="grabbing";});
+  wrap.addEventListener("mouseleave",()=>{dragging=false;wrap.style.cursor="grab";});
+  wrap.addEventListener("mouseup",()=>{dragging=false;wrap.style.cursor="grab";});
+  wrap.addEventListener("mousemove",e=>{if(!dragging)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX);});
+})();
+
+function xOf(h,m=0){return Math.round((h-TL_START+m/60)*tlZoom)+20;}
+
+function getTimelineEvents(){
+  const events=[];
+  allOrders.forEach(o=>{
+    const createdDate=toDateStr(o.createdAt);
+    const pickupDate=isoDateStr(o.pickupTime);
+    // Order placed event
+    if(createdDate===tlDateStr&&o.createdAt){
+      const d=getOrderDate(o);
+      if(d)events.push({type:"created",time:d,order:o,label:"Order placed",color:DOT_COLORS.created});
+    }
+    // Pickup/Delivery event
+    if(pickupDate===tlDateStr&&o.pickupTime){
+      const d=new Date(o.pickupTime);
+      const isDelivery=o.fulfilment==="delivery";
+      events.push({type:isDelivery?"delivery":"pickup",time:d,order:o,label:isDelivery?"Delivery":"Pickup",color:isDelivery?DOT_COLORS.delivery:DOT_COLORS.pickup});
+    }
+  });
+  events.sort((a,b)=>a.time-b.time);
+  return events;
+}
+
+function renderTimeline(){
+  const totalW=(TL_END-TL_START)*tlZoom+40;
+  const canvas=document.getElementById("tlCanvas");
+  const inner=document.getElementById("tlCanvasInner");
+  canvas.style.width=totalW+"px";
+
+  let html="";
+
+  // Background grid lines (subtle vertical lines per hour)
+  for(let h=TL_START;h<=TL_END;h++){
+    const x=xOf(h);
+    html+=`<div style="position:absolute;left:${x}px;top:0;width:1px;height:100%;background:var(--border);opacity:0.5;pointer-events:none;"></div>`;
+  }
+
+  // Main axis line
+  html+=`<div style="position:absolute;left:0;right:0;height:4px;top:${TL_AXIS_Y}px;background:var(--text-mute);border-radius:2px;"></div>`;
+
+  // Hour labels & tick marks
+  for(let h=TL_START;h<=TL_END;h++){
+    const x=xOf(h);
+    const label=h===0?"12am":h<12?h+"am":h===12?"12pm":(h-12)+"pm";
+    // tick
+    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-6}px;width:2px;height:12px;background:var(--text-mute);transform:translateX(-50%);"></div>`;
+    // label
+    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+10}px;transform:translateX(-50%);font-size:11px;font-weight:600;color:var(--text-mute);white-space:nowrap;">${label}</div>`;
+  }
+
+  // "Now" indicator (if today)
+  const today=new Date().toISOString().slice(0,10);
+  if(tlDateStr===today){
+    const now=new Date();
+    const nowH=now.getHours()+now.getMinutes()/60;
+    if(nowH>=TL_START&&nowH<=TL_END){
+      const nx=xOf(nowH);
+      html+=`<div style="position:absolute;left:${nx}px;top:0;width:2px;height:${TL_CANVAS_H}px;background:var(--accent);opacity:0.7;pointer-events:none;"></div>`;
+      html+=`<div style="position:absolute;left:${nx+4}px;top:${TL_AXIS_Y-28}px;font-size:10px;font-weight:800;color:var(--accent);letter-spacing:.03em;">NOW</div>`;
+    }
+  }
+
+  // Get and render events
+  const events=getTimelineEvents();
+  let aboveIdx=0,belowIdx=0;
+
+  events.forEach((ev,i)=>{
+    const h=ev.time.getHours(),m=ev.time.getMinutes();
+    if(h<TL_START||h>TL_END)return;
+    const x=xOf(h,m);
+    const isAbove=i%2===0;
+    const dist=isAbove?ABOVE_DIST[aboveIdx%2]:BELOW_DIST[belowIdx%2];
+    isAbove?aboveIdx++:belowIdx++;
+    const col=ev.color;
+    const timeStr=fmtHHMM(ev.time);
+    const nameShort=ev.order.customerName.length>14?ev.order.customerName.slice(0,13)+"…":ev.order.customerName;
+    const itemsShort=ev.order.items.map(it=>it.qty+"x "+it.name.slice(0,3)).join(", ");
+
+    // Dot on axis
+    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-8}px;width:16px;height:16px;border-radius:50%;background:${col};border:3px solid var(--surface);box-shadow:0 1px 5px rgba(0,0,0,.25);transform:translateX(-50%);z-index:3;"></div>`;
+
+    if(isAbove){
+      const stemBottom=TL_AXIS_Y-8;
+      const stemTop=TL_AXIS_Y-dist;
+      const stemH=stemBottom-stemTop;
+      // Stem
+      html+=`<div style="position:absolute;left:${x}px;top:${stemTop}px;width:2px;height:${stemH}px;background:${col};opacity:0.5;transform:translateX(-50%);"></div>`;
+      // Card (bottom-anchored to stem top, floating above)
+      const cardBottom=stemTop-2;
+      html+=`<div style="position:absolute;left:${x}px;bottom:${TL_CANVAS_H-cardBottom}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">`
+        +`<div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">${ev.label}</div>`
+        +`<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${esc(nameShort)}</div>`
+        +`<div style="font-size:11px;color:var(--text-soft);margin-bottom:2px;">${esc(itemsShort)}</div>`
+        +`<div style="font-size:10.5px;font-weight:600;color:${col};">${timeStr}</div>`
+        +`<div style="font-size:10px;color:var(--text-mute);margin-top:1px;">${ev.order.fulfilment==="delivery"?"🚗 Delivery":"📦 Pickup"}</div>`
+        +'</div>';
+      // Small time label on axis
+      html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-24}px;transform:translateX(-50%);font-size:10px;font-weight:700;color:${col};white-space:nowrap;letter-spacing:-.02em;">${timeStr}</div>`;
+    } else {
+      const stemTop=TL_AXIS_Y+8;
+      const stemH=dist-8;
+      // Stem
+      html+=`<div style="position:absolute;left:${x}px;top:${stemTop}px;width:2px;height:${stemH}px;background:${col};opacity:0.5;transform:translateX(-50%);"></div>`;
+      // Card (top at stem bottom)
+      const cardTop=stemTop+stemH+2;
+      html+=`<div style="position:absolute;left:${x}px;top:${cardTop}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">`
+        +`<div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">${ev.label}</div>`
+        +`<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${esc(nameShort)}</div>`
+        +`<div style="font-size:11px;color:var(--text-soft);margin-bottom:2px;">${esc(itemsShort)}</div>`
+        +`<div style="font-size:10.5px;font-weight:600;color:${col};">${timeStr}</div>`
+        +`<div style="font-size:10px;color:var(--text-mute);margin-top:1px;">${ev.order.fulfilment==="delivery"?"🚗 Delivery":"📦 Pickup"}</div>`
+        +'</div>';
+      // Small time label on axis (below)
+      html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+10}px;transform:translateX(-50%);font-size:10px;font-weight:700;color:${col};white-space:nowrap;letter-spacing:-.02em;margin-top:18px;">${timeStr}</div>`;
+    }
+  });
+
+  // Empty state overlay
+  if(!events.length){
+    html+=`<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;color:var(--text-mute);"><div style="font-size:32px;margin-bottom:8px;">📅</div><div style="font-size:13px;">No events on this date.<br>Add a pickup time to orders to see them here.</div></div>`;
+  }
+
+  inner.innerHTML=html;
+
+  // Scroll to current hour or 8am if today
+  const scrollWrap=document.getElementById("tlScrollWrap");
+  const scrollToH=tlDateStr===today?Math.max(TL_START,new Date().getHours()-1):8;
+  scrollWrap.scrollLeft=Math.max(0,xOf(scrollToH)-60);
+
+  // Render list below
+  renderTlList(events);
+}
+
+function renderTlList(events){
+  const list=document.getElementById("tlList");
+  if(!events.length){list.innerHTML='<div class="tl-list-empty">No orders or pickups on this date.</div>';return;}
+  list.innerHTML='<div class="tl-list-title">All events — '+new Date(tlDateStr+"T12:00:00").toLocaleDateString("en-MY",{weekday:"long",day:"numeric",month:"long"})+'</div>'
+    +events.map(ev=>{
+      const col=ev.color;
+      return`<div class="tl-list-card">`
+        +`<div class="tl-list-card-left">`
+          +`<div class="tl-list-card-name">${esc(ev.order.customerName)}</div>`
+          +`<div class="tl-list-card-sub">${esc(ev.order.items.map(i=>i.qty+"x "+i.name).join(", "))} — RM${ev.order.total}</div>`
+          +`<div class="tl-list-card-time" style="color:${col};">${ev.label} · ${fmtHHMM(ev.time)}</div>`
+        +'</div>'
+        +`<span class="badge ${bdgClass(ev.order.status)}">${bdgLabel(ev.order)}</span>`
+        +'</div>';
+    }).join("");
+}
 
 /* ════════════════════════════════════════
-   SALES TAB
+   SALES
    ════════════════════════════════════════ */
-let salesPeriod="month";
-let chart1Instance=null,chart2Instance=null;
-
-document.getElementById("periodBar").addEventListener("click",ev=>{
-  const chip=ev.target.closest(".period-chip");if(!chip)return;
-  document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));
-  chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();
-});
-
-function filterByPeriod(orders,period){
-  const now=new Date();
-  return orders.filter(o=>{
-    const d=getOrderDate(o);if(!d)return false;
-    if(period==="today"){return d.toDateString()===now.toDateString();}
-    if(period==="week"){
-      const weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());weekStart.setHours(0,0,0,0);
-      return d>=weekStart;
-    }
-    if(period==="month"){return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();}
-    return true; // all
-  });
-}
-
-function renderSales(){
-  const orders=filterByPeriod(allOrders,salesPeriod);
-  const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);
-  const totalOrders=orders.length;
-  const avg=totalOrders?Math.round(totalRev/totalOrders):0;
-
-  // Item counts
-  let sigQty=0,beefQty=0;
-  orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));
-
-  document.getElementById("salesTotalRev").textContent="RM"+totalRev;
-  document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");
-  document.getElementById("salesAvg").textContent="RM"+avg;
-  document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";
-  document.getElementById("salesSigQty").textContent=sigQty;
-  document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);
-  document.getElementById("salesBeefQty").textContent=beefQty;
-  document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);
-
-  // Chart 1: depends on period
-  renderChart1(orders);
-  // Chart 2: always last 6 months
-  renderChart2();
-}
-
-/* Chart 1: revenue per day (week/today) or per week (month) or per day (all=last 30 days) */
-function renderChart1(orders){
-  const now=new Date();
-  let labels=[],data=[],title="";
-
-  if(salesPeriod==="today"){
-    // Hourly breakdown today
-    title="Revenue by Hour (Today)";
-    const hours={};
-    orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const h=d.getHours();hours[h]=(hours[h]||0)+(o.total||0);});
-    for(let h=6;h<=22;h++){labels.push(h%12===0?12:h%12,(h<12?"am":"pm"));data.push(hours[h]||0);}
-    // Use simpler label
-    labels=[];for(let h=6;h<=22;h++){labels.push((h%12===0?12:h%12)+""+(h<12?"am":"pm"));}
-  } else if(salesPeriod==="week"){
-    title="Revenue by Day (This Week)";
-    const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-    const weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());weekStart.setHours(0,0,0,0);
-    const dayTotals=[0,0,0,0,0,0,0];
-    orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const idx=Math.floor((d-weekStart)/(86400000));if(idx>=0&&idx<7)dayTotals[idx]+=(o.total||0);});
-    labels=days;data=dayTotals;
-  } else if(salesPeriod==="month"){
-    title="Revenue by Week (This Month)";
-    const wk=[0,0,0,0,0];
-    orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const wIdx=Math.min(Math.floor((d.getDate()-1)/7),4);wk[wIdx]+=(o.total||0);});
-    labels=["Week 1","Week 2","Week 3","Week 4","Week 5"];data=wk;
-  } else {
-    // All: last 30 days
-    title="Revenue by Day (Last 30 Days)";
-    const dayMap={};
-    for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);dayMap[d.toISOString().slice(0,10)]=0;}
-    orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const k=d.toISOString().slice(0,10);if(k in dayMap)dayMap[k]+=(o.total||0);});
-    const entries=Object.entries(dayMap).sort(([a],[b])=>a.localeCompare(b));
-    labels=entries.map(([k])=>k.slice(5).replace("-","/"));data=entries.map(([,v])=>v);
-  }
-
-  document.getElementById("chart1Title").textContent=title;
-  const ctx=document.getElementById("chart1").getContext("2d");
-  if(chart1Instance)chart1Instance.destroy();
-  chart1Instance=new Chart(ctx,{
-    type:"bar",
-    data:{
-      labels,
-      datasets:[{
-        label:"Revenue (RM)",data,
-        backgroundColor:"rgba(199,64,31,0.75)",
-        borderColor:"rgba(165,52,26,1)",
-        borderWidth:1,borderRadius:5,
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>"RM"+ctx.parsed.y}}},
-      scales:{
-        x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},
-        y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}
-      }
-    }
-  });
-}
-
-/* Chart 2: Monthly revenue — last 6 months */
-function renderChart2(){
-  const now=new Date();
-  const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  const labels=[],data=[],orderCounts=[];
-  for(let i=5;i>=0;i--){
-    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
-    labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));
-    const mOrders=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});
-    data.push(mOrders.reduce((s,o)=>s+(o.total||0),0));
-    orderCounts.push(mOrders.length);
-  }
-  const ctx=document.getElementById("chart2").getContext("2d");
-  if(chart2Instance)chart2Instance.destroy();
-  chart2Instance=new Chart(ctx,{
-    type:"bar",
-    data:{
-      labels,
-      datasets:[
-        {label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5,yAxisID:"y"},
-        {label:"Orders",data:orderCounts,backgroundColor:"rgba(217,162,75,0.6)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:5,type:"bar",yAxisID:"y2"}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},
-        tooltip:{callbacks:{label:ctx=>ctx.dataset.yAxisID==="y"?"RM"+ctx.parsed.y:ctx.parsed.y+" orders"}}
-      },
-      scales:{
-        x:{grid:{display:false},ticks:{font:{size:11}}},
-        y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,position:"left",ticks:{callback:v=>"RM"+v,font:{size:10}}},
-        y2:{beginAtZero:true,position:"right",grid:{display:false},ticks:{font:{size:10}}}
-      }
-    }
-  });
-}
+let salesPeriod="month",chart1Instance=null,chart2Instance=null;
+document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
+function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);return d>=ws;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
+function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));document.getElementById("salesTotalRev").textContent="RM"+totalRev;document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);renderChart1(orders);renderChart2();}
+function renderChart1(orders){const now=new Date();let labels=[],data=[],title="";if(salesPeriod==="today"){title="Revenue by Hour (Today)";const hours={};orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const h=d.getHours();hours[h]=(hours[h]||0)+(o.total||0);});for(let h=6;h<=22;h++){labels.push((h%12===0?12:h%12)+""+(h<12?"am":"pm"));data.push(hours[h]||0);};}else if(salesPeriod==="week"){title="Revenue by Day (This Week)";const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const dt=[0,0,0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const idx=Math.floor((d-ws)/86400000);if(idx>=0&&idx<7)dt[idx]+=(o.total||0);});labels=days;data=dt;}else if(salesPeriod==="month"){title="Revenue by Week (This Month)";const wk=[0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const wi=Math.min(Math.floor((d.getDate()-1)/7),4);wk[wi]+=(o.total||0);});labels=["Week 1","Week 2","Week 3","Week 4","Week 5"];data=wk;}else{title="Revenue by Day (Last 30 Days)";const dayMap={};for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);dayMap[d.toISOString().slice(0,10)]=0;}orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const k=d.toISOString().slice(0,10);if(k in dayMap)dayMap[k]+=(o.total||0);});const ent=Object.entries(dayMap).sort(([a],[b])=>a.localeCompare(b));labels=ent.map(([k])=>k.slice(5).replace("-","/"));data=ent.map(([,v])=>v);}document.getElementById("chart1Title").textContent=title;const ctx=document.getElementById("chart1").getContext("2d");if(chart1Instance)chart1Instance.destroy();chart1Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"RM"+c.parsed.y}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
+function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],data=[],oc=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});data.push(mo.reduce((s,o)=>s+(o.total||0),0));oc.push(mo.length);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5,yAxisID:"y"},{label:"Orders",data:oc,backgroundColor:"rgba(217,162,75,0.6)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:5,yAxisID:"y2"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.yAxisID==="y"?"RM"+c.parsed.y:c.parsed.y+" orders"}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,position:"left",ticks:{callback:v=>"RM"+v,font:{size:10}}},y2:{beginAtZero:true,position:"right",grid:{display:false},ticks:{font:{size:10}}}}}});}
 
 /* ── Live listener ── */
 ordersRef.orderBy("createdAt","desc").limit(500).onSnapshot(
   snap=>{
-    setConn(true);
-    allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
-    checkNewOrders(allOrders);
-    renderEntryList(allOrders);
-    renderKanban(allOrders);
-    updateKitchenSummary(allOrders);
-    updateNotifBtn();
+    setConn(true);allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
+    checkNewOrders(allOrders);renderEntryList(allOrders);renderKanban(allOrders);updateKitchenSummary(allOrders);
     if(document.getElementById("timelineView").classList.contains("active"))renderTimeline();
     if(document.getElementById("salesView").classList.contains("active"))renderSales();
   },
