@@ -2089,7 +2089,7 @@ function renderChart1(orders){
     curWeekStart.setDate(now.getDate() - now.getDay());
     curWeekStart.setHours(0, 0, 0, 0);
     const wkLabels = [], wkRev = [], wkCount = [];
-    for (let i = 7; i >= 0; i--) {
+    for (let i = 4; i >= 0; i--) {
       const wkStart = new Date(curWeekStart);
       wkStart.setDate(curWeekStart.getDate() - i * 7);
       const wkEnd = new Date(wkStart);
@@ -2247,8 +2247,8 @@ function renderChart1(orders){
             color: tc.textMute,
             font: { size: isMobile ? 9.5 : 11, weight: "500", family: "'Work Sans', sans-serif" },
             autoSkip: false,
-            maxRotation: isMobile ? 40 : 0,
-            minRotation: isMobile ? 25 : 0
+            maxRotation: isMobile ? 25 : 0,
+            minRotation: 0
           }
         },
         yOrders: {
