@@ -24,6 +24,9 @@ header{position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px s
 .conn{font-size:11px;color:var(--text-mute);display:flex;align-items:center;gap:5px}
 .conn .dot{width:7px;height:7px;border-radius:50%;background:var(--success);display:inline-block}
 .conn.offline .dot{background:var(--accent)}
+.header-right{display:flex;align-items:center;gap:12px}
+.btn-signout{border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:8px;padding:4px 9px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-signout:hover{background:var(--surface-2);color:var(--accent)}
 /* Action bar */
 #actionBar{display:none;align-items:center;gap:10px;padding:7px 16px;background:color-mix(in srgb,var(--accent) 8%,var(--surface));border-bottom:1px solid color-mix(in srgb,var(--accent) 20%,var(--border))}
 #actionBar.visible{display:flex}
@@ -31,6 +34,7 @@ header{position:sticky;top:0;background:var(--bg);z-index:10;border-bottom:1px s
 .action-btn{border:1.5px solid var(--border);background:var(--surface);border-radius:10px;padding:6px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--text-soft)}
 .action-btn.edit{color:var(--accent-deep);border-color:var(--accent)}
 .action-btn.del{color:#C0392B;border-color:#C0392B}
+.action-btn.undo{color:var(--gold-deep);border-color:var(--gold);display:none}
 #actionBarClose{background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-mute);padding:2px 6px}
 /* Tabs */
 .tabs-wrap{padding:0 16px 10px}
@@ -229,35 +233,121 @@ textarea{resize:vertical;min-height:50px}
 .edit-cancel{flex:1;border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
 .edit-save{flex:1;border:none;background:var(--accent);color:#fff;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
 .edit-save:disabled{opacity:.5;cursor:not-allowed}
-/* PIN */
-#pinOverlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
-#pinOverlay .pin-logo{font-family:'Fraunces',serif;font-size:22px;color:var(--accent-deep);margin-bottom:8px}
-#pinOverlay .pin-logo span{color:var(--text)}
-#pinOverlay .pin-subtitle{font-size:13px;color:var(--text-mute);margin-bottom:32px}
-#pinDots{display:flex;gap:14px;margin-bottom:32px}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:transparent;transition:background .15s}
-.pin-dot.filled{background:var(--accent);border-color:var(--accent)}
-#pinKeypad{display:grid;grid-template-columns:repeat(3,72px);gap:10px}
-.pin-key{height:72px;border-radius:16px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:22px;font-weight:600;font-family:'Fraunces',serif;cursor:pointer;transition:background .12s}
-.pin-key:active{background:var(--surface-2)}
-.pin-key.del{font-family:'Work Sans',sans-serif;font-size:16px;font-weight:700;color:var(--text-soft)}
-#pinError{color:var(--accent);font-size:13px;height:18px;margin-top:12px;text-align:center}
+/* Inventory View */
+#inventoryView{padding:0 16px 40px;max-width:840px;margin:0 auto}
+.inv-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:18px 0 22px;flex-wrap:wrap}
+.inv-header h2{font-family:'Fraunces',serif;font-size:22px;color:var(--text);margin:0 0 4px}
+.inv-header p{font-size:13px;color:var(--text-mute);margin:0}
+.inv-quick-btns{display:flex;gap:8px;flex-wrap:wrap}
+.inv-btn{border:none;border-radius:10px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;display:inline-flex;align-items:center;gap:6px}
+.inv-btn.prod-btn{background:var(--accent);color:#fff}
+.inv-btn.prod-btn:hover{background:var(--accent-deep)}
+.inv-btn.guest-btn{background:var(--gold);color:#2b2118}
+.inv-btn.guest-btn:hover{background:var(--gold-deep);color:#fff}
+.inv-btn.audit-btn{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--border)}
+.inv-btn.audit-btn:hover{background:var(--surface);color:var(--text)}
+.inv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.inv-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.inv-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.inv-card-title{font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text)}
+.inv-badge{font-size:11px;font-weight:600;background:var(--surface-2);color:var(--text-mute);padding:3px 8px;border-radius:99px}
+.inv-stock-main{text-align:center;padding:12px 0 16px;border-bottom:1px solid var(--border)}
+.inv-stock-val{font-family:'Fraunces',serif;font-size:44px;font-weight:700;line-height:1;color:var(--accent-deep)}
+.inv-stock-label{font-size:12px;font-weight:600;color:var(--text-mute);margin-top:4px}
+.inv-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:14px;text-align:center}
+.inv-metric{display:flex;flex-direction:column;gap:2px}
+.inv-metric .im-label{font-size:11px;font-weight:600;color:var(--text-mute)}
+.inv-metric .im-val{font-size:16px;font-weight:700;color:var(--text)}
+.inv-metric.highlight-guest .im-val{color:var(--gold-deep)}
+.inv-metric.highlight-guest .im-label{color:var(--gold-deep)}
+.inv-logs-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.inv-logs-header{margin-bottom:14px}
+.inv-logs-header h3{font-family:'Fraunces',serif;font-size:16px;margin:0 0 2px}
+.inv-logs-sub{font-size:12px;color:var(--text-mute)}
+.inv-logs-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow-y:auto}
+.inv-log-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:13px}
+.inv-log-left{display:flex;align-items:center;gap:12px}
+.inv-tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.02em}
+.inv-tag.tag-guest{background:color-mix(in srgb,var(--gold) 22%,var(--surface));color:var(--gold-deep);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--border))}
+.inv-tag.tag-production{background:color-mix(in srgb,var(--success) 18%,var(--surface));color:#286330;border:1px solid color-mix(in srgb,var(--success) 35%,var(--border))}
+.inv-tag.tag-recount{background:color-mix(in srgb,#6B7CB0 20%,var(--surface));color:#3a4b7d;border:1px solid color-mix(in srgb,#6B7CB0 35%,var(--border))}
+.inv-log-meta{display:flex;flex-direction:column;gap:2px}
+.inv-log-title{font-weight:600;color:var(--text)}
+.inv-log-sub{font-size:11px;color:var(--text-mute)}
+.inv-log-qty{font-weight:700;font-size:14.5px}
+.inv-log-qty.positive{color:var(--success)}
+.inv-log-qty.negative{color:var(--accent)}
+#inventorySheet{position:fixed;inset:0;z-index:200;display:none}
+#inventorySheet.open{display:flex;flex-direction:column;justify-content:flex-end}
+.quick-qty-chips{display:flex;gap:8px;margin-top:8px}
+.quick-qty-btn{border:1px solid var(--border);background:var(--surface-2);color:var(--text-soft);border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+.quick-qty-btn:hover{background:var(--surface);color:var(--accent)}
+.recount-info-box{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:12px;font-size:13px;margin:10px 0}
+.inv-diff-notice{background:color-mix(in srgb,var(--gold) 15%,var(--surface));border:1px solid var(--gold);color:var(--gold-deep);border-radius:8px;padding:9px 12px;font-size:12.5px;margin-top:10px}
+/* Undo Toast */
+.undo-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2b2118;color:#fff;padding:11px 18px;border-radius:14px;display:flex;align-items:center;gap:14px;box-shadow:0 10px 30px rgba(0,0,0,.28);z-index:999;border:1px solid rgba(255,255,255,.15);font-size:13.5px;max-width:calc(100% - 32px);animation:toastIn .2s ease-out}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,12px)}to{opacity:1;transform:translate(-50%,0)}}
+.undo-toast .undo-msg{color:#f5ede0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:240px}
+.undo-action-btn{border:none;background:var(--gold);color:#2b2118;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .12s,transform .12s;white-space:nowrap}
+.undo-action-btn:hover{background:var(--gold-deep);color:#fff}
+.undo-action-btn:active{transform:scale(.95)}
+.undo-close-btn{border:none;background:none;color:#cfc2b2;font-size:18px;line-height:1;cursor:pointer;padding:0 4px}
+.undo-close-btn:hover{color:#fff}
+/* Stock Alert Toast */
+.stock-toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#2b2118;color:#fff;padding:14px 18px;border-radius:14px;display:flex;align-items:flex-start;gap:14px;box-shadow:0 14px 40px rgba(0,0,0,.35);z-index:9999;border:1.5px solid var(--gold);max-width:min(520px,calc(100% - 32px));animation:toastDown .25s ease-out}
+.stock-toast.deficit{border-color:#e74c3c}
+@keyframes toastDown{from{opacity:0;transform:translate(-50%,-16px)}to{opacity:1;transform:translate(-50%,0)}}
+.stock-toast-content{flex:1;text-align:left}
+.stock-toast-title{font-weight:700;font-size:14px;color:#fff;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.stock-toast-body{font-size:12.5px;color:#f0e6d8;line-height:1.4}
+.stock-toast-body strong{color:#ffd580}
+.stock-toast.deficit .stock-toast-body strong{color:#ff9999}
+.stock-toast-actions{display:flex;gap:8px;margin-top:10px}
+.stock-toast-btn{border:none;background:var(--gold);color:#2b2118;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .12s}
+.stock-toast-btn:hover{background:var(--gold-deep);color:#fff}
+.stock-toast-close{border:none;background:none;color:#cfc2b2;font-size:20px;line-height:1;cursor:pointer;padding:0 4px}
+.stock-toast-close:hover{color:#fff}
+/* Kitchen stock alerts */
+.kitchen-stock-alert{display:inline-flex;align-items:center;padding:3px 8px;border-radius:6px;font-size:11.5px;font-weight:700;margin-left:6px;letter-spacing:.01em}
+.kitchen-stock-alert.badge-deficit{background:color-mix(in srgb,#e74c3c 20%,var(--surface));color:#e74c3c;border:1px solid color-mix(in srgb,#e74c3c 45%,var(--border))}
+.kitchen-stock-alert.badge-low{background:color-mix(in srgb,var(--gold) 20%,var(--surface));color:var(--gold-deep);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--border))}
+/* Auth Overlay */
+#authOverlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 12px 35px rgba(0,0,0,.08);width:min(380px,100%);padding:32px 24px;text-align:center}
+.auth-logo{font-family:'Fraunces',serif;font-size:25px;color:var(--accent-deep);margin-bottom:6px}
+.auth-logo span{color:var(--text)}
+.auth-subtitle{font-size:13px;color:var(--text-mute);margin-bottom:24px;line-height:1.4}
+.auth-field{text-align:left;margin-bottom:15px}
+.auth-field label{display:block;font-size:12px;font-weight:700;color:var(--text-soft);margin-bottom:5px}
+.auth-field input{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:10px;padding:11px 12px;font-size:14.5px;font-family:inherit}
+.auth-error{background:color-mix(in srgb,#C0392B 10%,var(--surface));border:1px solid #C0392B;color:#C0392B;font-size:12.5px;padding:10px 12px;border-radius:8px;margin-bottom:15px;text-align:left}
+.auth-submit{width:100%;border:none;background:var(--accent);color:#fff;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s}
+.auth-submit:hover{background:var(--accent-deep)}
+.auth-submit:disabled{opacity:.6;cursor:not-allowed}
+.auth-hint{margin-top:18px;font-size:11px;color:var(--text-mute);display:flex;align-items:center;justify-content:center;gap:6px}
 
 </style>
 </head>
 <body>
 
-<div id="pinOverlay">
-  <div class="pin-logo">Roti<span>Canai</span> Orders</div>
-  <div class="pin-subtitle">Enter your PIN to continue</div>
-  <div id="pinDots"><div class="pin-dot" id="d0"></div><div class="pin-dot" id="d1"></div><div class="pin-dot" id="d2"></div><div class="pin-dot" id="d3"></div></div>
-  <div id="pinKeypad">
-    <button class="pin-key" data-v="1">1</button><button class="pin-key" data-v="2">2</button><button class="pin-key" data-v="3">3</button>
-    <button class="pin-key" data-v="4">4</button><button class="pin-key" data-v="5">5</button><button class="pin-key" data-v="6">6</button>
-    <button class="pin-key" data-v="7">7</button><button class="pin-key" data-v="8">8</button><button class="pin-key" data-v="9">9</button>
-    <button class="pin-key del" data-v="del">&#9003;</button><button class="pin-key" data-v="0">0</button><div></div>
+<div id="authOverlay">
+  <div class="auth-card">
+    <div class="auth-logo">Roti<span>Canai</span> Orders</div>
+    <div class="auth-subtitle">Family Portal &bull; Sign in to access kitchen & orders</div>
+    <form id="authForm" novalidate>
+      <div class="auth-field">
+        <label for="authEmail">Family Username or Email</label>
+        <input type="text" id="authEmail" required placeholder="family (or family@roticanai.com)" autocomplete="username">
+      </div>
+      <div class="auth-field">
+        <label for="authPassword">Password</label>
+        <input type="password" id="authPassword" required placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div id="authError" class="auth-error" style="display:none"></div>
+      <button type="submit" class="auth-submit" id="authSubmitBtn">Sign in to Kitchen</button>
+    </form>
+    <div class="auth-hint">🔒 Protected by Firebase Authentication</div>
   </div>
-  <div id="pinError"></div>
 </div>
 
 <div id="confirmSheet">
@@ -291,22 +381,71 @@ textarea{resize:vertical;min-height:50px}
   </div>
 </div>
 
+<div id="inventorySheet">
+  <div class="sheet-scrim" id="invScrim"></div>
+  <div class="edit-box">
+    <h3 id="invSheetTitle">Add Inventory</h3>
+    <p id="invSheetSubtitle" style="font-size:13px;color:var(--text-mute);margin:-10px 0 16px;"></p>
+    
+    <label>Product</label>
+    <div class="radio-group" id="invProductGroup">
+      <label class="checked"><input type="radio" name="invProduct" value="signature" checked> Signature (RM8)</label>
+      <label><input type="radio" name="invProduct" value="beef"> Beef (RM14)</label>
+    </div>
+
+    <!-- For Production and Guest Quantity -->
+    <div id="invQtyField">
+      <label id="invQtyLabel">Number of Packs</label>
+      <input type="number" id="invQtyInput" min="1" step="1" value="10" placeholder="10">
+      <div class="quick-qty-chips" id="quickQtyChips">
+        <button type="button" class="quick-qty-btn" data-add="5">+5</button>
+        <button type="button" class="quick-qty-btn" data-add="10">+10</button>
+        <button type="button" class="quick-qty-btn" data-add="20">+20</button>
+        <button type="button" class="quick-qty-btn" data-add="50">+50</button>
+      </div>
+    </div>
+
+    <!-- For Freezer Recount -->
+    <div id="invRecountField" style="display:none">
+      <div class="recount-info-box">
+        <div>System Expected: <b id="invExpectedVal">0 packs</b></div>
+      </div>
+      <label>Physical Count (What you actually see in freezer)</label>
+      <input type="number" id="invPhysicalCountInput" min="0" step="1" placeholder="0">
+      <div id="invDiffNotice" class="inv-diff-notice" style="display:none"></div>
+    </div>
+
+    <label>Notes (optional)</label>
+    <input type="text" id="invNoteInput" placeholder="e.g. Morning batch / Relative visit">
+
+    <div class="edit-save-btns">
+      <button type="button" class="edit-cancel" id="invCancelBtn">Cancel</button>
+      <button type="button" class="edit-save" id="invSaveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="app" id="mainApp" style="display:none">
 <header>
   <div class="header-main">
     <div class="brand"><h1>Roti<span>Canai</span> Orders</h1></div>
-    <span class="conn" id="connStatus"><span class="dot"></span><span id="connLabel">Connecting</span></span>
+    <div class="header-right">
+      <span class="conn" id="connStatus"><span class="dot"></span><span id="connLabel">Connecting</span></span>
+      <button class="btn-signout" id="btnSignOut" type="button" title="Sign out of Family Portal">&#x21AA; Sign Out</button>
+    </div>
   </div>
   <div id="actionBar">
     <button id="actionBarClose">&#10005;</button>
     <span id="actionBarLabel">1 selected</span>
     <button class="action-btn edit" id="actionEditBtn">&#9998; Edit</button>
     <button class="action-btn del" id="actionDeleteBtn">&#128465; Delete</button>
+    <button class="action-btn undo" id="actionUndoBtn">&#8630; Undo</button>
   </div>
   <div class="tabs-wrap">
     <div class="tabs" role="tablist">
       <button class="tab active" id="tabEntry">Entry</button>
       <button class="tab" id="tabKitchen">Kitchen</button>
+      <button class="tab" id="tabInventory">Inventory</button>
       <button class="tab" id="tabTimeline">Timeline</button>
       <button class="tab" id="tabSales">Sales</button>
     </div>
@@ -366,6 +505,87 @@ textarea{resize:vertical;min-height:50px}
     </div>
   </section>
 
+  <!-- Inventory -->
+  <section id="inventoryView">
+    <div class="inv-header">
+      <div>
+        <h2>Freezer Inventory</h2>
+        <p>Track production batches, guest packs & physical stock</p>
+      </div>
+      <div class="inv-quick-btns">
+        <button class="inv-btn prod-btn" id="btnAddProduction">+ Add Made</button>
+        <button class="inv-btn guest-btn" id="btnLogGuest">🎁 Give to Guest</button>
+        <button class="inv-btn audit-btn" id="btnAuditCount">📋 Recount Freezer</button>
+      </div>
+    </div>
+
+    <!-- Product Stock Cards -->
+    <div class="inv-grid">
+      <!-- Signature Card -->
+      <div class="inv-card">
+        <div class="inv-card-header">
+          <span class="inv-card-title">Frozen Roti Canai (Signature)</span>
+          <span class="inv-badge">5 pcs / pack</span>
+        </div>
+        <div class="inv-stock-main">
+          <div class="inv-stock-val" id="invSigStock">0</div>
+          <div class="inv-stock-label">Packs in Freezer</div>
+        </div>
+        <div class="inv-metrics">
+          <div class="inv-metric">
+            <span class="im-label">Total Made</span>
+            <span class="im-val" id="invSigMade">0</span>
+          </div>
+          <div class="inv-metric">
+            <span class="im-label">Customer Orders</span>
+            <span class="im-val" id="invSigSold">0</span>
+          </div>
+          <div class="inv-metric highlight-guest">
+            <span class="im-label">Guest Packs</span>
+            <span class="im-val" id="invSigGuest">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Beef Card -->
+      <div class="inv-card">
+        <div class="inv-card-header">
+          <span class="inv-card-title">Frozen Roti Canai Beef</span>
+          <span class="inv-badge">2 pcs / pack</span>
+        </div>
+        <div class="inv-stock-main">
+          <div class="inv-stock-val" id="invBeefStock">0</div>
+          <div class="inv-stock-label">Packs in Freezer</div>
+        </div>
+        <div class="inv-metrics">
+          <div class="inv-metric">
+            <span class="im-label">Total Made</span>
+            <span class="im-val" id="invBeefMade">0</span>
+          </div>
+          <div class="inv-metric">
+            <span class="im-label">Customer Orders</span>
+            <span class="im-val" id="invBeefSold">0</span>
+          </div>
+          <div class="inv-metric highlight-guest">
+            <span class="im-label">Guest Packs</span>
+            <span class="im-val" id="invBeefGuest">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Inventory Activity -->
+    <div class="inv-logs-card">
+      <div class="inv-logs-header">
+        <h3>Recent Inventory Activity</h3>
+        <span class="inv-logs-sub">Production batches, guest gifts & recount adjustments</span>
+      </div>
+      <div class="inv-logs-list" id="invLogsList">
+        <div class="empty"><div class="icon">&#128230;</div>No inventory activity recorded yet.</div>
+      </div>
+    </div>
+  </section>
+
   <!-- Timeline (horizontal, zoomable) -->
   <section id="timelineView">
     <!-- Top controls bar -->
@@ -419,15 +639,34 @@ textarea{resize:vertical;min-height:50px}
     <div class="chart-card"><h3>Monthly Revenue Trend by Product</h3><div class="chart-wrap"><canvas id="chart2"></canvas></div></div>
   </section>
 </main>
+<div id="undoToast" class="undo-toast" style="display:none">
+  <span class="undo-msg" id="undoMsg">Order updated</span>
+  <button type="button" class="undo-action-btn" id="undoToastBtn">&#8630; Undo</button>
+  <button type="button" class="undo-close-btn" id="undoCloseBtn" aria-label="Dismiss">&times;</button>
+</div>
+<div id="stockToast" class="stock-toast" style="display:none">
+  <div class="stock-toast-content">
+    <div class="stock-toast-title" id="stockToastTitle">&#9888;&#65039; Low Stock Alert</div>
+    <div class="stock-toast-body" id="stockToastBody"></div>
+    <div class="stock-toast-actions">
+      <button type="button" class="stock-toast-btn" id="stockToastAction">Go to Inventory &rarr;</button>
+    </div>
+  </div>
+  <button type="button" class="stock-toast-close" id="stockToastClose" aria-label="Dismiss">&times;</button>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-auth.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script>
 
 firebase.initializeApp({apiKey:"AIzaSyAi3neeFwR96ORrWxeRzuWnA7yYFtNl6mU",authDomain:"roti-canai-project.firebaseapp.com",projectId:"roti-canai-project",storageBucket:"roti-canai-project.firebasestorage.app",messagingSenderId:"416380583136",appId:"1:416380583136:web:fdf2c2a8f6e7049273a485"});
-const db=firebase.firestore(),ordersRef=db.collection("orders");
+const auth=firebase.auth(),db=firebase.firestore(),ordersRef=db.collection("orders");
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+const invRef=db.collection("inventory_logs");
+let allInvLogs=[];
 const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14}};
 const STATUS_FLOW=["new","preparing","packed","done"],STATUS_LABEL={new:"New",preparing:"Preparing",packed:"Packed"};
 let qty={signature:0,beef:0},activeFilter="all",allOrders=[],selectedId=null;
@@ -455,31 +694,362 @@ function fmtHHMM(d){return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"
 function setConn(ok){document.getElementById("connStatus").classList.toggle("offline",!ok);document.getElementById("connLabel").textContent=ok?"Live":"Reconnecting";}
 
 /* ── Tabs ── */
-const TAB_MAP={entry:"entryView",kitchen:"kitchenView",timeline:"timelineView",sales:"salesView"};
+const TAB_MAP={entry:"entryView",kitchen:"kitchenView",inventory:"inventoryView",timeline:"timelineView",sales:"salesView"};
 document.getElementById("tabEntry").addEventListener("click",()=>switchTab("entry"));
 document.getElementById("tabKitchen").addEventListener("click",()=>switchTab("kitchen"));
+document.getElementById("tabInventory").addEventListener("click",()=>{switchTab("inventory");renderInventory();});
 document.getElementById("tabTimeline").addEventListener("click",()=>{switchTab("timeline");renderTimeline();});
 document.getElementById("tabSales").addEventListener("click",()=>{switchTab("sales");renderSales();});
 function switchTab(w){Object.keys(TAB_MAP).forEach(k=>{document.getElementById("tab"+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle("active",k===w);document.getElementById(TAB_MAP[k]).classList.toggle("active",k===w);});clearSelection();}
 
+/* ── Undo Management ── */
+let lastUndoAction=null,undoTimer=null;
+
+function setUndoAction(action){
+  lastUndoAction=action;
+  if(undoTimer)clearTimeout(undoTimer);
+  const toast=document.getElementById("undoToast");
+  const msg=document.getElementById("undoMsg");
+  const undoBarBtn=document.getElementById("actionUndoBtn");
+  if(toast&&msg){
+    msg.textContent=(action.type==="delete"?"Deleted ":"Edited ")+esc(action.name);
+    toast.style.display="flex";
+    undoTimer=setTimeout(hideUndo,25000);
+  }
+  if(undoBarBtn){
+    undoBarBtn.style.display=(selectedId&&selectedId===action.id)?"inline-block":"none";
+  }
+}
+
+function hideUndo(){
+  const toast=document.getElementById("undoToast");
+  if(toast)toast.style.display="none";
+  if(undoTimer)clearTimeout(undoTimer);
+}
+
+document.getElementById("undoCloseBtn").addEventListener("click",hideUndo);
+
+async function requestUndo(){
+  if(!lastUndoAction)return;
+  const action=lastUndoAction;
+  let title="",sub="";
+  if(action.type==="delete"){
+    title="Restore deleted order?";
+    sub="Re-add the deleted order for "+esc(action.name)+"?";
+  }else{
+    title="Undo changes to this order?";
+    sub="Revert order for "+esc(action.name)+" back to previous details?";
+  }
+  const ok=await showConfirm(title,sub);
+  if(!ok)return;
+
+  try{
+    const restoredData={...action.data};
+    const orderId=action.id;
+    delete restoredData.id;
+    await ordersRef.doc(orderId).set(restoredData);
+    hideUndo();
+    lastUndoAction=null;
+    const undoBarBtn=document.getElementById("actionUndoBtn");
+    if(undoBarBtn)undoBarBtn.style.display="none";
+  }catch(err){
+    console.error("Undo error:",err);
+    alert("Could not undo: "+(err.message||"Check database connection."));
+  }
+}
+
+document.getElementById("undoToastBtn").addEventListener("click",requestUndo);
+document.getElementById("actionUndoBtn").addEventListener("click",requestUndo);
+
 /* ── Selection ── */
-function setSelected(id){selectedId=id;document.querySelectorAll(".order,.k-card").forEach(el=>el.classList.toggle("selected",el.dataset.id===id));const bar=document.getElementById("actionBar");id?bar.classList.add("visible"):bar.classList.remove("visible");}
+function setSelected(id){
+  selectedId=id;
+  document.querySelectorAll(".order,.k-card").forEach(el=>el.classList.toggle("selected",el.dataset.id===id));
+  const bar=document.getElementById("actionBar");
+  const undoBarBtn=document.getElementById("actionUndoBtn");
+  if(id){
+    bar.classList.add("visible");
+    if(undoBarBtn){
+      undoBarBtn.style.display=(lastUndoAction&&lastUndoAction.id===id)?"inline-block":"none";
+    }
+  }else{
+    bar.classList.remove("visible");
+    if(undoBarBtn)undoBarBtn.style.display="none";
+  }
+}
 function clearSelection(){setSelected(null);}
 document.getElementById("actionBarClose").addEventListener("click",clearSelection);
 document.getElementById("actionEditBtn").addEventListener("click",()=>{const o=allOrders.find(x=>x.id===selectedId);if(o)openEdit(o);});
-document.getElementById("actionDeleteBtn").addEventListener("click",async()=>{const o=allOrders.find(x=>x.id===selectedId);if(!o)return;const ok=await showConfirm("Delete this order?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "),true);if(!ok)return;try{await ordersRef.doc(o.id).delete();clearSelection();}catch{alert("Could not delete.");}});
-document.addEventListener("click",e=>{if(!e.target.closest(".order,.k-card,#actionBar,#editSheet,#confirmSheet"))clearSelection();});
+document.getElementById("actionDeleteBtn").addEventListener("click",async()=>{
+  const o=allOrders.find(x=>x.id===selectedId);
+  if(!o)return;
+  const ok=await showConfirm("Delete this order?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "),true);
+  if(!ok)return;
+  const backup={...o};
+  try{
+    await ordersRef.doc(o.id).delete();
+    clearSelection();
+    setUndoAction({type:"delete",id:backup.id,name:backup.customerName||"Order",data:backup});
+  }catch{alert("Could not delete.");}
+});
+document.addEventListener("click",e=>{if(!e.target.closest(".order,.k-card,#actionBar,#editSheet,#confirmSheet,#undoToast"))clearSelection();});
 
 /* ── Filter chips ── */
 document.getElementById("filterBar").addEventListener("click",ev=>{const chip=ev.target.closest(".chip");if(!chip)return;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");activeFilter=chip.dataset.filter;applyColumnVisibility();clearSelection();});
 function applyColumnVisibility(){document.querySelectorAll(".kanban-col").forEach(col=>{col.classList.toggle("hidden",activeFilter!=="all"&&col.dataset.status!==activeFilter);});}
 
-/* ── Notifications ── */
-document.getElementById("notifBtn").addEventListener("click",async()=>{if(!("Notification" in window)){alert("Notifications not supported.");return;}if(Notification.permission==="denied"){alert("Notifications blocked. Please allow in browser settings.");return;}let ok=Notification.permission==="granted";if(!ok){const p=await Notification.requestPermission();ok=p==="granted";}if(!ok)return;sendPrepReminder(allOrders);});
-function sendPrepReminder(orders){const today=new Date().toDateString();const pending=orders.filter(o=>{if(o.status==="done")return false;if(!o.createdAt)return true;return getOrderDate(o).toDateString()===today;});const t=computeTotals(pending);const entries=Object.entries(t);const msg=entries.length?entries.map(([n,q])=>q+"x "+n).join(", "):"No pending orders today";try{new Notification("RotiCanai Prep \uD83E\uDD53",{body:"Pending: "+msg});}catch{alert("Prep reminder:\n"+msg);}if(!("Notification" in window))document.getElementById("notifBtn").style.display="none";}
-let prevOrderCount=0;
-function checkNewOrders(orders){if(orders.length>prevOrderCount&&prevOrderCount>0&&Notification.permission==="granted"){const n=orders[0];if(n)try{new Notification("New order! \uD83E\uDD53",{body:esc(n.customerName)+" - "+n.items.map(i=>i.qty+"x "+i.name).join(", ")});}catch{}}prevOrderCount=orders.length;}
-function updateKitchenSummary(orders){const today=new Date().toDateString();const pending=orders.filter(o=>{if(o.status==="done")return false;if(!o.createdAt)return true;return getOrderDate(o).toDateString()===today;});const t=computeTotals(pending);const entries=Object.entries(t);const el=document.getElementById("summaryItems");if(!entries.length){el.innerHTML='<span class="kitchen-summary-empty">No pending orders today</span>';return;}el.innerHTML=entries.map(([n,q])=>'<span class="kitchen-summary-item">'+q+"x "+n+'</span>').join("");}
+/* ── Notifications & Stock Reminders ── */
+const LOW_STOCK_THRESHOLD = 5;
+const SAFE_STOCK_TARGET = 20;
+
+function getInventoryStockAlert() {
+  const totals = computeInventoryTotals();
+  const alerts = [];
+  const products = [
+    { id: "signature", name: "Signature" },
+    { id: "beef", name: "Beef" }
+  ];
+
+  products.forEach(p => {
+    const stock = totals[p.id].stock;
+    if (stock < 0) {
+      const deficit = Math.abs(stock);
+      const safeToMake = deficit + SAFE_STOCK_TARGET;
+      alerts.push({
+        productId: p.id,
+        name: p.name,
+        stock,
+        isDeficit: true,
+        neededNow: deficit,
+        suggestSafe: safeToMake,
+        msg: `${p.name}: Deficit! Need ${deficit} pack${deficit > 1 ? 's' : ''} immediately for order. Suggest cooking ${safeToMake} packs (${deficit} for orders + ${SAFE_STOCK_TARGET} safe storage).`
+      });
+    } else if (stock <= LOW_STOCK_THRESHOLD) {
+      const toMake = SAFE_STOCK_TARGET - stock;
+      alerts.push({
+        productId: p.id,
+        name: p.name,
+        stock,
+        isDeficit: false,
+        neededNow: 0,
+        suggestSafe: toMake,
+        msg: `${p.name}: Low stock! Only ${stock} pack${stock !== 1 ? 's' : ''} left in freezer (threshold: ${LOW_STOCK_THRESHOLD}). Suggest cooking ${toMake} packs to reach ${SAFE_STOCK_TARGET} safe packs.`
+      });
+    }
+  });
+
+  return alerts;
+}
+
+let stockToastTimer = null;
+function showStockAlertToast(title, alerts, orderSummary) {
+  const toast = document.getElementById("stockToast");
+  const titleEl = document.getElementById("stockToastTitle");
+  const bodyEl = document.getElementById("stockToastBody");
+  if (!toast || !titleEl || !bodyEl) return;
+
+  const hasDeficit = alerts.some(a => a.isDeficit);
+  toast.className = "stock-toast" + (hasDeficit ? " deficit" : "");
+  titleEl.innerHTML = (hasDeficit ? "&#128680; " : "&#9888;&#65039; ") + esc(title);
+
+  const alertItems = alerts.map(a => {
+    if (a.isDeficit) {
+      return `<div style="margin-top:4px;">&bull; <strong>${esc(a.name)}:</strong> Need <strong>${a.neededNow} pack${a.neededNow > 1 ? 's' : ''}</strong> immediately! Suggest cooking <strong>${a.suggestSafe} packs</strong> (${a.neededNow} for orders + ${SAFE_STOCK_TARGET} buffer).</div>`;
+    } else {
+      return `<div style="margin-top:4px;">&bull; <strong>${esc(a.name)}:</strong> Only <strong>${a.stock} pack${a.stock !== 1 ? 's' : ''} left</strong> in freezer (threshold: ${LOW_STOCK_THRESHOLD}). Suggest cooking <strong>${a.suggestSafe} packs</strong> to reach safe buffer.</div>`;
+    }
+  }).join("");
+
+  bodyEl.innerHTML = `<div style="margin-bottom:6px;font-size:12px;opacity:.9;">Order: ${esc(orderSummary)}</div>${alertItems}`;
+  toast.style.display = "flex";
+
+  if (stockToastTimer) clearTimeout(stockToastTimer);
+  stockToastTimer = setTimeout(() => {
+    toast.style.display = "none";
+  }, 20000);
+}
+
+document.getElementById("stockToastClose").addEventListener("click", () => {
+  const toast = document.getElementById("stockToast");
+  if (toast) toast.style.display = "none";
+  if (stockToastTimer) clearTimeout(stockToastTimer);
+});
+
+document.getElementById("stockToastAction").addEventListener("click", () => {
+  const toast = document.getElementById("stockToast");
+  if (toast) toast.style.display = "none";
+  if (stockToastTimer) clearTimeout(stockToastTimer);
+  switchTab("inventory");
+  renderInventory();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+function updateNotifBtnState() {
+  const btn = document.getElementById("notifBtn");
+  if (!btn || !("Notification" in window)) return;
+  if (Notification.permission === "granted") {
+    btn.innerHTML = "&#128276; Remind";
+    btn.title = "Send Kitchen Prep & Stock Reminder";
+  } else if (Notification.permission === "denied") {
+    btn.innerHTML = "&#128277; Alerts Off";
+    btn.title = "Notifications blocked in browser settings";
+  } else {
+    btn.innerHTML = "&#128276; Enable Alerts";
+    btn.title = "Tap to enable phone notifications for new orders & low stock";
+  }
+}
+
+document.getElementById("notifBtn").addEventListener("click", async () => {
+  if (!("Notification" in window)) {
+    alert("Notifications not supported in this browser.");
+    return;
+  }
+  if (Notification.permission === "denied") {
+    alert("Notifications are blocked in your browser settings. Please allow notifications for this site.");
+    return;
+  }
+  let ok = Notification.permission === "granted";
+  if (!ok) {
+    const p = await Notification.requestPermission();
+    ok = p === "granted";
+    updateNotifBtnState();
+  }
+  if (!ok) return;
+  sendPrepReminder(allOrders);
+});
+
+function sendPrepReminder(orders) {
+  const today = new Date().toDateString();
+  const pending = orders.filter(o => {
+    if (o.status === "done") return false;
+    if (!o.createdAt) return true;
+    return getOrderDate(o).toDateString() === today;
+  });
+  const t = computeTotals(pending);
+  const entries = Object.entries(t);
+  const prepMsg = entries.length ? entries.map(([n, q]) => q + "x " + n).join(", ") : "No pending orders today";
+
+  const stockAlerts = getInventoryStockAlert();
+  let title = "RotiCanai Kitchen Prep \uD83E\uDD53";
+  let body = "Today pending: " + prepMsg;
+
+  if (stockAlerts.length > 0) {
+    const hasDeficit = stockAlerts.some(a => a.isDeficit);
+    title = hasDeficit ? "\uD83D\uDEA8 Stock Deficit Alert! (Prep Needed)" : "\u26A0\uFE0F Low Stock Alert (\u22645 packs left)";
+    body += "\n\n" + stockAlerts.map(a => a.msg).join("\n");
+  } else {
+    const totals = computeInventoryTotals();
+    body += `\n\nFreezer stock healthy: ${totals.signature.stock} Signature, ${totals.beef.stock} Beef.`;
+  }
+
+  try {
+    new Notification(title, {
+      body: body,
+      requireInteraction: true
+    });
+  } catch (e) {
+    alert(title + "\n\n" + body);
+  }
+
+  if (stockAlerts.length > 0) {
+    showStockAlertToast(title, stockAlerts, "Kitchen Check");
+  }
+}
+
+let prevOrderCount = 0;
+function checkNewOrders(orders) {
+  if (orders.length > prevOrderCount && prevOrderCount > 0) {
+    const newCount = orders.length - prevOrderCount;
+    const newestOrders = orders.slice(0, newCount);
+    const firstOrder = newestOrders[0];
+    const orderItemsSummary = firstOrder && firstOrder.items
+      ? firstOrder.items.map(i => `${i.qty}x ${i.name}`).join(", ")
+      : "";
+    const customerInfo = firstOrder ? `${esc(firstOrder.customerName)} (${orderItemsSummary})` : "New order";
+
+    // 1. Check current inventory stock levels against low threshold (5 packs)
+    const stockAlerts = getInventoryStockAlert();
+
+    if (stockAlerts.length > 0) {
+      // Stock is low (<= 5) or in deficit (< 0)
+      const hasDeficit = stockAlerts.some(a => a.isDeficit);
+      const title = hasDeficit
+        ? "\uD83D\uDEA8 Stock Deficit Alert! Cook Needed"
+        : `\u26A0\uFE0F Low Stock Alert (\u2264${LOW_STOCK_THRESHOLD} packs left)`;
+
+      const alertLines = stockAlerts.map(a => {
+        if (a.isDeficit) {
+          return `\u2022 ${a.name}: Deficit! Need ${a.neededNow} pack${a.neededNow > 1 ? 's' : ''} immediately for order. Suggest cooking ${a.suggestSafe} packs (${a.neededNow} for orders + ${SAFE_STOCK_TARGET} safe buffer).`;
+        } else {
+          return `\u2022 ${a.name}: Low stock! Only ${a.stock} pack${a.stock !== 1 ? 's' : ''} left in freezer. Suggest cooking ${a.suggestSafe} packs to reach ${SAFE_STOCK_TARGET} safe packs.`;
+        }
+      });
+
+      const notifBody = `Order: ${customerInfo}\n${alertLines.join('\n')}`;
+
+      // A. Phone/Browser Notification Popup
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          new Notification(title, {
+            body: notifBody,
+            requireInteraction: true
+          });
+        } catch (e) {
+          console.warn("Notification popup error:", e);
+        }
+      }
+
+      // B. Mobile Vibration
+      if ("vibrate" in navigator) {
+        try { navigator.vibrate([250, 100, 250, 100, 250]); } catch (e) {}
+      }
+
+      // C. Floating In-App Toast
+      showStockAlertToast(title, stockAlerts, customerInfo);
+
+    } else {
+      // Stock is healthy (> 5 packs)
+      if ("Notification" in window && Notification.permission === "granted" && firstOrder) {
+        try {
+          new Notification("New order! \uD83E\uDD53", {
+            body: `${esc(firstOrder.customerName)} - ${orderItemsSummary}`
+          });
+        } catch (e) {}
+      }
+    }
+  }
+  prevOrderCount = orders.length;
+}
+
+function updateKitchenSummary(orders) {
+  const today = new Date().toDateString();
+  const pending = orders.filter(o => {
+    if (o.status === "done") return false;
+    if (!o.createdAt) return true;
+    return getOrderDate(o).toDateString() === today;
+  });
+  const t = computeTotals(pending);
+  const entries = Object.entries(t);
+  const el = document.getElementById("summaryItems");
+  const stockAlerts = getInventoryStockAlert();
+
+  let alertBadges = "";
+  if (stockAlerts.length > 0) {
+    alertBadges = stockAlerts.map(a => {
+      const cls = a.isDeficit ? "badge-deficit" : "badge-low";
+      const text = a.isDeficit
+        ? `\uD83D\uDEA8 ${a.name}: -${a.neededNow} deficit (Cook ${a.suggestSafe})`
+        : `\u26A0\uFE0F ${a.name}: ${a.stock} left (Cook ${a.suggestSafe})`;
+      return `<span class="kitchen-stock-alert ${cls}" title="${esc(a.msg)}">${text}</span>`;
+    }).join(" ");
+  }
+
+  if (!entries.length) {
+    el.innerHTML = '<span class="kitchen-summary-empty">No pending orders today</span>' + (alertBadges ? " " + alertBadges : "");
+    return;
+  }
+  el.innerHTML = entries.map(([n, q]) => '<span class="kitchen-summary-item">' + q + "x " + n + '</span>').join("") + (alertBadges ? " " + alertBadges : "");
+}
 
 /* ── Entry form ── */
 document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});});
@@ -521,7 +1091,7 @@ function openEdit(order){editOrderId=order.id;editQty={signature:0,beef:0};(orde
 function closeEdit(){document.getElementById("editSheet").classList.remove("open");editOrderId=null;}
 document.getElementById("editCancel").addEventListener("click",closeEdit);
 document.getElementById("editScrim").addEventListener("click",closeEdit);
-document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,orderDate=document.getElementById("editOrderDate").value,notes=document.getElementById("editNotes").value.trim(),deliveryCost=fulfil==="delivery"?getEditDeliveryCost():0,paymentStatus=document.querySelector('input[name="editPayment"]:checked').value,items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,paymentStatus,orderDate:orderDate||null,pickupTime:pickup||null});closeEdit();clearSelection();}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
+document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const o=allOrders.find(x=>x.id===editOrderId);const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,orderDate=document.getElementById("editOrderDate").value,notes=document.getElementById("editNotes").value.trim(),deliveryCost=fulfil==="delivery"?getEditDeliveryCost():0,paymentStatus=document.querySelector('input[name="editPayment"]:checked').value,items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const backup=o?{...o}:null;const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,paymentStatus,orderDate:orderDate||null,pickupTime:pickup||null});closeEdit();clearSelection();if(backup){setUndoAction({type:"edit",id:backup.id,name:backup.customerName||"Order",data:backup});}}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
 
 /* ── Entry list ── */
 function renderEntryList(orders){const list=document.getElementById("entryList");if(!orders.length){list.innerHTML='<div class="empty"><div class="icon">&#129379;</div>No orders yet today.</div>';return;}list.innerHTML=orders.slice(0,30).map(o=>{const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o),isSel=o.id===selectedId,isUnpaid=o.paymentStatus==="unpaid";return'<div class="order'+(isSel?" selected":"")+'" data-id="'+o.id+'"><div class="order-header"><div><div class="order-name">'+esc(o.customerName)+'</div><div class="order-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+'</div><div class="order-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="pickup-time">Pickup: '+pk+'</span>':'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><span class="badge '+bdgClass(o.status)+'">'+bdgLabel(o)+'</span>'+(isUnpaid?'<span class="badge badge-unpaid">Unpaid</span>':'')+'</div></div><div class="order-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.notes?'<div class="order-note">'+esc(o.notes)+'</div>':'')+((al||ul||isUnpaid)?'<div class="order-actions">'+(al?'<button class="btn-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(isUnpaid?'<button class="btn-paid paid-btn" data-id="'+o.id+'">Mark as paid</button>':'')+(ul?'<button class="btn-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')+'</div>';}).join("");list.querySelectorAll(".order").forEach(card=>{card.addEventListener("click",e=>{if(e.target.closest(".adv-btn,.undo-btn,.paid-btn"))return;setSelected(card.dataset.id===selectedId?null:card.dataset.id);});});wireButtons(list,orders);}
@@ -734,38 +1304,503 @@ function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const 
 function renderChart1(orders){const now=new Date();let labels=[],data=[],title="";if(salesPeriod==="today"){title="Revenue by Hour (Today)";const hours={};orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const h=d.getHours();hours[h]=(hours[h]||0)+(o.total||0);});for(let h=6;h<=22;h++){labels.push((h%12===0?12:h%12)+""+(h<12?"am":"pm"));data.push(hours[h]||0);};}else if(salesPeriod==="week"){title="Revenue by Day (This Week)";const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const dt=[0,0,0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const idx=Math.floor((d-ws)/86400000);if(idx>=0&&idx<7)dt[idx]+=(o.total||0);});labels=days;data=dt;}else if(salesPeriod==="month"){title="Revenue by Week (Last 8 Weeks)";const curWeekStart=new Date(now);curWeekStart.setDate(now.getDate()-now.getDay());curWeekStart.setHours(0,0,0,0);const wkLabels=[],wkData=[];for(let i=7;i>=0;i--){const wkStart=new Date(curWeekStart);wkStart.setDate(curWeekStart.getDate()-i*7);const wkEnd=new Date(wkStart);wkEnd.setDate(wkStart.getDate()+7);wkLabels.push(wkStart.toLocaleDateString("en-MY",{day:"numeric",month:"short"}));let rev=0;allOrders.forEach(o=>{const d=getOrderDate(o);if(d&&d>=wkStart&&d<wkEnd)rev+=(o.total||0);});wkData.push(rev);}labels=wkLabels;data=wkData;}else{title="Revenue by Day (Last 30 Days)";const dayMap={};for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);dayMap[d.toISOString().slice(0,10)]=0;}orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const k=d.toISOString().slice(0,10);if(k in dayMap)dayMap[k]+=(o.total||0);});const ent=Object.entries(dayMap).sort(([a],[b])=>a.localeCompare(b));labels=ent.map(([k])=>k.slice(5).replace("-","/"));data=ent.map(([,v])=>v);}document.getElementById("chart1Title").textContent=title;const ctx=document.getElementById("chart1").getContext("2d");if(chart1Instance)chart1Instance.destroy();chart1Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"RM"+c.parsed.y}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
 function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],sigData=[],beefData=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});let sig=0,beef=0;mo.forEach(o=>(o.items||[]).forEach(it=>{if(it.id==="signature")sig+=it.price*it.qty;else if(it.id==="beef")beef+=it.price*it.qty;}));sigData.push(sig);beefData.push(beef);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Signature (RM)",data:sigData,backgroundColor:"rgba(217,162,75,0.85)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:4,stack:"rev"},{label:"Beef (RM)",data:beefData,backgroundColor:"rgba(199,64,31,0.85)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:4,stack:"rev"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.label+": RM"+c.parsed.y}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
 
-/* ── Live listener ── */
-ordersRef.orderBy("createdAt","desc").limit(500).onSnapshot(
-  snap=>{
-    setConn(true);allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
-    customerDirectory=buildCustomerDirectory();
-    checkNewOrders(allOrders);renderEntryList(allOrders);renderKanban(allOrders);updateKitchenSummary(allOrders);
-    if(document.getElementById("timelineView").classList.contains("active"))renderTimeline();
-    if(document.getElementById("salesView").classList.contains("active"))renderSales();
-  },
-  ()=>setConn(false)
-);
-window.addEventListener("online",()=>setConn(true));
-window.addEventListener("offline",()=>setConn(false));
+/* ════════════════════════════════════════
+   INVENTORY TRACKING (Production, Guest & Freezer Recount)
+   ════════════════════════════════════════ */
+let currentInvMode = "production";
 
-</script>
-<script>
+function computeInventoryTotals() {
+  const totals = {
+    signature: { made: 0, sold: 0, guest: 0, stock: 0 },
+    beef: { made: 0, sold: 0, guest: 0, stock: 0 }
+  };
 
-(function(){
-  const C="6768",K="rc_unlocked";
-  function unlock(){document.getElementById("pinOverlay").style.display="none";document.getElementById("mainApp").style.display="";}
-  if(localStorage.getItem(K)==="1"){unlock();return;}
-  let e="";
-  function dots(){for(let i=0;i<4;i++)document.getElementById("d"+i).classList.toggle("filled",i<e.length);}
-  function shake(){const el=document.getElementById("pinOverlay");[12,-10,8,-6,4,0].reduce((p,x)=>p.then(()=>new Promise(r=>{el.style.transform="translateX("+x+"px)";setTimeout(r,50);})),Promise.resolve()).then(()=>el.style.transform="");}
-  document.getElementById("pinKeypad").addEventListener("click",function(ev){
-    const key=ev.target.closest(".pin-key");if(!key)return;
-    const v=key.dataset.v,err=document.getElementById("pinError");
-    if(v==="del"){e=e.slice(0,-1);err.textContent="";}else{if(e.length>=4)return;e+=v;}
-    dots();
-    if(e.length===4){if(e===C){localStorage.setItem(K,"1");unlock();}else{err.textContent="Wrong PIN. Try again.";shake();e="";dots();}}
+  // 1. Calculate customer orders (all confirmed/active orders in system)
+  allOrders.forEach(o => {
+    (o.items || []).forEach(i => {
+      const isSig = i.id === "signature" || (i.name && i.name.toLowerCase().includes("signature"));
+      const isBf = i.id === "beef" || (i.name && i.name.toLowerCase().includes("beef"));
+      const q = Number(i.qty) || 0;
+      if (isSig) totals.signature.sold += q;
+      if (isBf) totals.beef.sold += q;
+    });
   });
-})();
+
+  // 2. Calculate inventory logs (production batches, guest packs, and recount adjustments)
+  allInvLogs.forEach(l => {
+    const prod = l.product === "beef" ? "beef" : "signature";
+    const q = Number(l.qty) || 0;
+    if (l.type === "production" || l.tag === "Production") {
+      totals[prod].made += q;
+    } else if (l.type === "guest" || l.tag === "Guest") {
+      totals[prod].guest += q;
+    }
+  });
+
+  // 3. Expected Freezer Stock = Total Made - Customer Orders - Guest Gifts
+  totals.signature.stock = totals.signature.made - totals.signature.sold - totals.signature.guest;
+  totals.beef.stock = totals.beef.made - totals.beef.sold - totals.beef.guest;
+
+  return totals;
+}
+
+function renderInventory() {
+  const totals = computeInventoryTotals();
+
+  const sigStockEl = document.getElementById("invSigStock");
+  if (sigStockEl) {
+    sigStockEl.textContent = totals.signature.stock;
+    document.getElementById("invSigMade").textContent = totals.signature.made;
+    document.getElementById("invSigSold").textContent = totals.signature.sold;
+    document.getElementById("invSigGuest").textContent = totals.signature.guest;
+  }
+
+  const beefStockEl = document.getElementById("invBeefStock");
+  if (beefStockEl) {
+    beefStockEl.textContent = totals.beef.stock;
+    document.getElementById("invBeefMade").textContent = totals.beef.made;
+    document.getElementById("invBeefSold").textContent = totals.beef.sold;
+    document.getElementById("invBeefGuest").textContent = totals.beef.guest;
+  }
+
+  // Render recent activity logs
+  const listEl = document.getElementById("invLogsList");
+  if (listEl) {
+    if (!allInvLogs.length) {
+      listEl.innerHTML = '<div class="empty"><div class="icon">&#128230;</div>No inventory activity recorded yet.</div>';
+    } else {
+      listEl.innerHTML = allInvLogs.slice(0, 50).map(l => {
+        const isBeef = l.product === "beef";
+        const prodName = isBeef ? "Beef" : "Signature";
+        const isGuest = l.type === "guest" || l.tag === "Guest";
+        const isProd = l.type === "production" || l.tag === "Production";
+        const tagClass = isGuest ? "tag-guest" : (isProd ? "tag-production" : "tag-recount");
+        const tagLabel = l.tag || (isGuest ? "Guest" : (isProd ? "Production" : "Recount"));
+        const isPos = isProd;
+        const sign = isPos ? "+" : (l.qty === 0 ? "" : "-");
+        const qtyClass = isPos ? "positive" : (l.qty === 0 ? "" : "negative");
+        const cr = fmtTime(l.createdAt) || "Just now";
+        const note = l.note || (isGuest ? "Free pack for guest" : (isProd ? "Production batch" : "Freezer recount"));
+
+        return `<div class="inv-log-item" data-id="${l.id}">`
+          + `<div class="inv-log-left">`
+          + `<span class="inv-tag ${tagClass}">${esc(tagLabel)}</span>`
+          + `<div class="inv-log-meta">`
+          + `<div class="inv-log-title">${esc(prodName)} &bull; ${esc(note)}</div>`
+          + `<div class="inv-log-sub">${cr}</div>`
+          + `</div>`
+          + `</div>`
+          + `<div style="display:flex;align-items:center;gap:12px;">`
+          + `<span class="inv-log-qty ${qtyClass}">${sign}${l.qty} pack${l.qty !== 1 ? 's' : ''}</span>`
+          + `<button type="button" class="inv-del-log-btn" data-id="${l.id}" title="Delete this entry" style="background:none;border:none;color:var(--text-mute);cursor:pointer;font-size:18px;line-height:1;padding:4px 6px;">&times;</button>`
+          + `</div>`
+          + `</div>`;
+      }).join("");
+
+      listEl.querySelectorAll(".inv-del-log-btn").forEach(btn => {
+        btn.addEventListener("click", async e => {
+          e.stopPropagation();
+          const id = btn.dataset.id;
+          const log = allInvLogs.find(x => x.id === id);
+          if (!log) return;
+          const prodName = log.product === "beef" ? "Beef" : "Signature";
+          const ok = await showConfirm("Delete inventory entry?", `${log.tag || log.type}: ${log.qty} packs of ${prodName}`, true);
+          if (!ok) return;
+          try {
+            await invRef.doc(id).delete();
+          } catch (err) {
+            alert("Could not delete entry: " + (err.message || "Check connection"));
+          }
+        });
+      });
+    }
+  }
+}
+
+function getSelectedInvProduct() {
+  const checked = document.querySelector('input[name="invProduct"]:checked');
+  return checked ? checked.value : "signature";
+}
+
+function updateRecountExpected() {
+  const prod = getSelectedInvProduct();
+  const totals = computeInventoryTotals();
+  const exp = totals[prod].stock;
+  const expEl = document.getElementById("invExpectedVal");
+  if (expEl) expEl.textContent = `${exp} pack${exp !== 1 ? 's' : ''}`;
+  updateRecountDiff();
+}
+
+function updateRecountDiff() {
+  const physInp = document.getElementById("invPhysicalCountInput");
+  const diffEl = document.getElementById("invDiffNotice");
+  if (!physInp || !diffEl) return;
+  const val = physInp.value.trim();
+  if (val === "") {
+    diffEl.style.display = "none";
+    return;
+  }
+  const phys = Number(val);
+  if (isNaN(phys) || phys < 0) {
+    diffEl.style.display = "none";
+    return;
+  }
+  const totals = computeInventoryTotals();
+  const exp = totals[getSelectedInvProduct()].stock;
+  const diff = phys - exp;
+
+  if (diff === 0) {
+    diffEl.style.display = "block";
+    diffEl.style.background = "color-mix(in srgb, var(--success) 18%, var(--surface))";
+    diffEl.style.borderColor = "var(--success)";
+    diffEl.style.color = "#286330";
+    diffEl.innerHTML = `✓ Physical count matches system record (<b>${phys} packs</b>).`;
+  } else if (diff < 0) {
+    const missing = Math.abs(diff);
+    diffEl.style.display = "block";
+    diffEl.style.background = "color-mix(in srgb, var(--gold) 18%, var(--surface))";
+    diffEl.style.borderColor = "var(--gold)";
+    diffEl.style.color = "var(--gold-deep)";
+    diffEl.innerHTML = `⚠️ <b>${missing} uncounted pack${missing > 1 ? 's' : ''} missing.</b> Will be automatically logged under <b>Guest</b> tag.`;
+  } else {
+    diffEl.style.display = "block";
+    diffEl.style.background = "color-mix(in srgb, var(--success) 18%, var(--surface))";
+    diffEl.style.borderColor = "var(--success)";
+    diffEl.style.color = "#286330";
+    diffEl.innerHTML = `ℹ️ <b>+${diff} extra packs found.</b> Will be logged under <b>Production</b> to update stock.`;
+  }
+}
+
+function openInvSheet(mode) {
+  currentInvMode = mode;
+  const sheet = document.getElementById("inventorySheet");
+  const title = document.getElementById("invSheetTitle");
+  const sub = document.getElementById("invSheetSubtitle");
+  const qtyField = document.getElementById("invQtyField");
+  const recountField = document.getElementById("invRecountField");
+  const qtyLabel = document.getElementById("invQtyLabel");
+  const qtyInp = document.getElementById("invQtyInput");
+  const physInp = document.getElementById("invPhysicalCountInput");
+  const noteInp = document.getElementById("invNoteInput");
+  const saveBtn = document.getElementById("invSaveBtn");
+
+  noteInp.value = "";
+
+  if (mode === "production") {
+    title.textContent = "+ Add Made Roti (Production Batch)";
+    sub.textContent = "Log packs cooked, packed, and placed into the freezer.";
+    qtyField.style.display = "block";
+    recountField.style.display = "none";
+    qtyLabel.textContent = "Number of Packs Made";
+    qtyInp.value = 10;
+    noteInp.placeholder = "e.g. Morning batch / 50 pcs";
+    saveBtn.textContent = "Save Production Batch";
+  } else if (mode === "guest") {
+    title.textContent = "🎁 Give Free Pack to Guest";
+    sub.textContent = "Log complimentary packs given to visiting family or friends.";
+    qtyField.style.display = "block";
+    recountField.style.display = "none";
+    qtyLabel.textContent = "Number of Packs Given to Guest";
+    qtyInp.value = 1;
+    noteInp.placeholder = "e.g. Auntie visit / Neighbor gift";
+    saveBtn.textContent = "Save Guest Pack";
+  } else if (mode === "audit") {
+    title.textContent = "📋 Recount Freezer Stock";
+    sub.textContent = "Count what is physically in the freezer. Uncounted missing packs are automatically tagged as Guest.";
+    qtyField.style.display = "none";
+    recountField.style.display = "block";
+    physInp.value = "";
+    document.getElementById("invDiffNotice").style.display = "none";
+    noteInp.placeholder = "e.g. Weekly freezer check";
+    saveBtn.textContent = "Confirm Recount";
+    updateRecountExpected();
+  }
+
+  sheet.classList.add("open");
+}
+
+function closeInvSheet() {
+  document.getElementById("inventorySheet").classList.remove("open");
+}
+
+/* ── Inventory Sheet Event Handlers ── */
+document.getElementById("btnAddProduction").addEventListener("click", () => openInvSheet("production"));
+document.getElementById("btnLogGuest").addEventListener("click", () => openInvSheet("guest"));
+document.getElementById("btnAuditCount").addEventListener("click", () => openInvSheet("audit"));
+
+document.getElementById("invCancelBtn").addEventListener("click", closeInvSheet);
+document.getElementById("invScrim").addEventListener("click", closeInvSheet);
+
+document.querySelectorAll('input[name="invProduct"]').forEach(r => {
+  r.addEventListener("change", () => {
+    document.querySelectorAll("#invProductGroup label").forEach(l => l.classList.toggle("checked", l.querySelector("input").checked));
+    if (currentInvMode === "audit") updateRecountExpected();
+  });
+});
+
+document.querySelectorAll(".quick-qty-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const add = Number(btn.dataset.add) || 0;
+    const inp = document.getElementById("invQtyInput");
+    inp.value = Math.max(1, (Number(inp.value) || 0) + add);
+  });
+});
+
+document.getElementById("invPhysicalCountInput").addEventListener("input", updateRecountDiff);
+
+document.getElementById("invSaveBtn").addEventListener("click", async () => {
+  const saveBtn = document.getElementById("invSaveBtn");
+  const prod = getSelectedInvProduct();
+  const note = document.getElementById("invNoteInput").value.trim();
+
+  if (currentInvMode === "production" || currentInvMode === "guest") {
+    const q = parseInt(document.getElementById("invQtyInput").value, 10);
+    if (!q || q <= 0) {
+      alert("Please enter a valid pack quantity (at least 1).");
+      return;
+    }
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Saving...";
+    try {
+      if (currentInvMode === "production") {
+        await invRef.add({
+          product: prod,
+          type: "production",
+          tag: "Production",
+          qty: q,
+          note: note || "Production batch",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        await invRef.add({
+          product: prod,
+          type: "guest",
+          tag: "Guest",
+          qty: q,
+          note: note || "Given to guest",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+      closeInvSheet();
+    } catch (err) {
+      console.error("Save inventory error:", err);
+      alert("Could not save: " + (err.message || "Check database connection."));
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Save";
+    }
+  } else if (currentInvMode === "audit") {
+    const physInp = document.getElementById("invPhysicalCountInput");
+    const val = physInp.value.trim();
+    if (val === "" || isNaN(Number(val)) || Number(val) < 0) {
+      alert("Please enter a valid physical freezer count (0 or more).");
+      return;
+    }
+    const phys = parseInt(val, 10);
+    const totals = computeInventoryTotals();
+    const exp = totals[prod].stock;
+    const diff = phys - exp;
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = "Updating stock...";
+    try {
+      if (diff < 0) {
+        // Missing packs -> automatically tag as Guest!
+        const missing = Math.abs(diff);
+        await invRef.add({
+          product: prod,
+          type: "guest",
+          tag: "Guest",
+          qty: missing,
+          note: note || `Freezer recount: ${missing} uncounted pack${missing > 1 ? 's' : ''} tagged as Guest`,
+          expectedBefore: exp,
+          physicalCount: phys,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else if (diff > 0) {
+        // Extra packs found -> log as production adjustment
+        await invRef.add({
+          product: prod,
+          type: "production",
+          tag: "Production",
+          qty: diff,
+          note: note || `Freezer recount: +${diff} extra packs found`,
+          expectedBefore: exp,
+          physicalCount: phys,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      } else {
+        // Matches expected
+        await invRef.add({
+          product: prod,
+          type: "audit",
+          tag: "Recount",
+          qty: 0,
+          note: note || `Freezer recount verified (${phys} packs in freezer)`,
+          expectedBefore: exp,
+          physicalCount: phys,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }
+      closeInvSheet();
+    } catch (err) {
+      console.error("Audit recount error:", err);
+      alert("Could not save recount: " + (err.message || "Check database connection."));
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = "Confirm Recount";
+    }
+  }
+});
+
+/* ── Auth & Live listener ── */
+let unsubscribeOrders = null;
+let unsubscribeInventory = null;
+
+function startInventoryListener() {
+  if (unsubscribeInventory) unsubscribeInventory();
+  unsubscribeInventory = invRef.orderBy("createdAt", "desc").limit(300).onSnapshot(
+    snap => {
+      allInvLogs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      renderInventory();
+      updateKitchenSummary(allOrders);
+    },
+    err => {
+      console.error("Inventory listener error:", err);
+      if (err && err.code === "permission-denied") {
+        console.warn("Permission denied on inventory_logs. Check Firestore rules.");
+      }
+    }
+  );
+}
+
+function stopInventoryListener() {
+  if (unsubscribeInventory) {
+    unsubscribeInventory();
+    unsubscribeInventory = null;
+  }
+}
+
+function startOrdersListener() {
+  if (unsubscribeOrders) unsubscribeOrders();
+  setConn(false);
+  unsubscribeOrders = ordersRef.orderBy("createdAt","desc").limit(500).onSnapshot(
+    snap => {
+      setConn(true);
+      allOrders = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      customerDirectory = buildCustomerDirectory();
+      renderInventory();
+      checkNewOrders(allOrders);
+      renderEntryList(allOrders);
+      renderKanban(allOrders);
+      updateKitchenSummary(allOrders);
+      if (document.getElementById("timelineView").classList.contains("active")) renderTimeline();
+      if (document.getElementById("salesView").classList.contains("active")) renderSales();
+    },
+    err => {
+      console.error("Firestore listener error:", err);
+      setConn(false);
+      if (err && err.code === "permission-denied") {
+        const errEl = document.getElementById("authError");
+        if (errEl) {
+          errEl.textContent = "Database access denied. Check your Firestore Security Rules in Firebase Console.";
+          errEl.style.display = "block";
+        }
+      }
+    }
+  );
+}
+
+function stopOrdersListener() {
+  if (unsubscribeOrders) {
+    unsubscribeOrders();
+    unsubscribeOrders = null;
+  }
+}
+
+window.addEventListener("online", () => { if (auth.currentUser) setConn(true); });
+window.addEventListener("offline", () => setConn(false));
+
+/* ── Auth State Management ── */
+auth.onAuthStateChanged(user => {
+  const overlay = document.getElementById("authOverlay");
+  const mainApp = document.getElementById("mainApp");
+  const errEl = document.getElementById("authError");
+  if (errEl) errEl.style.display = "none";
+
+  if (user) {
+    overlay.style.display = "none";
+    mainApp.style.display = "";
+    updateNotifBtnState();
+    startOrdersListener();
+    startInventoryListener();
+  } else {
+    stopOrdersListener();
+    stopInventoryListener();
+    mainApp.style.display = "none";
+    overlay.style.display = "flex";
+  }
+});
+
+/* ── Auth Form Sign In ── */
+document.getElementById("authForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  let email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+  const errEl = document.getElementById("authError");
+  const submitBtn = document.getElementById("authSubmitBtn");
+
+  if (!email || !password) {
+    errEl.textContent = "Please enter both username/email and password.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  // If user just types "family" or username without '@', auto-append @roticanai.com
+  if (!email.includes("@")) {
+    email = email.toLowerCase() + "@roticanai.com";
+  }
+
+  errEl.style.display = "none";
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Signing in...";
+
+  try {
+    await auth.signInWithEmailAndPassword(email, password);
+  } catch (err) {
+    console.error("Firebase sign in failed:", err);
+    let msg = "Invalid login credentials. Please try again.";
+    if (err.code === "auth/invalid-email") {
+      msg = "Invalid email format. Try typing just 'family' or a full email.";
+    } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+      msg = `Account "${email}" not found or password incorrect. Make sure you created this user in Firebase Console > Authentication > Users.`;
+    } else if (err.code === "auth/operation-not-allowed") {
+      msg = "Email/Password sign-in is disabled in your Firebase Console. Enable it in Authentication > Sign-in method.";
+    } else if (err.code === "auth/too-many-requests") {
+      msg = "Too many failed attempts. Please wait a few moments and try again.";
+    } else if (err.code === "auth/network-request-failed") {
+      msg = "Network connection error. Check your internet connection.";
+    } else if (err.message) {
+      msg = err.message;
+    }
+    errEl.textContent = msg;
+    errEl.style.display = "block";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Sign in to Kitchen";
+  }
+});
+
+/* ── Sign Out ── */
+document.getElementById("btnSignOut").addEventListener("click", async () => {
+  const ok = await showConfirm("Sign out of Family Portal?", "You will need to sign in again to access orders.");
+  if (!ok) return;
+  try {
+    await auth.signOut();
+  } catch (err) {
+    console.error("Sign out failed:", err);
+  }
+});
 
 </script>
 </body>

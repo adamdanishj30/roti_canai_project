@@ -5,12 +5,14 @@ FastAPI + Google Gemini (google-genai SDK)
 
 import os
 import logging
+import secrets
 
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
@@ -85,6 +87,28 @@ class ChatResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# Authentication for Internal Family Dashboard (/orders)
+# ---------------------------------------------------------------------------
+
+security = HTTPBasic()
+FAMILY_USERNAME = os.environ.get("FAMILY_USERNAME", "family")
+FAMILY_PASSWORD = os.environ.get("FAMILY_PASSWORD", "roti6768")
+
+
+def verify_family_credentials(credentials: HTTPBasicCredentials = Depends(security)):
+    """Validates HTTP Basic Auth credentials for family access."""
+    is_user_correct = secrets.compare_digest(credentials.username, FAMILY_USERNAME)
+    is_pass_correct = secrets.compare_digest(credentials.password, FAMILY_PASSWORD)
+    if not (is_user_correct and is_pass_correct):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
+
+# ---------------------------------------------------------------------------
 # Routes
 # ---------------------------------------------------------------------------
 
@@ -95,10 +119,9 @@ def health_check():
 
 
 @app.get("/orders")
-def orders_page():
+def orders_page(user: str = Depends(verify_family_credentials)):
     """Serves the internal family order-tracking app (mom/sis order entry
-    and dad's kitchen view). Not linked from the public site - share the
-    URL directly with family members."""
+    and dad's kitchen view). Protected by HTTP Basic Authentication."""
     return FileResponse(Path(__file__).parent / "orders.html")
 
 
