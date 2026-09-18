@@ -206,6 +206,20 @@ textarea{resize:vertical;min-height:50px}
 .chart-card.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px}
 .chart-card.combo-card h3{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--text);text-align:center;margin:0 0 12px 0;letter-spacing:-0.01em}
 .combo-chart-wrap{position:relative;width:100%;height:300px}
+@media(max-width:640px){
+  #salesView{padding:0 12px 36px}
+  .sales-header{padding:10px 0 4px}
+  .summary-grid{gap:8px;margin:10px 0}
+  .summary-card{padding:12px 10px}
+  .summary-card .sc-value{font-size:20px}
+  .summary-card .sc-label{font-size:10px;margin-bottom:4px}
+  .item-breakdown{gap:8px;margin-bottom:10px}
+  .item-pill{padding:10px 6px}
+  .item-pill .ip-qty{font-size:22px}
+  .chart-card.combo-card{padding:14px 10px 10px}
+  .chart-card.combo-card h3{font-size:13.5px;margin:0 0 8px 0;line-height:1.35}
+  .combo-chart-wrap{height:260px}
+}
 /* Sheets */
 #confirmSheet{position:fixed;inset:0;z-index:200;display:none}
 #confirmSheet.open{display:flex;flex-direction:column;justify-content:flex-end}
@@ -840,7 +854,7 @@ document.getElementById("tabKitchen").addEventListener("click",()=>{switchTab("k
 document.getElementById("tabInventory").addEventListener("click",()=>{switchTab("inventory");renderInventory();});
 document.getElementById("tabTimeline").addEventListener("click",()=>{switchTab("timeline");renderTimeline();});
 document.getElementById("tabSales").addEventListener("click",()=>{switchTab("sales");renderSales();});
-function switchTab(w){Object.keys(TAB_MAP).forEach(k=>{document.getElementById("tab"+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle("active",k===w);document.getElementById(TAB_MAP[k]).classList.toggle("active",k===w);});clearSelection();}
+function switchTab(w){Object.keys(TAB_MAP).forEach(k=>{document.getElementById("tab"+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle("active",k===w);document.getElementById(TAB_MAP[k]).classList.toggle("active",k===w);});clearSelection();window.scrollTo({top:0,behavior:"instant"});}
 
 /* ── Undo Management ── */
 let lastUndoAction=null,undoTimer=null;
@@ -1953,38 +1967,78 @@ const comboDataLabelsPlugin = {
   afterDatasetsDraw(chart) {
     const ctx = chart.ctx;
     const tc = chart.options.__themeColors || getThemeColors();
-    chart.data.datasets.forEach((dataset, datasetIdx) => {
-      const meta = chart.getDatasetMeta(datasetIdx);
-      if (meta.hidden) return;
+    const isMobile = window.innerWidth < 640;
 
-      meta.data.forEach((element, i) => {
-        const val = dataset.data[i];
+    const barMeta = chart.getDatasetMeta(0);
+    const lineMeta = chart.getDatasetMeta(1);
+
+    // 1. Bar Data Labels (Orders Count)
+    if (barMeta && !barMeta.hidden) {
+      const barData = chart.data.datasets[0].data;
+      barMeta.data.forEach((element, i) => {
+        const val = barData[i];
         if (val === undefined || val === null || val <= 0) return;
 
+        const x = element.x;
+        const barH = element.base - element.y;
+
         ctx.save();
-        if (dataset.type === "bar") {
-          const x = element.x;
-          const barH = element.base - element.y;
-          const inside = barH >= 26;
-          const y = inside ? element.y + 15 : element.y - 8;
-          ctx.font = '700 10.5px "Work Sans", sans-serif';
-          ctx.fillStyle = inside ? tc.barText : tc.text;
-          ctx.textAlign = "center";
+        ctx.font = isMobile ? '700 9.5px "Work Sans", sans-serif' : '700 10.5px "Work Sans", sans-serif';
+        ctx.textAlign = "center";
+
+        if (barH >= 22) {
+          // If bar is tall enough, place text INSIDE near top of bar
+          ctx.fillStyle = tc.barText;
           ctx.textBaseline = "middle";
-          const txt = val + (val === 1 ? " order" : " orders");
-          ctx.fillText(txt, x, y);
-        } else if (dataset.type === "line") {
-          const x = element.x;
-          const y = element.y - 10;
-          ctx.font = '700 11px "Work Sans", sans-serif';
-          ctx.fillStyle = tc.revLine;
-          ctx.textAlign = "center";
+          const txt = isMobile ? `${val}` : `${val} ${val === 1 ? 'order' : 'orders'}`;
+          ctx.fillText(txt, x, element.y + 11);
+        } else {
+          // If short (e.g. 1 order), place INSIDE near base of bar so it never collides with line above
+          ctx.fillStyle = tc.barText || tc.text;
           ctx.textBaseline = "bottom";
-          ctx.fillText("RM" + Math.round(val), x, y);
+          ctx.fillText(`${val}`, x, element.base - 2);
         }
         ctx.restore();
       });
-    });
+    }
+
+    // 2. Line Data Labels (Revenue RM)
+    if (lineMeta && !lineMeta.hidden) {
+      const revData = chart.data.datasets[1].data;
+      const totalPoints = lineMeta.data.length;
+
+      lineMeta.data.forEach((element, i) => {
+        const val = revData[i];
+        if (val === undefined || val === null || val <= 0) return;
+
+        ctx.save();
+        ctx.font = isMobile ? '700 10px "Work Sans", sans-serif' : '700 11px "Work Sans", sans-serif';
+        ctx.fillStyle = tc.revLine;
+        ctx.textBaseline = "bottom";
+
+        let x = element.x;
+        let y = element.y - 7;
+
+        if (i === totalPoints - 1) {
+          // Rightmost point: align right with slight offset to avoid colliding with right Y-axis
+          ctx.textAlign = "right";
+          x = element.x - 2;
+        } else if (i === 0) {
+          // Leftmost point: align left
+          ctx.textAlign = "left";
+          x = element.x + 2;
+        } else {
+          ctx.textAlign = "center";
+        }
+
+        if (chart.chartArea && y < chart.chartArea.top + 8) {
+          y = chart.chartArea.top + 10;
+        }
+
+        ctx.fillText("RM" + Math.round(val), x, y);
+        ctx.restore();
+      });
+    }
   }
 };
 
@@ -2092,6 +2146,7 @@ function renderChart1(orders){
   const yOrdersMax = Math.max(8, Math.ceil(maxOrders * 1.25));
   const yRevMax = Math.max(800, Math.ceil((maxRev * 1.15) / 100) * 100);
   const tc = getThemeColors();
+  const isMobile = window.innerWidth < 640;
 
   chart1Instance = new Chart(ctx, {
     data: {
@@ -2105,8 +2160,8 @@ function renderChart1(orders){
           borderColor: tc.goldBarBorder,
           borderWidth: 0,
           borderRadius: 3,
-          barPercentage: 0.45,
-          categoryPercentage: 0.65,
+          barPercentage: isMobile ? 0.55 : 0.45,
+          categoryPercentage: isMobile ? 0.75 : 0.65,
           yAxisID: "yOrders",
           order: 2
         },
@@ -2118,8 +2173,8 @@ function renderChart1(orders){
           backgroundColor: tc.revLine,
           borderWidth: 2.8,
           pointStyle: "rect",
-          pointRadius: 6,
-          pointHoverRadius: 8,
+          pointRadius: isMobile ? 5 : 6,
+          pointHoverRadius: isMobile ? 7 : 8,
           pointBackgroundColor: tc.revLine,
           pointBorderColor: tc.revLine,
           tension: 0,
@@ -2132,6 +2187,14 @@ function renderChart1(orders){
       responsive: true,
       maintainAspectRatio: false,
       __themeColors: tc,
+      layout: {
+        padding: {
+          left: isMobile ? 4 : 8,
+          right: isMobile ? 12 : 18,
+          top: isMobile ? 16 : 24,
+          bottom: 2
+        }
+      },
       interaction: {
         mode: "index",
         intersect: false
@@ -2142,11 +2205,11 @@ function renderChart1(orders){
           position: "top",
           align: "start",
           labels: {
-            boxWidth: 16,
-            boxHeight: 10,
-            padding: 16,
+            boxWidth: isMobile ? 12 : 16,
+            boxHeight: isMobile ? 8 : 10,
+            padding: isMobile ? 10 : 16,
             color: tc.textSoft,
-            font: { size: 12, weight: "600", family: "'Work Sans', sans-serif" }
+            font: { size: isMobile ? 11 : 12, weight: "600", family: "'Work Sans', sans-serif" }
           }
         },
         tooltip: {
@@ -2155,8 +2218,11 @@ function renderChart1(orders){
           borderWidth: tc.isDark ? 1 : 0,
           titleColor: tc.tooltipText,
           bodyColor: tc.tooltipText,
-          padding: 10,
+          padding: 8,
           cornerRadius: 8,
+          caretSize: 4,
+          titleFont: { size: 11, weight: "bold", family: "'Work Sans', sans-serif" },
+          bodyFont: { size: 11, family: "'Work Sans', sans-serif" },
           callbacks: {
             label: function(c) {
               if (c.dataset.yAxisID === "yRevenue") {
@@ -2172,15 +2238,17 @@ function renderChart1(orders){
         x: {
           grid: { color: tc.grid },
           title: {
-            display: true,
+            display: !isMobile,
             text: xTitle,
             color: tc.textSoft,
             font: { size: 12, weight: "bold", family: "'Work Sans', sans-serif" }
           },
           ticks: {
             color: tc.textMute,
-            font: { size: 11, weight: "500", family: "'Work Sans', sans-serif" },
-            maxRotation: 0
+            font: { size: isMobile ? 9.5 : 11, weight: "500", family: "'Work Sans', sans-serif" },
+            autoSkip: false,
+            maxRotation: isMobile ? 40 : 0,
+            minRotation: isMobile ? 25 : 0
           }
         },
         yOrders: {
@@ -2190,7 +2258,7 @@ function renderChart1(orders){
           min: 0,
           max: yOrdersMax,
           title: {
-            display: true,
+            display: !isMobile,
             text: "Order Count",
             color: tc.gold,
             font: { size: 12, weight: "bold", family: "'Work Sans', sans-serif" }
@@ -2198,8 +2266,9 @@ function renderChart1(orders){
           ticks: {
             stepSize: 1,
             precision: 0,
+            padding: isMobile ? 3 : 6,
             color: tc.gold,
-            font: { size: 11, weight: "700", family: "'Work Sans', sans-serif" }
+            font: { size: isMobile ? 10 : 11, weight: "700", family: "'Work Sans', sans-serif" }
           },
           grid: { color: tc.grid }
         },
@@ -2210,14 +2279,15 @@ function renderChart1(orders){
           min: 0,
           max: yRevMax,
           title: {
-            display: true,
+            display: !isMobile,
             text: "Revenue (RM)",
             color: tc.revLine,
             font: { size: 12, weight: "bold", family: "'Work Sans', sans-serif" }
           },
           ticks: {
+            padding: isMobile ? 3 : 6,
             color: tc.revLine,
-            font: { size: 11, weight: "700", family: "'Work Sans', sans-serif" },
+            font: { size: isMobile ? 10 : 11, weight: "700", family: "'Work Sans', sans-serif" },
             callback: v => v
           },
           grid: { drawOnChartArea: false }
@@ -2227,7 +2297,16 @@ function renderChart1(orders){
     plugins: [comboDataLabelsPlugin]
   });
 }
-function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],sigData=[],beefData=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});let sig=0,beef=0;mo.forEach(o=>(o.items||[]).forEach(it=>{if(it.id==="signature")sig+=it.price*it.qty;else if(it.id==="beef")beef+=it.price*it.qty;}));sigData.push(sig);beefData.push(beef);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();const tc=getThemeColors();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Signature (RM)",data:sigData,backgroundColor:"rgba(217,162,75,0.85)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:4,stack:"rev"},{label:"Beef (RM)",data:beefData,backgroundColor:"rgba(199,64,31,0.85)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:4,stack:"rev"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10,color:tc.textSoft}},tooltip:{backgroundColor:tc.tooltipBg,borderColor:tc.tooltipBorder,borderWidth:tc.isDark?1:0,titleColor:tc.tooltipText,bodyColor:tc.tooltipText,callbacks:{label:c=>c.dataset.label+": RM"+c.parsed.y}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11},color:tc.textMute}},y:{stacked:true,grid:{color:tc.grid},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10},color:tc.textMute}}}}});}
+let chartResizeTimer = null;
+window.addEventListener("resize", () => {
+  if (chartResizeTimer) clearTimeout(chartResizeTimer);
+  chartResizeTimer = setTimeout(() => {
+    const sv = document.getElementById("salesView");
+    if (sv && sv.classList.contains("active")) {
+      renderSales();
+    }
+  }, 250);
+});
 
 /* ════════════════════════════════════════
    INVENTORY TRACKING (Production, Guest & Freezer Recount)
