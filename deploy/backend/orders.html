@@ -181,6 +181,9 @@ textarea{resize:vertical;min-height:50px}
 .summary-card .sc-label{font-size:11px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
 .summary-card .sc-value{font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--accent-deep)}
 .summary-card .sc-sub{font-size:11.5px;color:var(--text-mute);margin-top:3px}
+.summary-card .sc-value-row{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.summary-card .sc-delivery-add{font-size:12px;font-weight:700;color:var(--text-mute)}
+.summary-card .sc-total-faint{font-size:10.5px;color:var(--text-mute);opacity:.6;margin-top:5px}
 .item-breakdown{display:flex;gap:10px;margin-bottom:14px}
 .item-pill{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
 .item-pill .ip-qty{font-family:'Fraunces',serif;font-size:26px;font-weight:700}
@@ -366,7 +369,7 @@ textarea{resize:vertical;min-height:50px}
       <button class="today-btn" id="tlToday">Today</button>
       <div class="zoom-ctrl">
         <button class="zoom-btn" id="tlZoomOut" title="Zoom out">&#8722;</button>
-        <span class="zoom-label" id="tlZoomLabel">1x</span>
+        <span class="zoom-label" id="tlZoomLabel">Day</span>
         <button class="zoom-btn" id="tlZoomIn" title="Zoom in">&#43;</button>
       </div>
     </div>
@@ -396,7 +399,7 @@ textarea{resize:vertical;min-height:50px}
       <button class="period-chip" data-period="all">All Time</button>
     </div>
     <div class="summary-grid">
-      <div class="summary-card"><div class="sc-label">Revenue</div><div class="sc-value" id="salesTotalRev">RM0</div><div class="sc-sub" id="salesTotalOrders">0 orders</div></div>
+      <div class="summary-card"><div class="sc-label">Revenue</div><div class="sc-value-row"><span class="sc-value" id="salesItemRev">RM0</span><span class="sc-delivery-add" id="salesDeliveryAdd"></span></div><div class="sc-sub" id="salesTotalOrders">0 orders</div><div class="sc-total-faint" id="salesGrandTotal"></div></div>
       <div class="summary-card"><div class="sc-label">Avg per order</div><div class="sc-value" id="salesAvg">RM0</div><div class="sc-sub" id="salesAvgSub">&nbsp;</div></div>
     </div>
     <div class="item-breakdown">
@@ -524,22 +527,14 @@ function wireButtons(c,orders){c.querySelectorAll(".adv-btn").forEach(btn=>{btn.
    ════════════════════════════════════════ */
 const DOT_COLORS={created:"#6B7CB0",pickup:"#D9A24B",delivery:"#C7401F"};
 const TL_CANVAS_H=440,TL_AXIS_Y=210;
-const TL_START=6,TL_END=22; // 6am – 10pm shown in hour mode
 
-// Zoom ladder: index 0 = most zoomed in (fine hours) … last = most zoomed out (months)
+// Zoom ladder: 3 fixed views — Day, Week, Month
 const ZOOM_LEVELS=[
-  {mode:"hour", px:220, label:"2x"},
-  {mode:"hour", px:150, label:"1.5x"},
-  {mode:"hour", px:90,  label:"1x"},
-  {mode:"hour", px:55,  label:"0.5x"},
-  {mode:"day",  px:110, label:"Day"},
-  {mode:"day",  px:60,  label:"Day"},
-  {mode:"week", px:90,  label:"Week"},
-  {mode:"week", px:50,  label:"Week"},
+  {mode:"day",  px:90,  label:"Day"},
+  {mode:"week", px:70,  label:"Week"},
   {mode:"month",px:130, label:"Month"},
-  {mode:"month",px:75,  label:"Month"},
 ];
-let tlZoomIdx=2; // default: hour mode, 90px/hr
+let tlZoomIdx=0; // default: Day view
 let tlAnchor=startOfDay(new Date()); // the date the view is centered/focused on
 
 function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x;}
@@ -559,12 +554,12 @@ function curPx(){return ZOOM_LEVELS[tlZoomIdx].px;}
   document.getElementById("tlPrev").addEventListener("click",()=>{stepAnchor(-1);});
   document.getElementById("tlNext").addEventListener("click",()=>{stepAnchor(1);});
   document.getElementById("tlToday").addEventListener("click",()=>{tlAnchor=startOfDay(new Date());inp.value=toInputDate(tlAnchor);renderTimeline();});
+  updateZoomLabel();
 })();
 function stepAnchor(dir){
   const mode=curMode();
   const inp=document.getElementById("tlDate");
-  if(mode==="hour")tlAnchor=addDays(tlAnchor,dir*1);
-  else if(mode==="day")tlAnchor=addDays(tlAnchor,dir*7);
+  if(mode==="day")tlAnchor=addDays(tlAnchor,dir*7);
   else if(mode==="week")tlAnchor=addDays(tlAnchor,dir*28);
   else tlAnchor=addMonths(tlAnchor,dir*6);
   inp.value=toInputDate(tlAnchor);
@@ -607,105 +602,14 @@ function getAllTimelineEvents(){
 }
 
 function renderTimeline(){
-  const mode=curMode();
-  if(mode==="hour")renderHourView();
-  else renderBucketView(mode);
+  renderBucketView(curMode());
 }
 
-/* ── HOUR VIEW: one day, exact times, collision-avoiding cards ── */
-function renderHourView(){
-  const px=curPx();
-  const dateStr=toInputDate(tlAnchor);
-  const xOf=(h,m=0)=>Math.round((h-TL_START+m/60)*px)+20;
-  const totalW=(TL_END-TL_START)*px+40;
-  const canvas=document.getElementById("tlCanvas");
-  const inner=document.getElementById("tlCanvasInner");
-  canvas.style.width=totalW+"px";
-
-  let html="";
-  for(let h=TL_START;h<=TL_END;h++){
-    const x=xOf(h);
-    html+=`<div style="position:absolute;left:${x}px;top:0;width:1px;height:100%;background:var(--border);opacity:0.5;pointer-events:none;"></div>`;
-  }
-  html+=`<div style="position:absolute;left:0;right:0;height:4px;top:${TL_AXIS_Y}px;background:var(--text-mute);border-radius:2px;"></div>`;
-  for(let h=TL_START;h<=TL_END;h++){
-    const x=xOf(h);
-    const label=h===0?"12am":h<12?h+"am":h===12?"12pm":(h-12)+"pm";
-    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-6}px;width:2px;height:12px;background:var(--text-mute);transform:translateX(-50%);"></div>`;
-    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+10}px;transform:translateX(-50%);font-size:11px;font-weight:600;color:var(--text-mute);white-space:nowrap;">${label}</div>`;
-  }
-
-  const today=new Date();
-  const isToday=dateStr===toInputDate(today);
-  if(isToday){
-    const nowH=today.getHours()+today.getMinutes()/60;
-    if(nowH>=TL_START&&nowH<=TL_END){
-      const nx=xOf(nowH);
-      html+=`<div style="position:absolute;left:${nx}px;top:0;width:2px;height:${TL_CANVAS_H}px;background:var(--accent);opacity:0.7;pointer-events:none;"></div>`;
-      html+=`<div style="position:absolute;left:${nx+4}px;top:${TL_AXIS_Y-28}px;font-size:10px;font-weight:800;color:var(--accent);letter-spacing:.03em;">NOW</div>`;
-    }
-  }
-
-  const events=getAllTimelineEvents().filter(ev=>toInputDate(ev.time)===dateStr&&ev.time.getHours()>=TL_START&&ev.time.getHours()<=TL_END);
-
-  // Lane-based collision avoidance: events that fall close together on the
-  // x-axis get pushed further from the axis instead of stacking on top of
-  // each other. Alternates above/below, and within each side finds the
-  // nearest free lane.
-  const CARD_GAP=140; // min horizontal px between two cards sharing a lane
-  const ABOVE_DIST=[80,155,230,305,380];
-  const BELOW_DIST=[80,155,230,305,380];
-  const aboveLanes=[],belowLanes=[];
-
-  events.forEach((ev,i)=>{
-    const x=xOf(ev.time.getHours(),ev.time.getMinutes());
-    const isAbove=i%2===0;
-    const lanes=isAbove?aboveLanes:belowLanes;
-    let laneIdx=lanes.findIndex(lastX=>x-lastX>=CARD_GAP);
-    if(laneIdx===-1){laneIdx=lanes.length;lanes.push(x);}else{lanes[laneIdx]=x;}
-    const distArr=isAbove?ABOVE_DIST:BELOW_DIST;
-    const dist=distArr[Math.min(laneIdx,distArr.length-1)]+Math.max(0,laneIdx-distArr.length+1)*75;
-    const col=ev.color;
-    const timeStr=fmtHHMM(ev.time);
-    const nameShort=ev.order.customerName.length>14?ev.order.customerName.slice(0,13)+"…":ev.order.customerName;
-    const itemsShort=ev.order.items.map(it=>it.qty+"x "+it.name.slice(0,3)).join(", ");
-
-    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-8}px;width:16px;height:16px;border-radius:50%;background:${col};border:3px solid var(--surface);box-shadow:0 1px 5px rgba(0,0,0,.25);transform:translateX(-50%);z-index:3;"></div>`;
-
-    const cardInner=`<div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">${ev.label}</div>`
-      +`<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${esc(nameShort)}</div>`
-      +`<div style="font-size:11px;color:var(--text-soft);margin-bottom:2px;">${esc(itemsShort)}</div>`
-      +`<div style="font-size:10.5px;font-weight:600;color:${col};">${timeStr}</div>`
-      +`<div style="font-size:10px;color:var(--text-mute);margin-top:1px;">${ev.order.fulfilment==="delivery"?"Delivery":"Pickup"}</div>`;
-
-    if(isAbove){
-      const stemBottom=TL_AXIS_Y-8,stemTop=TL_AXIS_Y-dist,stemH=stemBottom-stemTop,cardBottom=stemTop-2;
-      html+=`<div style="position:absolute;left:${x}px;top:${stemTop}px;width:2px;height:${stemH}px;background:${col};opacity:0.5;transform:translateX(-50%);"></div>`;
-      html+=`<div style="position:absolute;left:${x}px;bottom:${TL_CANVAS_H-cardBottom}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">${cardInner}</div>`;
-    } else {
-      const stemTop=TL_AXIS_Y+8,stemH=dist-8,cardTop=stemTop+stemH+2;
-      html+=`<div style="position:absolute;left:${x}px;top:${stemTop}px;width:2px;height:${stemH}px;background:${col};opacity:0.5;transform:translateX(-50%);"></div>`;
-      html+=`<div style="position:absolute;left:${x}px;top:${cardTop}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">${cardInner}</div>`;
-    }
-  });
-
-  if(!events.length){
-    html+=`<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;color:var(--text-mute);"><div style="font-size:32px;margin-bottom:8px;">📅</div><div style="font-size:13px;">No events on this date.<br>Add a pickup time to orders to see them here.</div></div>`;
-  }
-
-  inner.innerHTML=html;
-  const scrollWrap=document.getElementById("tlScrollWrap");
-  const scrollToH=isToday?Math.max(TL_START,today.getHours()-1):8;
-  scrollWrap.scrollLeft=Math.max(0,xOf(scrollToH)-60);
-
-  renderTlList(events,new Date(dateStr+"T12:00:00").toLocaleDateString("en-MY",{weekday:"long",day:"numeric",month:"long"}));
-}
-
-/* ── BUCKET VIEWS: day / week / month, zoomed out ── */
+/* ── BUCKET VIEWS: day / week / month ── */
 const BUCKET_CFG={
-  day:{window:60,label:d=>d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:d=>d.toLocaleDateString("en-MY",{weekday:"short"}),step:(d,i)=>addDays(d,i),start:d=>startOfDay(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=2;},contains:(bucket,t)=>toInputDate(t)===toInputDate(bucket.start)},
-  week:{window:27,label:d=>"Wk of "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:()=>"",step:(d,i)=>addDays(d,i*7),start:d=>startOfWeek(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=4;},contains:(bucket,t)=>t>=bucket.start&&t<addDays(bucket.start,7)},
-  month:{window:25,label:d=>d.toLocaleDateString("en-MY",{month:"short",year:"2-digit"}),sub:()=>"",step:(d,i)=>addMonths(d,i),start:d=>startOfMonth(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=6;},contains:(bucket,t)=>t>=bucket.start&&t<addMonths(bucket.start,1)},
+  day:{window:60,label:d=>d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:d=>d.toLocaleDateString("en-MY",{weekday:"short"}),step:(d,i)=>addDays(d,i),start:d=>startOfDay(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;},contains:(bucket,t)=>toInputDate(t)===toInputDate(bucket.start)},
+  week:{window:27,label:d=>"Wk of "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:()=>"",step:(d,i)=>addDays(d,i*7),start:d=>startOfWeek(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=0;},contains:(bucket,t)=>t>=bucket.start&&t<addDays(bucket.start,7)},
+  month:{window:25,label:d=>d.toLocaleDateString("en-MY",{month:"short",year:"2-digit"}),sub:()=>"",step:(d,i)=>addMonths(d,i),start:d=>startOfMonth(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=1;},contains:(bucket,t)=>t>=bucket.start&&t<addMonths(bucket.start,1)},
 };
 let BUCKET_CACHE=[];
 
@@ -815,7 +719,7 @@ function renderTlList(events,titleText,showDate){
 let salesPeriod="month",chart1Instance=null,chart2Instance=null;
 document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
 function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);return d>=ws;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
-function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));document.getElementById("salesTotalRev").textContent="RM"+totalRev;document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);renderChart1(orders);renderChart2();}
+function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);const totalRev=itemRev+deliveryRev;const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));document.getElementById("salesItemRev").textContent="RM"+itemRev;document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);renderChart1(orders);renderChart2();}
 function renderChart1(orders){const now=new Date();let labels=[],data=[],title="";if(salesPeriod==="today"){title="Revenue by Hour (Today)";const hours={};orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const h=d.getHours();hours[h]=(hours[h]||0)+(o.total||0);});for(let h=6;h<=22;h++){labels.push((h%12===0?12:h%12)+""+(h<12?"am":"pm"));data.push(hours[h]||0);};}else if(salesPeriod==="week"){title="Revenue by Day (This Week)";const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const dt=[0,0,0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const idx=Math.floor((d-ws)/86400000);if(idx>=0&&idx<7)dt[idx]+=(o.total||0);});labels=days;data=dt;}else if(salesPeriod==="month"){title="Revenue by Week (Last 8 Weeks)";const curWeekStart=new Date(now);curWeekStart.setDate(now.getDate()-now.getDay());curWeekStart.setHours(0,0,0,0);const wkLabels=[],wkData=[];for(let i=7;i>=0;i--){const wkStart=new Date(curWeekStart);wkStart.setDate(curWeekStart.getDate()-i*7);const wkEnd=new Date(wkStart);wkEnd.setDate(wkStart.getDate()+7);wkLabels.push(wkStart.toLocaleDateString("en-MY",{day:"numeric",month:"short"}));let rev=0;allOrders.forEach(o=>{const d=getOrderDate(o);if(d&&d>=wkStart&&d<wkEnd)rev+=(o.total||0);});wkData.push(rev);}labels=wkLabels;data=wkData;}else{title="Revenue by Day (Last 30 Days)";const dayMap={};for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);dayMap[d.toISOString().slice(0,10)]=0;}orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const k=d.toISOString().slice(0,10);if(k in dayMap)dayMap[k]+=(o.total||0);});const ent=Object.entries(dayMap).sort(([a],[b])=>a.localeCompare(b));labels=ent.map(([k])=>k.slice(5).replace("-","/"));data=ent.map(([,v])=>v);}document.getElementById("chart1Title").textContent=title;const ctx=document.getElementById("chart1").getContext("2d");if(chart1Instance)chart1Instance.destroy();chart1Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"RM"+c.parsed.y}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
 function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],sigData=[],beefData=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});let sig=0,beef=0;mo.forEach(o=>(o.items||[]).forEach(it=>{if(it.id==="signature")sig+=it.price*it.qty;else if(it.id==="beef")beef+=it.price*it.qty;}));sigData.push(sig);beefData.push(beef);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Signature (RM)",data:sigData,backgroundColor:"rgba(217,162,75,0.85)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:4,stack:"rev"},{label:"Beef (RM)",data:beefData,backgroundColor:"rgba(199,64,31,0.85)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:4,stack:"rev"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.label+": RM"+c.parsed.y}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
 
