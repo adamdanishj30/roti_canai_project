@@ -65,6 +65,7 @@ textarea{resize:vertical;min-height:50px}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:active{background:var(--accent-deep)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.form-actions{display:flex;gap:10px;margin-top:14px}.form-actions .btn{margin-top:0;flex:1}.btn-secondary{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--border)}
 .error-text{color:var(--accent);font-size:12.5px;margin-top:4px}
 .list-title{font-size:13px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.03em;margin:22px 0 10px}
 /* Order cards */
@@ -265,6 +266,8 @@ textarea{resize:vertical;min-height:50px}
     <label>Fulfilment</label>
     <div class="radio-group" id="editFulfilGroup"><label class="checked"><input type="radio" name="editFulfil" value="pickup" checked> Self pickup</label><label><input type="radio" name="editFulfil" value="delivery"> Delivery</label></div>
     <div id="editAddressField" style="display:none"><label>Delivery address</label><input type="text" id="editAddress" placeholder="Jalan Putra Bahagia..."></div>
+    <div id="editDeliveryCostField" style="display:none"><label>Delivery cost (RM)</label><input type="number" id="editDeliveryCost" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+    <label>Order date</label><input type="datetime-local" id="editOrderDate">
     <label>Pickup / delivery time (optional)</label><input type="datetime-local" id="editPickupTime">
     <label>Notes (optional)</label><textarea id="editNotes" placeholder="Special request..."></textarea>
     <div class="edit-save-btns"><button class="edit-cancel" id="editCancel">Cancel</button><button class="edit-save" id="editSave">Save changes</button></div>
@@ -305,12 +308,13 @@ textarea{resize:vertical;min-height:50px}
         <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price">RM14 - 2 pieces</div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1">-</button><span id="qty-beef">0</span><button type="button" data-item="beef" data-delta="1">+</button></div></div>
         <label>Fulfilment</label>
         <div class="radio-group" id="fulfilGroup"><label class="checked"><input type="radio" name="fulfil" value="pickup" checked> Self pickup</label><label><input type="radio" name="fulfil" value="delivery"> Delivery</label></div>
-        <div id="addressField" style="display:none"><label for="custAddress">Delivery address</label><input type="text" id="custAddress" placeholder="Jalan Putra Bahagia..."></div>
+        <div id="addressField" style="display:none"><label for="custAddress">Delivery address</label><input type="text" id="custAddress" placeholder="Jalan Putra Bahagia..."><label for="deliveryCost">Delivery cost (RM)</label><input type="number" id="deliveryCost" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></div>
+        <label for="orderDate">Order date</label><input type="datetime-local" id="orderDate">
         <label for="pickupTime">Pickup / delivery time (optional)</label><input type="datetime-local" id="pickupTime">
         <label for="custNotes">Notes (optional)</label><textarea id="custNotes" placeholder="Special request..."></textarea>
         <div class="total-row"><span>Total</span><span id="totalOut">RM0</span></div>
         <div id="formError" class="error-text" style="display:none"></div>
-        <button type="submit" class="btn btn-primary" id="saveBtn">Save order</button>
+        <div class="form-actions"><button type="button" class="btn btn-secondary" id="clearBtn">Clear</button><button type="submit" class="btn btn-primary" id="saveBtn">Save order</button></div>
       </form>
       <div class="list-title">Today orders</div>
       <div id="entryList"><div class="empty"><div class="icon">&#129379;</div>No orders yet today.</div></div>
@@ -389,7 +393,7 @@ textarea{resize:vertical;min-height:50px}
       <div class="item-pill beef"><div class="ip-qty" id="salesBeefQty">0</div><div class="ip-label">Beef</div><div class="ip-rev" id="salesBeefRev">RM0</div></div>
     </div>
     <div class="chart-card"><h3 id="chart1Title">Revenue by Day</h3><div class="chart-wrap"><canvas id="chart1"></canvas></div></div>
-    <div class="chart-card"><h3>Monthly Revenue Trend</h3><div class="chart-wrap"><canvas id="chart2"></canvas></div></div>
+    <div class="chart-card"><h3>Monthly Revenue Trend by Product</h3><div class="chart-wrap"><canvas id="chart2"></canvas></div></div>
   </section>
 </main>
 </div>
@@ -416,7 +420,7 @@ function bdgClass(s){return{preparing:"badge-preparing",packed:"badge-packed",do
 function bdgLabel(o){return o.status==="done"?doneLabel(o):STATUS_LABEL[o.status]||"New";}
 function fmtTime(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
 function fmtPickup(iso){if(!iso)return null;const d=new Date(iso);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
-function getOrderDate(o){if(!o.createdAt)return null;return o.createdAt.toDate?o.createdAt.toDate():new Date(o.createdAt);}
+function getOrderDate(o){const value=o.orderDate||o.createdAt;if(!value)return null;return value.toDate?value.toDate():new Date(value);}
 function toDateStr(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toISOString().slice(0,10);}
 function isoDateStr(iso){return iso?iso.slice(0,10):null;}
 function computeTotals(orders){const t={};orders.forEach(o=>(o.items||[]).forEach(i=>{t[i.name]=(t[i.name]||0)+i.qty;}));return t;}
@@ -454,11 +458,16 @@ function updateKitchenSummary(orders){const today=new Date().toDateString();cons
 
 /* ── Entry form ── */
 document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});});
-function updateTotal(){document.getElementById("totalOut").textContent="RM"+(qty.signature*8+qty.beef*14);}
-document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display=r.value==="delivery"&&r.checked?"block":"none";});});
+function getDeliveryCost(){const value=Number(document.getElementById("deliveryCost").value);return Number.isFinite(value)&&value>0?value:0;}
+function updateTotal(){document.getElementById("totalOut").textContent="RM"+(qty.signature*8+qty.beef*14+getDeliveryCost()).toFixed(2);}
+function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0};document.getElementById("qty-signature").textContent=0;document.getElementById("qty-beef").textContent=0;document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);updateTotal();clearError();}
+document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display=r.value==="delivery"&&r.checked?"block":"none";updateTotal();});});
+document.getElementById("deliveryCost").addEventListener("input",updateTotal);
+document.getElementById("clearBtn").addEventListener("click",resetOrderForm);
 function showError(msg){const el=document.getElementById("formError");el.textContent=msg;el.style.display="block";}
 function clearError(){document.getElementById("formError").style.display="none";}
-document.getElementById("orderForm").addEventListener("submit",async e=>{e.preventDefault();clearError();const name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),fulfil=document.querySelector('input[name="fulfil"]:checked').value,address=document.getElementById("custAddress").value.trim(),notes=document.getElementById("custNotes").value.trim(),pickup=document.getElementById("pickupTime").value,items=Object.entries(qty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name){showError("Enter customer name.");return;}if(!phone){showError("Enter phone number.");return;}if(!items.length){showError("Add at least one item.");return;}if(fulfil==="delivery"&&!address){showError("Enter delivery address.");return;}const total=items.reduce((s,i)=>s+i.price*i.qty,0),saveBtn=document.getElementById("saveBtn");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.add({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,total,pickupTime:pickup||null,status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp()});document.getElementById("orderForm").reset();qty={signature:0,beef:0};document.getElementById("qty-signature").textContent=0;document.getElementById("qty-beef").textContent=0;document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));updateTotal();}catch{showError("Could not save. Check connection.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save order";}});
+document.getElementById("orderForm").addEventListener("submit",async e=>{e.preventDefault();clearError();const name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),fulfil=document.querySelector('input[name="fulfil"]:checked').value,address=document.getElementById("custAddress").value.trim(),notes=document.getElementById("custNotes").value.trim(),pickup=document.getElementById("pickupTime").value,orderDate=document.getElementById("orderDate").value,deliveryCost=fulfil==="delivery"?getDeliveryCost():0,items=Object.entries(qty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name){showError("Enter customer name.");return;}if(!phone){showError("Enter phone number.");return;}if(!items.length){showError("Add at least one item.");return;}if(fulfil==="delivery"&&!address){showError("Enter delivery address.");return;}const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("saveBtn");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.add({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,orderDate:orderDate||null,pickupTime:pickup||null,status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp()});resetOrderForm();}catch{showError("Could not save. Check connection.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save order";}});
+resetOrderForm();
 
 /* ── Confirm sheet ── */
 let confirmResolve=null;
@@ -471,12 +480,13 @@ document.getElementById("confirmScrim").addEventListener("click",()=>closeConfir
 /* ── Edit sheet ── */
 let editOrderId=null,editQty={signature:0,beef:0};
 document.querySelectorAll(".edit-stepper").forEach(btn=>{btn.addEventListener("click",()=>{editQty[btn.dataset.item]=Math.max(0,editQty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("edit-qty-"+btn.dataset.item).textContent=editQty[btn.dataset.item];});});
-document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editAddressField").style.display=r.value==="delivery"&&r.checked?"block":"none";});});
-function openEdit(order){editOrderId=order.id;editQty={signature:0,beef:0};(order.items||[]).forEach(i=>{if(editQty[i.id]!==undefined)editQty[i.id]=i.qty;});document.getElementById("editName").value=order.customerName||"";document.getElementById("editPhone").value=order.phone||"";document.getElementById("edit-qty-signature").textContent=editQty.signature;document.getElementById("edit-qty-beef").textContent=editQty.beef;const isD=order.fulfilment==="delivery";document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.checked=r.value===(isD?"delivery":"pickup");});document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editAddress").value=order.address||"";document.getElementById("editPickupTime").value=order.pickupTime||"";document.getElementById("editNotes").value=order.notes||"";document.getElementById("editSheet").classList.add("open");}
+function getEditDeliveryCost(){const v=Number(document.getElementById("editDeliveryCost").value);return Number.isFinite(v)&&v>0?v:0;}
+document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));const isD=r.value==="delivery"&&r.checked;document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editDeliveryCostField").style.display=isD?"block":"none";});});
+function openEdit(order){editOrderId=order.id;editQty={signature:0,beef:0};(order.items||[]).forEach(i=>{if(editQty[i.id]!==undefined)editQty[i.id]=i.qty;});document.getElementById("editName").value=order.customerName||"";document.getElementById("editPhone").value=order.phone||"";document.getElementById("edit-qty-signature").textContent=editQty.signature;document.getElementById("edit-qty-beef").textContent=editQty.beef;const isD=order.fulfilment==="delivery";document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.checked=r.value===(isD?"delivery":"pickup");});document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editAddress").value=order.address||"";document.getElementById("editDeliveryCostField").style.display=isD?"block":"none";document.getElementById("editDeliveryCost").value=order.deliveryCost||"";document.getElementById("editOrderDate").value=order.orderDate||"";document.getElementById("editPickupTime").value=order.pickupTime||"";document.getElementById("editNotes").value=order.notes||"";document.getElementById("editSheet").classList.add("open");}
 function closeEdit(){document.getElementById("editSheet").classList.remove("open");editOrderId=null;}
 document.getElementById("editCancel").addEventListener("click",closeEdit);
 document.getElementById("editScrim").addEventListener("click",closeEdit);
-document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,notes=document.getElementById("editNotes").value.trim(),items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const total=items.reduce((s,i)=>s+i.price*i.qty,0),saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,total,pickupTime:pickup||null});closeEdit();clearSelection();}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
+document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,orderDate=document.getElementById("editOrderDate").value,notes=document.getElementById("editNotes").value.trim(),deliveryCost=fulfil==="delivery"?getEditDeliveryCost():0,items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,orderDate:orderDate||null,pickupTime:pickup||null});closeEdit();clearSelection();}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
 
 /* ── Entry list ── */
 function renderEntryList(orders){const list=document.getElementById("entryList");if(!orders.length){list.innerHTML='<div class="empty"><div class="icon">&#129379;</div>No orders yet today.</div>';return;}list.innerHTML=orders.slice(0,30).map(o=>{const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o),isSel=o.id===selectedId;return'<div class="order'+(isSel?" selected":"")+'" data-id="'+o.id+'"><div class="order-header"><div><div class="order-name">'+esc(o.customerName)+'</div><div class="order-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+'</div><div class="order-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="pickup-time">Pickup: '+pk+'</span>':'')+'</div></div><span class="badge '+bdgClass(o.status)+'">'+bdgLabel(o)+'</span></div><div class="order-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.notes?'<div class="order-note">'+esc(o.notes)+'</div>':'')+((al||ul)?'<div class="order-actions">'+(al?'<button class="btn-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(ul?'<button class="btn-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')+'</div>';}).join("");list.querySelectorAll(".order").forEach(card=>{card.addEventListener("click",e=>{if(e.target.closest(".adv-btn,.undo-btn"))return;setSelected(card.dataset.id===selectedId?null:card.dataset.id);});});wireButtons(list,orders);}
@@ -488,61 +498,87 @@ function renderKanban(orders){STATUS_FLOW.forEach(status=>{const col=orders.filt
 function wireButtons(c,orders){c.querySelectorAll(".adv-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const next=nextStatus(o.status||"new");if(!next)return;const ok=await showConfirm(advLabel(o)+"?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "));if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({status:next});}catch{btn.disabled=false;}});});c.querySelectorAll(".undo-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const prev=prevStatus(o.status||"new");if(!prev)return;const ok=await showConfirm("Undo to "+STATUS_LABEL[prev]+"?",esc(o.customerName));if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({status:prev});}catch{btn.disabled=false;}});});}
 
 /* ════════════════════════════════════════
-   HORIZONTAL TIMELINE (PowerPoint style)
+   HORIZONTAL TIMELINE — multi-scale zoom
+   (hour → day → week → month, like a map)
    ════════════════════════════════════════ */
-let tlDateStr=new Date().toISOString().slice(0,10);
-let tlZoom=80; // px per hour
-const TL_ZOOM_STEPS=[40,60,80,110,150,200,280];
-let tlZoomIdx=2; // default 80px/hr
-const TL_START=6,TL_END=22; // 6am – 10pm shown
-const TL_CANVAS_H=440,TL_AXIS_Y=210;
-// Above: levels (distance from axis). Alternate between them.
-const ABOVE_DIST=[80,160];
-const BELOW_DIST=[80,160];
 const DOT_COLORS={created:"#6B7CB0",pickup:"#D9A24B",delivery:"#C7401F"};
+const TL_CANVAS_H=440,TL_AXIS_Y=210;
+const TL_START=6,TL_END=22; // 6am – 10pm shown in hour mode
 
-// Date nav
+// Zoom ladder: index 0 = most zoomed in (fine hours) … last = most zoomed out (months)
+const ZOOM_LEVELS=[
+  {mode:"hour", px:220, label:"2x"},
+  {mode:"hour", px:150, label:"1.5x"},
+  {mode:"hour", px:90,  label:"1x"},
+  {mode:"hour", px:55,  label:"0.5x"},
+  {mode:"day",  px:110, label:"Day"},
+  {mode:"day",  px:60,  label:"Day"},
+  {mode:"week", px:90,  label:"Week"},
+  {mode:"week", px:50,  label:"Week"},
+  {mode:"month",px:130, label:"Month"},
+  {mode:"month",px:75,  label:"Month"},
+];
+let tlZoomIdx=2; // default: hour mode, 90px/hr
+let tlAnchor=startOfDay(new Date()); // the date the view is centered/focused on
+
+function startOfDay(d){const x=new Date(d);x.setHours(0,0,0,0);return x;}
+function startOfWeek(d){const x=startOfDay(d);x.setDate(x.getDate()-x.getDay());return x;}
+function startOfMonth(d){return new Date(d.getFullYear(),d.getMonth(),1);}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x;}
+function addMonths(d,n){const x=new Date(d);x.setMonth(x.getMonth()+n);return x;}
+function toInputDate(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function curMode(){return ZOOM_LEVELS[tlZoomIdx].mode;}
+function curPx(){return ZOOM_LEVELS[tlZoomIdx].px;}
+
+// ── Nav controls ──
 (function(){
   const inp=document.getElementById("tlDate");
-  inp.value=tlDateStr;
-  inp.addEventListener("change",()=>{tlDateStr=inp.value;renderTimeline();});
-  document.getElementById("tlPrev").addEventListener("click",()=>{const d=new Date(tlDateStr+"T00:00:00");d.setDate(d.getDate()-1);tlDateStr=d.toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});
-  document.getElementById("tlNext").addEventListener("click",()=>{const d=new Date(tlDateStr+"T00:00:00");d.setDate(d.getDate()+1);tlDateStr=d.toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});
-  document.getElementById("tlToday").addEventListener("click",()=>{tlDateStr=new Date().toISOString().slice(0,10);inp.value=tlDateStr;renderTimeline();});
+  inp.value=toInputDate(tlAnchor);
+  inp.addEventListener("change",()=>{if(!inp.value)return;tlAnchor=startOfDay(new Date(inp.value+"T00:00:00"));renderTimeline();});
+  document.getElementById("tlPrev").addEventListener("click",()=>{stepAnchor(-1);});
+  document.getElementById("tlNext").addEventListener("click",()=>{stepAnchor(1);});
+  document.getElementById("tlToday").addEventListener("click",()=>{tlAnchor=startOfDay(new Date());inp.value=toInputDate(tlAnchor);renderTimeline();});
 })();
+function stepAnchor(dir){
+  const mode=curMode();
+  const inp=document.getElementById("tlDate");
+  if(mode==="hour")tlAnchor=addDays(tlAnchor,dir*1);
+  else if(mode==="day")tlAnchor=addDays(tlAnchor,dir*7);
+  else if(mode==="week")tlAnchor=addDays(tlAnchor,dir*28);
+  else tlAnchor=addMonths(tlAnchor,dir*6);
+  inp.value=toInputDate(tlAnchor);
+  renderTimeline();
+}
 
-// Zoom controls
-document.getElementById("tlZoomIn").addEventListener("click",()=>{if(tlZoomIdx<TL_ZOOM_STEPS.length-1){tlZoomIdx++;tlZoom=TL_ZOOM_STEPS[tlZoomIdx];updateZoomLabel();renderTimeline();}});
-document.getElementById("tlZoomOut").addEventListener("click",()=>{if(tlZoomIdx>0){tlZoomIdx--;tlZoom=TL_ZOOM_STEPS[tlZoomIdx];updateZoomLabel();renderTimeline();}});
-function updateZoomLabel(){const ratios=["0.5x","0.75x","1x","1.4x","1.9x","2.5x","3.5x"];document.getElementById("tlZoomLabel").textContent=ratios[tlZoomIdx]||tlZoom+"px";}
+// ── Zoom controls ──
+document.getElementById("tlZoomIn").addEventListener("click",()=>{if(tlZoomIdx>0){tlZoomIdx--;updateZoomLabel();renderTimeline();}});
+document.getElementById("tlZoomOut").addEventListener("click",()=>{if(tlZoomIdx<ZOOM_LEVELS.length-1){tlZoomIdx++;updateZoomLabel();renderTimeline();}});
+function updateZoomLabel(){document.getElementById("tlZoomLabel").textContent=ZOOM_LEVELS[tlZoomIdx].label;}
 
 // Drag-to-scroll on the timeline wrap
 (function(){
   const wrap=document.getElementById("tlScrollWrap");
-  let dragging=false,startX=0,scrollLeft=0;
-  wrap.addEventListener("mousedown",e=>{dragging=true;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;wrap.style.cursor="grabbing";});
+  let dragging=false,startX=0,scrollLeft=0,moved=false;
+  wrap.addEventListener("mousedown",e=>{dragging=true;moved=false;startX=e.pageX-wrap.offsetLeft;scrollLeft=wrap.scrollLeft;wrap.style.cursor="grabbing";});
   wrap.addEventListener("mouseleave",()=>{dragging=false;wrap.style.cursor="grab";});
   wrap.addEventListener("mouseup",()=>{dragging=false;wrap.style.cursor="grab";});
-  wrap.addEventListener("mousemove",e=>{if(!dragging)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;wrap.scrollLeft=scrollLeft-(x-startX);});
+  wrap.addEventListener("mousemove",e=>{if(!dragging)return;e.preventDefault();const x=e.pageX-wrap.offsetLeft;if(Math.abs(x-startX)>4)moved=true;wrap.scrollLeft=scrollLeft-(x-startX);});
+  wrap.addEventListener("click",e=>{if(moved){e.stopPropagation();moved=false;}});
 })();
 
-function xOf(h,m=0){return Math.round((h-TL_START+m/60)*tlZoom)+20;}
-
-function getTimelineEvents(){
+/* Build a flat list of every timeline-relevant event across ALL orders
+   (order-placed + pickup/delivery), each with a concrete Date/time. */
+function getAllTimelineEvents(){
   const events=[];
   allOrders.forEach(o=>{
-    const createdDate=toDateStr(o.createdAt);
-    const pickupDate=isoDateStr(o.pickupTime);
-    // Order placed event
-    if(createdDate===tlDateStr&&o.createdAt){
-      const d=getOrderDate(o);
-      if(d)events.push({type:"created",time:d,order:o,label:"Order placed",color:DOT_COLORS.created});
-    }
-    // Pickup/Delivery event
-    if(pickupDate===tlDateStr&&o.pickupTime){
-      const d=new Date(o.pickupTime);
-      const isDelivery=o.fulfilment==="delivery";
-      events.push({type:isDelivery?"delivery":"pickup",time:d,order:o,label:isDelivery?"Delivery":"Pickup",color:isDelivery?DOT_COLORS.delivery:DOT_COLORS.pickup});
+    const d1=getOrderDate(o);
+    if(d1)events.push({type:"created",time:d1,order:o,label:"Order placed",color:DOT_COLORS.created});
+    if(o.pickupTime){
+      const d2=new Date(o.pickupTime);
+      if(!isNaN(d2)){
+        const isDelivery=o.fulfilment==="delivery";
+        events.push({type:isDelivery?"delivery":"pickup",time:d2,order:o,label:isDelivery?"Delivery":"Pickup",color:isDelivery?DOT_COLORS.delivery:DOT_COLORS.pickup});
+      }
     }
   });
   events.sort((a,b)=>a.time-b.time);
@@ -550,37 +586,38 @@ function getTimelineEvents(){
 }
 
 function renderTimeline(){
-  const totalW=(TL_END-TL_START)*tlZoom+40;
+  const mode=curMode();
+  if(mode==="hour")renderHourView();
+  else renderBucketView(mode);
+}
+
+/* ── HOUR VIEW: one day, exact times, collision-avoiding cards ── */
+function renderHourView(){
+  const px=curPx();
+  const dateStr=toInputDate(tlAnchor);
+  const xOf=(h,m=0)=>Math.round((h-TL_START+m/60)*px)+20;
+  const totalW=(TL_END-TL_START)*px+40;
   const canvas=document.getElementById("tlCanvas");
   const inner=document.getElementById("tlCanvasInner");
   canvas.style.width=totalW+"px";
 
   let html="";
-
-  // Background grid lines (subtle vertical lines per hour)
   for(let h=TL_START;h<=TL_END;h++){
     const x=xOf(h);
     html+=`<div style="position:absolute;left:${x}px;top:0;width:1px;height:100%;background:var(--border);opacity:0.5;pointer-events:none;"></div>`;
   }
-
-  // Main axis line
   html+=`<div style="position:absolute;left:0;right:0;height:4px;top:${TL_AXIS_Y}px;background:var(--text-mute);border-radius:2px;"></div>`;
-
-  // Hour labels & tick marks
   for(let h=TL_START;h<=TL_END;h++){
     const x=xOf(h);
     const label=h===0?"12am":h<12?h+"am":h===12?"12pm":(h-12)+"pm";
-    // tick
     html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-6}px;width:2px;height:12px;background:var(--text-mute);transform:translateX(-50%);"></div>`;
-    // label
     html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+10}px;transform:translateX(-50%);font-size:11px;font-weight:600;color:var(--text-mute);white-space:nowrap;">${label}</div>`;
   }
 
-  // "Now" indicator (if today)
-  const today=new Date().toISOString().slice(0,10);
-  if(tlDateStr===today){
-    const now=new Date();
-    const nowH=now.getHours()+now.getMinutes()/60;
+  const today=new Date();
+  const isToday=dateStr===toInputDate(today);
+  if(isToday){
+    const nowH=today.getHours()+today.getMinutes()/60;
     if(nowH>=TL_START&&nowH<=TL_END){
       const nx=xOf(nowH);
       html+=`<div style="position:absolute;left:${nx}px;top:0;width:2px;height:${TL_CANVAS_H}px;background:var(--accent);opacity:0.7;pointer-events:none;"></div>`;
@@ -588,88 +625,163 @@ function renderTimeline(){
     }
   }
 
-  // Get and render events
-  const events=getTimelineEvents();
-  let aboveIdx=0,belowIdx=0;
+  const events=getAllTimelineEvents().filter(ev=>toInputDate(ev.time)===dateStr&&ev.time.getHours()>=TL_START&&ev.time.getHours()<=TL_END);
+
+  // Lane-based collision avoidance: events that fall close together on the
+  // x-axis get pushed further from the axis instead of stacking on top of
+  // each other. Alternates above/below, and within each side finds the
+  // nearest free lane.
+  const CARD_GAP=140; // min horizontal px between two cards sharing a lane
+  const ABOVE_DIST=[80,155,230,305,380];
+  const BELOW_DIST=[80,155,230,305,380];
+  const aboveLanes=[],belowLanes=[];
 
   events.forEach((ev,i)=>{
-    const h=ev.time.getHours(),m=ev.time.getMinutes();
-    if(h<TL_START||h>TL_END)return;
-    const x=xOf(h,m);
+    const x=xOf(ev.time.getHours(),ev.time.getMinutes());
     const isAbove=i%2===0;
-    const dist=isAbove?ABOVE_DIST[aboveIdx%2]:BELOW_DIST[belowIdx%2];
-    isAbove?aboveIdx++:belowIdx++;
+    const lanes=isAbove?aboveLanes:belowLanes;
+    let laneIdx=lanes.findIndex(lastX=>x-lastX>=CARD_GAP);
+    if(laneIdx===-1){laneIdx=lanes.length;lanes.push(x);}else{lanes[laneIdx]=x;}
+    const distArr=isAbove?ABOVE_DIST:BELOW_DIST;
+    const dist=distArr[Math.min(laneIdx,distArr.length-1)]+Math.max(0,laneIdx-distArr.length+1)*75;
     const col=ev.color;
     const timeStr=fmtHHMM(ev.time);
     const nameShort=ev.order.customerName.length>14?ev.order.customerName.slice(0,13)+"…":ev.order.customerName;
     const itemsShort=ev.order.items.map(it=>it.qty+"x "+it.name.slice(0,3)).join(", ");
 
-    // Dot on axis
     html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-8}px;width:16px;height:16px;border-radius:50%;background:${col};border:3px solid var(--surface);box-shadow:0 1px 5px rgba(0,0,0,.25);transform:translateX(-50%);z-index:3;"></div>`;
 
+    const cardInner=`<div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">${ev.label}</div>`
+      +`<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${esc(nameShort)}</div>`
+      +`<div style="font-size:11px;color:var(--text-soft);margin-bottom:2px;">${esc(itemsShort)}</div>`
+      +`<div style="font-size:10.5px;font-weight:600;color:${col};">${timeStr}</div>`
+      +`<div style="font-size:10px;color:var(--text-mute);margin-top:1px;">${ev.order.fulfilment==="delivery"?"Delivery":"Pickup"}</div>`;
+
     if(isAbove){
-      const stemBottom=TL_AXIS_Y-8;
-      const stemTop=TL_AXIS_Y-dist;
-      const stemH=stemBottom-stemTop;
-      // Stem
+      const stemBottom=TL_AXIS_Y-8,stemTop=TL_AXIS_Y-dist,stemH=stemBottom-stemTop,cardBottom=stemTop-2;
       html+=`<div style="position:absolute;left:${x}px;top:${stemTop}px;width:2px;height:${stemH}px;background:${col};opacity:0.5;transform:translateX(-50%);"></div>`;
-      // Card (bottom-anchored to stem top, floating above)
-      const cardBottom=stemTop-2;
-      html+=`<div style="position:absolute;left:${x}px;bottom:${TL_CANVAS_H-cardBottom}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">`
-        +`<div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">${ev.label}</div>`
-        +`<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${esc(nameShort)}</div>`
-        +`<div style="font-size:11px;color:var(--text-soft);margin-bottom:2px;">${esc(itemsShort)}</div>`
-        +`<div style="font-size:10.5px;font-weight:600;color:${col};">${timeStr}</div>`
-        +`<div style="font-size:10px;color:var(--text-mute);margin-top:1px;">${ev.order.fulfilment==="delivery"?"🚗 Delivery":"📦 Pickup"}</div>`
-        +'</div>';
-      // Small time label on axis
-      html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-24}px;transform:translateX(-50%);font-size:10px;font-weight:700;color:${col};white-space:nowrap;letter-spacing:-.02em;">${timeStr}</div>`;
+      html+=`<div style="position:absolute;left:${x}px;bottom:${TL_CANVAS_H-cardBottom}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">${cardInner}</div>`;
     } else {
-      const stemTop=TL_AXIS_Y+8;
-      const stemH=dist-8;
-      // Stem
+      const stemTop=TL_AXIS_Y+8,stemH=dist-8,cardTop=stemTop+stemH+2;
       html+=`<div style="position:absolute;left:${x}px;top:${stemTop}px;width:2px;height:${stemH}px;background:${col};opacity:0.5;transform:translateX(-50%);"></div>`;
-      // Card (top at stem bottom)
-      const cardTop=stemTop+stemH+2;
-      html+=`<div style="position:absolute;left:${x}px;top:${cardTop}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">`
-        +`<div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;">${ev.label}</div>`
-        +`<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">${esc(nameShort)}</div>`
-        +`<div style="font-size:11px;color:var(--text-soft);margin-bottom:2px;">${esc(itemsShort)}</div>`
-        +`<div style="font-size:10.5px;font-weight:600;color:${col};">${timeStr}</div>`
-        +`<div style="font-size:10px;color:var(--text-mute);margin-top:1px;">${ev.order.fulfilment==="delivery"?"🚗 Delivery":"📦 Pickup"}</div>`
-        +'</div>';
-      // Small time label on axis (below)
-      html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+10}px;transform:translateX(-50%);font-size:10px;font-weight:700;color:${col};white-space:nowrap;letter-spacing:-.02em;margin-top:18px;">${timeStr}</div>`;
+      html+=`<div style="position:absolute;left:${x}px;top:${cardTop}px;transform:translateX(-50%);background:var(--surface);border:2px solid ${col};border-radius:10px;padding:7px 10px;min-width:115px;max-width:155px;box-shadow:0 3px 10px rgba(0,0,0,.10);z-index:2;">${cardInner}</div>`;
     }
   });
 
-  // Empty state overlay
   if(!events.length){
     html+=`<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;color:var(--text-mute);"><div style="font-size:32px;margin-bottom:8px;">📅</div><div style="font-size:13px;">No events on this date.<br>Add a pickup time to orders to see them here.</div></div>`;
   }
 
   inner.innerHTML=html;
-
-  // Scroll to current hour or 8am if today
   const scrollWrap=document.getElementById("tlScrollWrap");
-  const scrollToH=tlDateStr===today?Math.max(TL_START,new Date().getHours()-1):8;
+  const scrollToH=isToday?Math.max(TL_START,today.getHours()-1):8;
   scrollWrap.scrollLeft=Math.max(0,xOf(scrollToH)-60);
 
-  // Render list below
-  renderTlList(events);
+  renderTlList(events,new Date(dateStr+"T12:00:00").toLocaleDateString("en-MY",{weekday:"long",day:"numeric",month:"long"}));
 }
 
-function renderTlList(events){
+/* ── BUCKET VIEWS: day / week / month, zoomed out ── */
+const BUCKET_CFG={
+  day:{window:60,label:d=>d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:d=>d.toLocaleDateString("en-MY",{weekday:"short"}),step:(d,i)=>addDays(d,i),start:d=>startOfDay(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=2;},contains:(bucket,t)=>toInputDate(t)===toInputDate(bucket.start)},
+  week:{window:27,label:d=>"Wk of "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:()=>"",step:(d,i)=>addDays(d,i*7),start:d=>startOfWeek(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=4;},contains:(bucket,t)=>t>=bucket.start&&t<addDays(bucket.start,7)},
+  month:{window:25,label:d=>d.toLocaleDateString("en-MY",{month:"short",year:"2-digit"}),sub:()=>"",step:(d,i)=>addMonths(d,i),start:d=>startOfMonth(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=6;},contains:(bucket,t)=>t>=bucket.start&&t<addMonths(bucket.start,1)},
+};
+let BUCKET_CACHE=[];
+
+function renderBucketView(mode){
+  const cfg=BUCKET_CFG[mode];
+  const px=curPx();
+  const half=Math.floor(cfg.window/2);
+  const centerStart=cfg.start(tlAnchor);
+  const buckets=[];
+  for(let i=-half;i<=half;i++){
+    const start=cfg.step(centerStart,i);
+    buckets.push({start,label:cfg.label(start),sub:cfg.sub(start)});
+  }
+  BUCKET_CACHE=buckets;
+
+  const xOf=i=>i*px+40;
+  const totalW=buckets.length*px+60;
+  const canvas=document.getElementById("tlCanvas");
+  const inner=document.getElementById("tlCanvasInner");
+  canvas.style.width=totalW+"px";
+
+  const events=getAllTimelineEvents();
+  const today=new Date();
+  let html="";
+  html+=`<div style="position:absolute;left:0;right:0;height:4px;top:${TL_AXIS_Y}px;background:var(--text-mute);border-radius:2px;"></div>`;
+
+  let maxCount=1;
+  const counted=buckets.map(b=>{
+    const inBucket=events.filter(ev=>cfg.contains(b,ev.time));
+    const c={created:0,pickup:0,delivery:0,total:inBucket.length,rev:0};
+    inBucket.forEach(ev=>{c[ev.type]++;if(ev.type!=="created")c.rev+=ev.order.total||0;});
+    maxCount=Math.max(maxCount,c.total);
+    return c;
+  });
+
+  buckets.forEach((b,i)=>{
+    const x=xOf(i);
+    const c=counted[i];
+    const isTodayBucket=cfg.contains(b,today);
+    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-6}px;width:1px;height:12px;background:var(--text-mute);transform:translateX(-50%);"></div>`;
+    html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+10}px;transform:translateX(-50%);font-size:11px;font-weight:${isTodayBucket?800:600};color:${isTodayBucket?"var(--accent)":"var(--text-mute)"};white-space:nowrap;">${b.label}</div>`;
+    if(b.sub)html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y+24}px;transform:translateX(-50%);font-size:9.5px;color:var(--text-mute);white-space:nowrap;">${b.sub}</div>`;
+
+    if(c.total>0){
+      const maxBarH=150;
+      const barH=Math.max(8,Math.round((c.total/maxCount)*maxBarH));
+      const segs=[["created",c.created],["pickup",c.pickup],["delivery",c.delivery]].filter(s=>s[1]>0);
+      let stackTop=TL_AXIS_Y-8-barH,cursor=0;
+      const segHtml=segs.map(([type,cnt])=>{
+        const segH=Math.round((cnt/c.total)*barH);
+        const top=TL_AXIS_Y-8-cursor-segH;
+        cursor+=segH;
+        return `<div style="position:absolute;left:${x}px;top:${top}px;width:22px;height:${segH}px;background:${DOT_COLORS[type]};transform:translateX(-50%);"></div>`;
+      }).join("");
+      html+=`<div class="tl-bucket-bar" data-idx="${i}" style="position:absolute;left:${x-14}px;top:${TL_AXIS_Y-8-barH}px;width:28px;height:${barH}px;cursor:pointer;border-radius:5px 5px 0 0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.15);">${segHtml}</div>`;
+      html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-16-barH}px;transform:translateX(-50%);font-size:10.5px;font-weight:700;color:var(--text);white-space:nowrap;">${c.total}</div>`;
+    } else {
+      html+=`<div class="tl-bucket-bar" data-idx="${i}" style="position:absolute;left:${x-14}px;top:${TL_AXIS_Y-14}px;width:28px;height:6px;cursor:pointer;border-radius:3px;background:var(--border);opacity:.5;"></div>`;
+    }
+    if(isTodayBucket){
+      html+=`<div style="position:absolute;left:${x}px;top:0;width:2px;height:${TL_CANVAS_H}px;background:var(--accent);opacity:0.35;pointer-events:none;"></div>`;
+    }
+  });
+
+  inner.innerHTML=html;
+  inner.querySelectorAll(".tl-bucket-bar").forEach(el=>{
+    el.addEventListener("click",()=>{
+      const idx=Number(el.dataset.idx);
+      cfg.drillIn(idx);
+      document.getElementById("tlDate").value=toInputDate(tlAnchor);
+      updateZoomLabel();
+      renderTimeline();
+    });
+  });
+
+  const scrollWrap=document.getElementById("tlScrollWrap");
+  scrollWrap.scrollLeft=Math.max(0,xOf(half)-scrollWrap.clientWidth/2);
+
+  const modeName=mode.charAt(0).toUpperCase()+mode.slice(1);
+  const rangeLabel=modeName+" view — centred on "+tlAnchor.toLocaleDateString("en-MY",{day:"numeric",month:"long",year:"numeric"});
+  const allInRange=[];
+  buckets.forEach((b,i)=>{if(counted[i].total>0)events.filter(ev=>cfg.contains(b,ev.time)).forEach(ev=>allInRange.push(ev));});
+  renderTlList(allInRange.sort((a,b)=>a.time-b.time),rangeLabel,true);
+}
+
+function renderTlList(events,titleText,showDate){
   const list=document.getElementById("tlList");
-  if(!events.length){list.innerHTML='<div class="tl-list-empty">No orders or pickups on this date.</div>';return;}
-  list.innerHTML='<div class="tl-list-title">All events — '+new Date(tlDateStr+"T12:00:00").toLocaleDateString("en-MY",{weekday:"long",day:"numeric",month:"long"})+'</div>'
-    +events.map(ev=>{
+  if(!events.length){list.innerHTML='<div class="tl-list-empty">No orders or pickups in view.</div>';return;}
+  list.innerHTML='<div class="tl-list-title">'+(titleText?"All events — "+titleText:"All events")+'</div>'
+    +events.slice(0,200).map(ev=>{
       const col=ev.color;
+      const dateBit=showDate?fmtHHMM(ev.time)+" · "+ev.time.toLocaleDateString("en-MY",{day:"numeric",month:"short"}):fmtHHMM(ev.time);
       return`<div class="tl-list-card">`
         +`<div class="tl-list-card-left">`
           +`<div class="tl-list-card-name">${esc(ev.order.customerName)}</div>`
           +`<div class="tl-list-card-sub">${esc(ev.order.items.map(i=>i.qty+"x "+i.name).join(", "))} — RM${ev.order.total}</div>`
-          +`<div class="tl-list-card-time" style="color:${col};">${ev.label} · ${fmtHHMM(ev.time)}</div>`
+          +`<div class="tl-list-card-time" style="color:${col};">${ev.label} · ${dateBit}</div>`
         +'</div>'
         +`<span class="badge ${bdgClass(ev.order.status)}">${bdgLabel(ev.order)}</span>`
         +'</div>';
@@ -683,8 +795,8 @@ let salesPeriod="month",chart1Instance=null,chart2Instance=null;
 document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
 function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);return d>=ws;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
 function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const totalRev=orders.reduce((s,o)=>s+(o.total||0),0);const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));document.getElementById("salesTotalRev").textContent="RM"+totalRev;document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);renderChart1(orders);renderChart2();}
-function renderChart1(orders){const now=new Date();let labels=[],data=[],title="";if(salesPeriod==="today"){title="Revenue by Hour (Today)";const hours={};orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const h=d.getHours();hours[h]=(hours[h]||0)+(o.total||0);});for(let h=6;h<=22;h++){labels.push((h%12===0?12:h%12)+""+(h<12?"am":"pm"));data.push(hours[h]||0);};}else if(salesPeriod==="week"){title="Revenue by Day (This Week)";const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const dt=[0,0,0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const idx=Math.floor((d-ws)/86400000);if(idx>=0&&idx<7)dt[idx]+=(o.total||0);});labels=days;data=dt;}else if(salesPeriod==="month"){title="Revenue by Week (This Month)";const wk=[0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const wi=Math.min(Math.floor((d.getDate()-1)/7),4);wk[wi]+=(o.total||0);});labels=["Week 1","Week 2","Week 3","Week 4","Week 5"];data=wk;}else{title="Revenue by Day (Last 30 Days)";const dayMap={};for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);dayMap[d.toISOString().slice(0,10)]=0;}orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const k=d.toISOString().slice(0,10);if(k in dayMap)dayMap[k]+=(o.total||0);});const ent=Object.entries(dayMap).sort(([a],[b])=>a.localeCompare(b));labels=ent.map(([k])=>k.slice(5).replace("-","/"));data=ent.map(([,v])=>v);}document.getElementById("chart1Title").textContent=title;const ctx=document.getElementById("chart1").getContext("2d");if(chart1Instance)chart1Instance.destroy();chart1Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"RM"+c.parsed.y}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
-function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],data=[],oc=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});data.push(mo.reduce((s,o)=>s+(o.total||0),0));oc.push(mo.length);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5,yAxisID:"y"},{label:"Orders",data:oc,backgroundColor:"rgba(217,162,75,0.6)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:5,yAxisID:"y2"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.yAxisID==="y"?"RM"+c.parsed.y:c.parsed.y+" orders"}}},scales:{x:{grid:{display:false},ticks:{font:{size:11}}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,position:"left",ticks:{callback:v=>"RM"+v,font:{size:10}}},y2:{beginAtZero:true,position:"right",grid:{display:false},ticks:{font:{size:10}}}}}});}
+function renderChart1(orders){const now=new Date();let labels=[],data=[],title="";if(salesPeriod==="today"){title="Revenue by Hour (Today)";const hours={};orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const h=d.getHours();hours[h]=(hours[h]||0)+(o.total||0);});for(let h=6;h<=22;h++){labels.push((h%12===0?12:h%12)+""+(h<12?"am":"pm"));data.push(hours[h]||0);};}else if(salesPeriod==="week"){title="Revenue by Day (This Week)";const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const dt=[0,0,0,0,0,0,0];orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const idx=Math.floor((d-ws)/86400000);if(idx>=0&&idx<7)dt[idx]+=(o.total||0);});labels=days;data=dt;}else if(salesPeriod==="month"){title="Revenue by Week (Last 8 Weeks)";const curWeekStart=new Date(now);curWeekStart.setDate(now.getDate()-now.getDay());curWeekStart.setHours(0,0,0,0);const wkLabels=[],wkData=[];for(let i=7;i>=0;i--){const wkStart=new Date(curWeekStart);wkStart.setDate(curWeekStart.getDate()-i*7);const wkEnd=new Date(wkStart);wkEnd.setDate(wkStart.getDate()+7);wkLabels.push(wkStart.toLocaleDateString("en-MY",{day:"numeric",month:"short"}));let rev=0;allOrders.forEach(o=>{const d=getOrderDate(o);if(d&&d>=wkStart&&d<wkEnd)rev+=(o.total||0);});wkData.push(rev);}labels=wkLabels;data=wkData;}else{title="Revenue by Day (Last 30 Days)";const dayMap={};for(let i=29;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);dayMap[d.toISOString().slice(0,10)]=0;}orders.forEach(o=>{const d=getOrderDate(o);if(!d)return;const k=d.toISOString().slice(0,10);if(k in dayMap)dayMap[k]+=(o.total||0);});const ent=Object.entries(dayMap).sort(([a],[b])=>a.localeCompare(b));labels=ent.map(([k])=>k.slice(5).replace("-","/"));data=ent.map(([,v])=>v);}document.getElementById("chart1Title").textContent=title;const ctx=document.getElementById("chart1").getContext("2d");if(chart1Instance)chart1Instance.destroy();chart1Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Revenue (RM)",data,backgroundColor:"rgba(199,64,31,0.75)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>"RM"+c.parsed.y}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},maxRotation:45}},y:{grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
+function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],sigData=[],beefData=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});let sig=0,beef=0;mo.forEach(o=>(o.items||[]).forEach(it=>{if(it.id==="signature")sig+=it.price*it.qty;else if(it.id==="beef")beef+=it.price*it.qty;}));sigData.push(sig);beefData.push(beef);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Signature (RM)",data:sigData,backgroundColor:"rgba(217,162,75,0.85)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:4,stack:"rev"},{label:"Beef (RM)",data:beefData,backgroundColor:"rgba(199,64,31,0.85)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:4,stack:"rev"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.label+": RM"+c.parsed.y}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
 
 /* ── Live listener ── */
 ordersRef.orderBy("createdAt","desc").limit(500).onSnapshot(

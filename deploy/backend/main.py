@@ -40,6 +40,8 @@ client = genai.Client(api_key=GEMINI_API_KEY)
 
 SYSTEM_INSTRUCTION = """You are a friendly customer service assistant for a family-run frozen roti business.
 Menu:
+- Frozen Roti Canai (Signature): RM8 per pack (5 pieces).
+- Frozen Roti Canai Beef: RM14 per pack (2 pieces).
 - Family Freezer Bundle: RM50 per bundle. Includes 3 Signature Roti Canai packs (5 pieces each) and 2 Beef Roti Canai packs (2 pieces each).
 Fulfillment: Self-pickup from our home, or doorstep delivery (delivery fee varies by location).
 Orders & inquiries: Call or WhatsApp +60198858627.
