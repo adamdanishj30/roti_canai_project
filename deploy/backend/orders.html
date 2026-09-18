@@ -531,7 +531,7 @@ const TL_CANVAS_H=440,TL_AXIS_Y=210;
 // Zoom ladder: 3 fixed views — Day, Week, Month
 const ZOOM_LEVELS=[
   {mode:"day",  px:90,  label:"Day"},
-  {mode:"week", px:70,  label:"Week"},
+  {mode:"week", px:85,  label:"Week"},
   {mode:"month",px:130, label:"Month"},
 ];
 let tlZoomIdx=0; // default: Day view
@@ -608,7 +608,7 @@ function renderTimeline(){
 /* ── BUCKET VIEWS: day / week / month ── */
 const BUCKET_CFG={
   day:{window:60,label:d=>d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:d=>d.toLocaleDateString("en-MY",{weekday:"short"}),step:(d,i)=>addDays(d,i),start:d=>startOfDay(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;},contains:(bucket,t)=>toInputDate(t)===toInputDate(bucket.start)},
-  week:{window:27,label:d=>"Wk of "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:()=>"",step:(d,i)=>addDays(d,i*7),start:d=>startOfWeek(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=0;},contains:(bucket,t)=>t>=bucket.start&&t<addDays(bucket.start,7)},
+  week:{window:27,label:d=>d.toLocaleDateString("en-MY",{day:"numeric",month:"short"}),sub:()=>"",step:(d,i)=>addDays(d,i*7),start:d=>startOfWeek(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=0;},contains:(bucket,t)=>t>=bucket.start&&t<addDays(bucket.start,7)},
   month:{window:25,label:d=>d.toLocaleDateString("en-MY",{month:"short",year:"2-digit"}),sub:()=>"",step:(d,i)=>addMonths(d,i),start:d=>startOfMonth(d),drillIn:idx=>{tlAnchor=BUCKET_CACHE[idx].start;tlZoomIdx=1;},contains:(bucket,t)=>t>=bucket.start&&t<addMonths(bucket.start,1)},
 };
 let BUCKET_CACHE=[];
