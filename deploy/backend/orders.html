@@ -203,9 +203,9 @@ textarea{resize:vertical;min-height:50px}
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
 .chart-card h3{font-family:'Fraunces',serif;font-size:14px;color:var(--text);margin:0 0 14px}
 .chart-wrap{position:relative;width:100%;height:200px}
-.chart-card.combo-card{background:#FFFFFF!important;color:#1E293B!important;border:1px solid #E2E8F0;border-radius:14px;padding:18px 16px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
-.chart-card.combo-card h3{font-family:'Work Sans',-apple-system,sans-serif;font-size:15.5px;font-weight:700;color:#1E293B!important;text-align:center;margin:0 0 12px 0;letter-spacing:-0.01em}
-.combo-chart-wrap{position:relative;width:100%;height:320px}
+.chart-card.combo-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 16px 14px}
+.chart-card.combo-card h3{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--text);text-align:center;margin:0 0 12px 0;letter-spacing:-0.01em}
+.combo-chart-wrap{position:relative;width:100%;height:300px}
 /* Sheets */
 #confirmSheet{position:fixed;inset:0;z-index:200;display:none}
 #confirmSheet.open{display:flex;flex-direction:column;justify-content:flex-end}
@@ -329,6 +329,80 @@ textarea{resize:vertical;min-height:50px}
 .auth-submit:disabled{opacity:.6;cursor:not-allowed}
 .auth-hint{margin-top:18px;font-size:11px;color:var(--text-mute);display:flex;align-items:center;justify-content:center;gap:6px}
 
+/* Done Archive & Calendar */
+.kanban-archive-hint{margin-top:10px;padding:8px 10px;background:var(--surface-2);border:1px dashed var(--border);border-radius:10px;font-size:11.5px;font-weight:600;color:var(--text-soft);text-align:center;cursor:pointer;transition:all .15s}
+.kanban-archive-hint:hover{background:var(--border);color:var(--accent)}
+.done-archive-section{margin-top:24px;border-top:1px solid var(--border);padding-top:20px}
+.done-archive-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px}
+.done-archive-title-wrap{display:flex;align-items:center;gap:10px}
+.done-archive-icon{font-size:24px}
+.done-archive-title{font-family:'Fraunces',Georgia,serif;font-size:17px;color:var(--text);margin:0}
+.done-archive-sub{font-size:12px;color:var(--text-mute);margin:2px 0 0}
+.done-archive-controls{display:flex;align-items:center;gap:8px}
+.archive-view-btn{border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.archive-view-btn:hover{background:var(--surface-2);color:var(--text)}
+.archive-view-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Calendar Picker */
+.archive-calendar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.archive-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.archive-cal-nav .cal-nav-title{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--text)}
+.cal-nav-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:8px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cal-nav-btn:hover{background:var(--border)}
+.archive-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.cal-day-header{font-size:11px;font-weight:700;color:var(--text-mute);padding-bottom:4px}
+.cal-day-cell{min-height:48px;border:1px solid transparent;border-radius:8px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;position:relative;background:transparent;color:var(--text-mute);font-size:12px;font-weight:500;cursor:default}
+.cal-day-cell.other-month{opacity:0.3}
+.cal-day-cell.has-orders{background:var(--surface-2);border-color:color-mix(in srgb,var(--gold) 40%,transparent);color:var(--text);cursor:pointer;font-weight:700}
+.cal-day-cell.has-orders:hover{border-color:var(--gold);transform:scale(1.02)}
+.cal-day-cell.selected{border-color:var(--accent)!important;background:color-mix(in srgb,var(--accent) 18%,var(--surface))!important}
+.cal-day-badge{font-size:9.5px;font-weight:700;background:var(--gold);color:#1C1712;border-radius:10px;padding:1px 5px;margin-top:3px;line-height:1.2}
+.cal-day-today{box-shadow:inset 0 0 0 1.5px var(--accent)}
+
+/* Date Groups */
+.archive-date-group{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
+.archive-date-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text)}
+.archive-date-meta{font-size:12px;font-weight:600;color:var(--text-mute)}
+.archive-orders-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;padding:12px 14px}
+.archive-order-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.archive-order-card:hover{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 6%,var(--surface));transform:translateY(-1px)}
+.aoc-top{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:4px}
+.aoc-name{font-weight:700;font-size:13.5px;color:var(--text)}
+.aoc-total{font-weight:700;font-size:13px;color:var(--accent)}
+.aoc-items{font-size:12px;color:var(--text-soft);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.aoc-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-mute)}
+
+/* Order Detail Modal */
+.order-detail-modal{position:fixed;inset:0;z-index:250;display:none;align-items:center;justify-content:center;padding:16px}
+.order-detail-modal.open{display:flex}
+.order-detail-box{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:18px;max-width:440px;width:100%;max-height:90vh;overflow-y:auto;padding:22px 20px 20px;z-index:2;box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.order-detail-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.order-detail-status-row{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.order-detail-name{font-family:'Fraunces',Georgia,serif;font-size:20px;color:var(--text);margin:0}
+.order-detail-phone{font-size:13px;color:var(--text-soft);margin-top:2px}
+.order-detail-phone a{color:var(--accent);text-decoration:none;font-weight:600}
+.modal-close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-mute);line-height:1;padding:0 4px}
+.modal-close-btn:hover{color:var(--text)}
+.od-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.od-info-item{display:flex;flex-direction:column}
+.od-info-lbl{font-size:10.5px;font-weight:700;text-transform:uppercase;color:var(--text-mute);letter-spacing:0.03em}
+.od-info-val{font-size:12.5px;font-weight:600;color:var(--text);margin-top:1px;word-break:break-word}
+.od-items-card{background:var(--surface-2);border-radius:10px;padding:12px;margin-bottom:14px}
+.od-items-title{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-mute);letter-spacing:0.03em;margin-bottom:8px}
+.od-item-row{display:flex;justify-content:space-between;font-size:13px;font-weight:500;padding:4px 0;border-bottom:1px dashed var(--border)}
+.od-item-row:last-child{border-bottom:none}
+.od-total-row{display:flex;justify-content:space-between;font-size:15px;font-weight:700;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.od-notes-box{background:var(--surface-2);border-radius:10px;padding:10px 12px;margin-bottom:16px}
+.od-notes-text{font-size:12.5px;color:var(--text-soft);margin:4px 0 0;font-style:italic}
+.order-detail-actions{display:flex;gap:10px}
+.order-detail-actions button{flex:1;border-radius:10px;padding:10px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:none;transition:opacity .15s}
+.order-detail-actions .od-btn-edit{background:var(--accent);color:#fff}
+.order-detail-actions .od-btn-reopen{background:var(--surface-2);border:1px solid var(--border);color:var(--text)}
+.order-detail-actions .od-btn-close{background:var(--surface-2);border:1px solid var(--border);color:var(--text-soft)}
+.order-detail-actions button:hover{opacity:0.88}
+.badge-paid{background:var(--success-bg);color:var(--success)}
+.badge-pickup{background:var(--surface-2);color:var(--text-soft)}
+.badge-delivery{background:color-mix(in srgb,var(--accent) 15%,var(--surface));color:var(--accent-deep)}
 </style>
 </head>
 <body>
@@ -428,6 +502,38 @@ textarea{resize:vertical;min-height:50px}
   </div>
 </div>
 
+<div id="orderDetailModal" class="order-detail-modal">
+  <div class="sheet-scrim" id="orderDetailScrim"></div>
+  <div class="order-detail-box" id="orderDetailBox">
+    <div class="order-detail-header">
+      <div>
+        <div class="order-detail-status-row" id="odStatusRow"></div>
+        <h2 class="order-detail-name" id="odName">Customer Name</h2>
+        <div class="order-detail-phone" id="odPhone"></div>
+      </div>
+      <button class="modal-close-btn" id="odCloseBtn" aria-label="Close modal">&times;</button>
+    </div>
+    <div class="od-info-grid" id="odInfoGrid"></div>
+    <div class="od-items-card">
+      <div class="od-items-title">Order Items</div>
+      <div id="odItemsList"></div>
+      <div class="od-total-row">
+        <span>Total</span>
+        <span id="odTotal">RM0.00</span>
+      </div>
+    </div>
+    <div class="od-notes-box" id="odNotesBox" style="display:none">
+      <div class="od-info-lbl">Notes</div>
+      <div class="od-notes-text" id="odNotesText"></div>
+    </div>
+    <div class="order-detail-actions">
+      <button type="button" class="od-btn-reopen" id="odReopenBtn">&#8630; Reopen</button>
+      <button type="button" class="od-btn-edit" id="odEditBtn">&#9998; Edit Order</button>
+      <button type="button" class="od-btn-close" id="odCloseBtn2">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="app" id="mainApp" style="display:none">
 <header>
   <div class="header-main">
@@ -503,6 +609,39 @@ textarea{resize:vertical;min-height:50px}
       <div class="kanban-col" id="col-preparing" data-status="preparing"><div class="kanban-col-header"><span class="kanban-col-title">Preparing</span><span class="kanban-count" id="count-preparing">0</span></div><div id="cards-preparing"><div class="empty"><div class="icon">&#127859;</div>Nothing cooking</div></div></div>
       <div class="kanban-col" id="col-packed" data-status="packed"><div class="kanban-col-header"><span class="kanban-col-title">Packed</span><span class="kanban-count" id="count-packed">0</span></div><div id="cards-packed"><div class="empty"><div class="icon">&#128230;</div>Nothing packed</div></div></div>
       <div class="kanban-col" id="col-done" data-status="done"><div class="kanban-col-header"><span class="kanban-col-title">Done</span><span class="kanban-count" id="count-done">0</span></div><div id="cards-done"><div class="empty"><div class="icon">&#9989;</div>No completed orders</div></div></div>
+    </div>
+
+    <!-- Completed Orders Archive Section -->
+    <div class="done-archive-section" id="doneArchiveSection">
+      <div class="done-archive-header">
+        <div class="done-archive-title-wrap">
+          <span class="done-archive-icon">📦</span>
+          <div>
+            <h3 class="done-archive-title">Completed Orders Archive</h3>
+            <p class="done-archive-sub" id="archiveSubtitle">Orders completed over 3 days ago are stored here</p>
+          </div>
+        </div>
+        <div class="done-archive-controls">
+          <button type="button" class="archive-view-btn" id="archiveToggleCal">📅 Calendar</button>
+          <button type="button" class="archive-view-btn active" id="archiveToggleScope" data-scope="older">Showing: &gt;3 Days Old</button>
+        </div>
+      </div>
+
+      <!-- Calendar Picker Widget (Toggleable) -->
+      <div class="archive-calendar-wrap" id="archiveCalendarWrap" style="display:none">
+        <div class="archive-cal-nav">
+          <button type="button" class="cal-nav-btn" id="archiveCalPrev" title="Previous Month">&larr;</button>
+          <span class="cal-nav-title" id="archiveCalTitle">Month Year</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <button type="button" class="archive-view-btn" id="archiveFilterClear" style="display:none;padding:4px 8px;font-size:11px">Clear filter</button>
+            <button type="button" class="cal-nav-btn" id="archiveCalNext" title="Next Month">&rarr;</button>
+          </div>
+        </div>
+        <div class="archive-cal-grid" id="archiveCalGrid"></div>
+      </div>
+
+      <!-- Date-Grouped Orders List -->
+      <div id="archiveDateGroups"></div>
     </div>
   </section>
 
@@ -697,7 +836,7 @@ function setConn(ok){document.getElementById("connStatus").classList.toggle("off
 /* ── Tabs ── */
 const TAB_MAP={entry:"entryView",kitchen:"kitchenView",inventory:"inventoryView",timeline:"timelineView",sales:"salesView"};
 document.getElementById("tabEntry").addEventListener("click",()=>switchTab("entry"));
-document.getElementById("tabKitchen").addEventListener("click",()=>switchTab("kitchen"));
+document.getElementById("tabKitchen").addEventListener("click",()=>{switchTab("kitchen");renderDoneArchive(allOrders);});
 document.getElementById("tabInventory").addEventListener("click",()=>{switchTab("inventory");renderInventory();});
 document.getElementById("tabTimeline").addEventListener("click",()=>{switchTab("timeline");renderTimeline();});
 document.getElementById("tabSales").addEventListener("click",()=>{switchTab("sales");renderSales();});
@@ -1097,11 +1236,496 @@ document.getElementById("editSave").addEventListener("click",async()=>{if(!editO
 /* ── Entry list (removed from entry page) ── */
 function renderEntryList(orders){const list=document.getElementById("entryList");if(!list)return;}
 
+/* ── Done Orders Archive & Calendar State ── */
+let archiveScope = "older"; // "older" (>3 days) or "all"
+let archiveCalMonth = new Date();
+let archiveSelectedDateKey = null;
+let activeModalOrder = null;
+
+function getOrderDoneDate(o) {
+  const val = o.doneAt || o.updatedAt || o.orderDate || o.createdAt;
+  if (!val) return new Date();
+  return val.toDate ? val.toDate() : new Date(val);
+}
+
+function isRecentDoneOrder(o) {
+  const d = getOrderDoneDate(o);
+  const now = new Date();
+  const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2, 0, 0, 0, 0);
+  return d.getTime() >= cutoff.getTime();
+}
+
+function toDateKey(d) {
+  const yr = d.getFullYear();
+  const mo = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${yr}-${mo}-${day}`;
+}
+
+function formatArchiveDateKey(key) {
+  const [y, m, d] = key.split("-").map(Number);
+  const date = new Date(y, m - 1, d);
+  const now = new Date();
+  const todayKey = toDateKey(now);
+  const yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  const yestKey = toDateKey(yest);
+  let prefix = "";
+  if (key === todayKey) prefix = "Today — ";
+  else if (key === yestKey) prefix = "Yesterday — ";
+  return prefix + date.toLocaleDateString("en-MY", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
+}
+
 /* ── Kanban ── */
-function renderKanban(orders){STATUS_FLOW.forEach(status=>{const col=orders.filter(o=>(o.status||"new")===status),cEl=document.getElementById("count-"+status),kEl=document.getElementById("cards-"+status);if(cEl)cEl.textContent=col.length;if(!kEl)return;const em={new:"No new orders",preparing:"Nothing cooking",packed:"Nothing packed",done:"No completed orders"};if(!col.length){kEl.innerHTML='<div class="empty"><div class="icon"></div>'+em[status]+'</div>';return;}kEl.innerHTML=col.map(o=>{const cr=fmtTime(o.createdAt),pk=fmtPickup(o.pickupTime),al=advLabel(o),ul=undLabel(o),isSel=o.id===selectedId,isUnpaid=o.paymentStatus==="unpaid";return'<div class="k-card'+(isSel?" selected":"")+'" data-id="'+o.id+'"><div class="k-name">'+esc(o.customerName)+(isUnpaid?' <span class="badge badge-unpaid">Unpaid</span>':"")+'</div><div class="k-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+(o.address?" - "+esc(o.address):"")+'</div><div class="k-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="k-pickup">Pickup: '+pk+'</span>':'')+'</div><div class="k-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+(o.notes?'<div class="k-note">'+esc(o.notes)+'</div>':'')+((al||ul||isUnpaid)?'<div class="k-actions">'+(al?'<button class="k-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+(isUnpaid?'<button class="k-paid paid-btn" data-id="'+o.id+'">Mark paid</button>':'')+(ul?'<button class="k-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+'</div>':'')+'</div>';}).join("");kEl.querySelectorAll(".k-card").forEach(card=>{card.addEventListener("click",e=>{if(e.target.closest(".adv-btn,.undo-btn,.paid-btn"))return;setSelected(card.dataset.id===selectedId?null:card.dataset.id);});});wireButtons(kEl,orders);});applyColumnVisibility();}
+function renderKanban(orders){
+  STATUS_FLOW.forEach(status=>{
+    let col = orders.filter(o=>(o.status||"new")===status);
+    let olderDone = [];
+    if (status === "done") {
+      olderDone = col.filter(o => !isRecentDoneOrder(o));
+      col = col.filter(isRecentDoneOrder);
+    }
+    const cEl = document.getElementById("count-"+status);
+    const kEl = document.getElementById("cards-"+status);
+    if (cEl) cEl.textContent = col.length;
+    if (!kEl) return;
+    const em = {
+      new: "No new orders",
+      preparing: "Nothing cooking",
+      packed: "Nothing packed",
+      done: "No recent completed orders"
+    };
+    if (!col.length) {
+      kEl.innerHTML = '<div class="empty"><div class="icon">&#9989;</div>'+em[status]+'</div>';
+    } else {
+      kEl.innerHTML = col.map(o=>{
+        const cr = fmtTime(o.createdAt), pk = fmtPickup(o.pickupTime), al = advLabel(o), ul = undLabel(o), isSel = o.id===selectedId, isUnpaid = o.paymentStatus==="unpaid";
+        return '<div class="k-card'+(isSel?" selected":"")+'" data-id="'+o.id+'">'+
+          '<div class="k-name">'+esc(o.customerName)+(isUnpaid?' <span class="badge badge-unpaid">Unpaid</span>':"")+'</div>'+
+          '<div class="k-meta">'+(o.fulfilment==="delivery"?"Delivery":"Self pickup")+(o.address?" - "+esc(o.address):"")+'</div>'+
+          '<div class="k-times">'+(cr?'<span>Ordered: '+cr+'</span>':'')+(pk?'<span class="k-pickup">Pickup: '+pk+'</span>':'')+'</div>'+
+          '<div class="k-items">'+esc(o.items.map(i=>i.qty+"x "+i.name).join(", "))+" - RM"+o.total+'</div>'+
+          (o.notes?'<div class="k-note">'+esc(o.notes)+'</div>':'')+
+          ((al||ul||isUnpaid)?'<div class="k-actions">'+
+            (al?'<button class="k-advance adv-btn" data-id="'+o.id+'">'+al+'</button>':'')+
+            (isUnpaid?'<button class="k-paid paid-btn" data-id="'+o.id+'">Mark paid</button>':'')+
+            (ul?'<button class="k-undo undo-btn" data-id="'+o.id+'">'+ul+'</button>':'')+
+          '</div>':'')+
+        '</div>';
+      }).join("");
+    }
+    if (status === "done" && olderDone.length > 0) {
+      const hint = document.createElement("div");
+      hint.className = "kanban-archive-hint";
+      hint.innerHTML = `📦 ${olderDone.length} older completed order${olderDone.length > 1 ? 's' : ''} stored in Archive below &darr;`;
+      hint.onclick = () => {
+        const arch = document.getElementById("doneArchiveSection");
+        if (arch) arch.scrollIntoView({ behavior: "smooth" });
+      };
+      kEl.appendChild(hint);
+    }
+    kEl.querySelectorAll(".k-card").forEach(card=>{
+      card.addEventListener("click",e=>{
+        if(e.target.closest(".adv-btn,.undo-btn,.paid-btn"))return;
+        setSelected(card.dataset.id===selectedId?null:card.dataset.id);
+      });
+    });
+    wireButtons(kEl,orders);
+  });
+  applyColumnVisibility();
+}
 
 /* ── Advance/Undo ── */
-function wireButtons(c,orders){c.querySelectorAll(".adv-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const next=nextStatus(o.status||"new");if(!next)return;const ok=await showConfirm(advLabel(o)+"?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "));if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({status:next});}catch{btn.disabled=false;}});});c.querySelectorAll(".undo-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const prev=prevStatus(o.status||"new");if(!prev)return;const ok=await showConfirm("Undo to "+STATUS_LABEL[prev]+"?",esc(o.customerName));if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({status:prev});}catch{btn.disabled=false;}});});c.querySelectorAll(".paid-btn").forEach(btn=>{btn.addEventListener("click",async e=>{e.stopPropagation();const o=orders.find(x=>x.id===btn.dataset.id);if(!o)return;const ok=await showConfirm("Mark as paid?",esc(o.customerName)+" - RM"+o.total);if(!ok)return;btn.disabled=true;try{await ordersRef.doc(o.id).update({paymentStatus:"paid"});}catch{btn.disabled=false;}});});}
+function wireButtons(c,orders){
+  c.querySelectorAll(".adv-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const o=orders.find(x=>x.id===btn.dataset.id);
+      if(!o)return;
+      const next=nextStatus(o.status||"new");
+      if(!next)return;
+      const ok=await showConfirm(advLabel(o)+"?",esc(o.customerName)+" - "+o.items.map(i=>i.qty+"x "+i.name).join(", "));
+      if(!ok)return;
+      btn.disabled=true;
+      try{
+        const updateData = { status: next };
+        if (next === "done") {
+          updateData.doneAt = firebase.firestore.FieldValue.serverTimestamp();
+        } else if (o.status === "done" && next !== "done") {
+          updateData.doneAt = null;
+        }
+        await ordersRef.doc(o.id).update(updateData);
+      }catch{
+        btn.disabled=false;
+      }
+    });
+  });
+  c.querySelectorAll(".undo-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const o=orders.find(x=>x.id===btn.dataset.id);
+      if(!o)return;
+      const prev=prevStatus(o.status||"new");
+      if(!prev)return;
+      const ok=await showConfirm("Undo to "+STATUS_LABEL[prev]+"?",esc(o.customerName));
+      if(!ok)return;
+      btn.disabled=true;
+      try{
+        const updateData = { status: prev };
+        if (o.status === "done" && prev !== "done") {
+          updateData.doneAt = null;
+        }
+        await ordersRef.doc(o.id).update(updateData);
+      }catch{
+        btn.disabled=false;
+      }
+    });
+  });
+  c.querySelectorAll(".paid-btn").forEach(btn=>{
+    btn.addEventListener("click",async e=>{
+      e.stopPropagation();
+      const o=orders.find(x=>x.id===btn.dataset.id);
+      if(!o)return;
+      const ok=await showConfirm("Mark as paid?",esc(o.customerName)+" - RM"+o.total);
+      if(!ok)return;
+      btn.disabled=true;
+      try{
+        await ordersRef.doc(o.id).update({paymentStatus:"paid"});
+      }catch{
+        btn.disabled=false;
+      }
+    });
+  });
+}
+
+/* ── Completed Orders Archive & Calendar ── */
+function renderDoneArchive(orders) {
+  const container = document.getElementById("archiveDateGroups");
+  if (!container) return;
+
+  const allDone = orders.filter(o => (o.status || "new") === "done");
+  const olderDone = allDone.filter(o => !isRecentDoneOrder(o));
+  let displayedDone = archiveScope === "all" ? allDone : olderDone;
+
+  const subtitleEl = document.getElementById("archiveSubtitle");
+  if (subtitleEl) {
+    if (archiveScope === "older") {
+      subtitleEl.textContent = `${olderDone.length} order${olderDone.length !== 1 ? 's' : ''} completed over 3 days ago (${allDone.length} total completed)`;
+    } else {
+      subtitleEl.textContent = `All ${allDone.length} completed order${allDone.length !== 1 ? 's' : ''} across all dates`;
+    }
+  }
+
+  // Render Calendar with allDone so badges reflect order dates
+  renderArchiveCalendar(allDone);
+
+  // If a calendar date is selected, filter displayedDone
+  if (archiveSelectedDateKey) {
+    displayedDone = displayedDone.filter(o => toDateKey(getOrderDoneDate(o)) === archiveSelectedDateKey);
+  }
+
+  const clearBtn = document.getElementById("archiveFilterClear");
+  if (clearBtn) {
+    clearBtn.style.display = archiveSelectedDateKey ? "inline-block" : "none";
+    if (archiveSelectedDateKey) {
+      clearBtn.textContent = `Clear (${archiveSelectedDateKey})`;
+    }
+  }
+
+  if (!displayedDone.length) {
+    container.innerHTML = `<div class="empty" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px 20px;text-align:center"><div class="icon" style="font-size:28px;margin-bottom:8px">📦</div><div style="font-weight:600;color:var(--text-soft)">No archived orders ${archiveSelectedDateKey ? 'on ' + archiveSelectedDateKey : (archiveScope === "older" ? 'older than 3 days' : 'found')}</div><div style="font-size:12px;color:var(--text-mute);margin-top:4px">Completed orders appear here once they pass the 3-day viewing window.</div></div>`;
+    return;
+  }
+
+  // Group by date key (YYYY-MM-DD)
+  const groups = new Map();
+  displayedDone.forEach(o => {
+    const key = toDateKey(getOrderDoneDate(o));
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(o);
+  });
+
+  // Sort dates descending (newest first)
+  const sortedKeys = [...groups.keys()].sort((a, b) => b.localeCompare(a));
+
+  container.innerHTML = sortedKeys.map(dateKey => {
+    const dateOrders = groups.get(dateKey);
+    const dayTotal = dateOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+
+    const cardsHtml = dateOrders.map(o => {
+      const doneD = getOrderDoneDate(o);
+      const timeStr = doneD.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit", hour12: true });
+      const itemsSummary = (o.items || []).map(i => `${i.qty}x ${i.name}`).join(", ");
+      const isUnpaid = o.paymentStatus === "unpaid";
+      const isDelivery = o.fulfilment === "delivery";
+
+      return `<div class="archive-order-card" data-order-id="${o.id}">
+        <div class="aoc-top">
+          <span class="aoc-name">${esc(o.customerName)}</span>
+          <span class="aoc-total">RM${(Number(o.total) || 0).toFixed(2)}</span>
+        </div>
+        <div class="aoc-items" title="${esc(itemsSummary)}">${esc(itemsSummary)}</div>
+        <div class="aoc-meta">
+          <span>${isDelivery ? '🚗 Delivery' : '🏪 Pickup'} &bull; ${timeStr}</span>
+          <span>${isUnpaid ? '<span class="badge badge-unpaid">Unpaid</span>' : '<span class="badge badge-paid">Paid</span>'}</span>
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="archive-date-group" id="group-${dateKey}">
+      <div class="archive-date-header">
+        <span>📅 ${formatArchiveDateKey(dateKey)}</span>
+        <span class="archive-date-meta">${dateOrders.length} order${dateOrders.length > 1 ? 's' : ''} &bull; RM${dayTotal.toFixed(2)}</span>
+      </div>
+      <div class="archive-orders-grid">
+        ${cardsHtml}
+      </div>
+    </div>`;
+  }).join("");
+
+  // Attach click listeners to cards
+  container.querySelectorAll(".archive-order-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const order = allOrders.find(x => x.id === card.dataset.orderId);
+      if (order) openOrderDetailModal(order);
+    });
+  });
+}
+
+/* ── Archive Calendar Widget ── */
+function renderArchiveCalendar(doneOrders) {
+  const grid = document.getElementById("archiveCalGrid");
+  const title = document.getElementById("archiveCalTitle");
+  if (!grid || !title) return;
+
+  const year = archiveCalMonth.getFullYear();
+  const month = archiveCalMonth.getMonth();
+  title.textContent = archiveCalMonth.toLocaleDateString("en-MY", { month: "long", year: "numeric" });
+
+  const counts = new Map();
+  doneOrders.forEach(o => {
+    const key = toDateKey(getOrderDoneDate(o));
+    counts.set(key, (counts.get(key) || 0) + 1);
+  });
+
+  const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Sun
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+  const dayHeaders = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  let html = dayHeaders.map(h => `<div class="cal-day-header">${h}</div>`).join("");
+
+  const todayKey = toDateKey(new Date());
+
+  // Previous month trailing days
+  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+    const dayNum = daysInPrevMonth - i;
+    html += `<div class="cal-day-cell other-month"><span>${dayNum}</span></div>`;
+  }
+
+  // Current month days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const count = counts.get(dKey) || 0;
+    const isSelected = archiveSelectedDateKey === dKey;
+    const isToday = todayKey === dKey;
+
+    let classes = ["cal-day-cell"];
+    if (count > 0) classes.push("has-orders");
+    if (isSelected) classes.push("selected");
+    if (isToday) classes.push("cal-day-today");
+
+    html += `<div class="${classes.join(" ")}" data-date="${dKey}">
+      <span>${day}</span>
+      ${count > 0 ? `<span class="cal-day-badge">${count}</span>` : ''}
+    </div>`;
+  }
+
+  // Next month leading days
+  const totalCells = firstDayOfWeek + daysInMonth;
+  const remaining = (7 - (totalCells % 7)) % 7;
+  for (let i = 1; i <= remaining; i++) {
+    html += `<div class="cal-day-cell other-month"><span>${i}</span></div>`;
+  }
+
+  grid.innerHTML = html;
+
+  // Click handlers on days with orders
+  grid.querySelectorAll(".cal-day-cell.has-orders").forEach(cell => {
+    cell.addEventListener("click", () => {
+      const d = cell.dataset.date;
+      if (archiveSelectedDateKey === d) {
+        archiveSelectedDateKey = null;
+      } else {
+        archiveSelectedDateKey = d;
+      }
+      renderDoneArchive(allOrders);
+      if (archiveSelectedDateKey) {
+        const groupEl = document.getElementById("group-" + archiveSelectedDateKey);
+        if (groupEl) groupEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+  });
+}
+
+/* ── Order Detail Modal ── */
+function openOrderDetailModal(order) {
+  activeModalOrder = order;
+  const modal = document.getElementById("orderDetailModal");
+  if (!modal) return;
+
+  const isUnpaid = order.paymentStatus === "unpaid";
+  const isDelivery = order.fulfilment === "delivery";
+  const doneD = getOrderDoneDate(order);
+  const createdD = order.createdAt ? (order.createdAt.toDate ? order.createdAt.toDate() : new Date(order.createdAt)) : null;
+
+  // Status badges
+  const statusRow = document.getElementById("odStatusRow");
+  statusRow.innerHTML = `
+    <span class="badge badge-done">&#10003; Done (${isDelivery ? 'Delivered' : 'Picked up'})</span>
+    <span class="badge ${isUnpaid ? 'badge-unpaid' : 'badge-paid'}">${isUnpaid ? 'Unpaid' : 'Paid'}</span>
+    <span class="badge ${isDelivery ? 'badge-delivery' : 'badge-pickup'}">${isDelivery ? 'Delivery' : 'Self pickup'}</span>
+  `;
+
+  // Customer Name & Phone
+  document.getElementById("odName").textContent = order.customerName || "Customer";
+  const phoneEl = document.getElementById("odPhone");
+  if (order.phone) {
+    const rawPhone = String(order.phone).replace(/\D/g, "");
+    phoneEl.innerHTML = `&#128222; <a href="tel:${esc(order.phone)}">${esc(order.phone)}</a> &bull; <a href="https://wa.me/${rawPhone}" target="_blank" rel="noopener">WhatsApp</a>`;
+  } else {
+    phoneEl.textContent = "No phone number";
+  }
+
+  // Info Grid
+  const infoGrid = document.getElementById("odInfoGrid");
+  infoGrid.innerHTML = `
+    <div class="od-info-item">
+      <span class="od-info-lbl">Fulfilment</span>
+      <span class="od-info-val">${isDelivery ? 'Delivery' : 'Self pickup'}</span>
+    </div>
+    <div class="od-info-item">
+      <span class="od-info-lbl">Payment</span>
+      <span class="od-info-val">${isUnpaid ? 'Pay later (Unpaid)' : 'Paid'}</span>
+    </div>
+    ${isDelivery && order.address ? `
+    <div class="od-info-item" style="grid-column: span 2">
+      <span class="od-info-lbl">Delivery Address</span>
+      <span class="od-info-val">${esc(order.address)}</span>
+    </div>` : ''}
+    ${isDelivery && order.deliveryCost ? `
+    <div class="od-info-item">
+      <span class="od-info-lbl">Delivery Fee</span>
+      <span class="od-info-val">RM${Number(order.deliveryCost).toFixed(2)}</span>
+    </div>` : ''}
+    <div class="od-info-item">
+      <span class="od-info-lbl">Completed On</span>
+      <span class="od-info-val">${doneD.toLocaleDateString("en-MY", { day: "numeric", month: "short", year: "numeric" })} ${doneD.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit", hour12: true })}</span>
+    </div>
+    ${createdD ? `
+    <div class="od-info-item">
+      <span class="od-info-lbl">Ordered At</span>
+      <span class="od-info-val">${createdD.toLocaleDateString("en-MY", { day: "numeric", month: "short" })} ${createdD.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit", hour12: true })}</span>
+    </div>` : ''}
+    ${order.pickupTime ? `
+    <div class="od-info-item">
+      <span class="od-info-lbl">Scheduled For</span>
+      <span class="od-info-val">${fmtPickup(order.pickupTime)}</span>
+    </div>` : ''}
+  `;
+
+  // Items List
+  const itemsList = document.getElementById("odItemsList");
+  itemsList.innerHTML = (order.items || []).map(i => `
+    <div class="od-item-row">
+      <span><strong>${i.qty}x</strong> ${esc(i.name)}</span>
+      <span>RM${(Number(i.price || 0) * Number(i.qty || 0)).toFixed(2)}</span>
+    </div>
+  `).join("");
+
+  document.getElementById("odTotal").textContent = "RM" + (Number(order.total) || 0).toFixed(2);
+
+  // Notes
+  const notesBox = document.getElementById("odNotesBox");
+  const notesText = document.getElementById("odNotesText");
+  if (order.notes && order.notes.trim()) {
+    notesText.textContent = `"${order.notes.trim()}"`;
+    notesBox.style.display = "block";
+  } else {
+    notesBox.style.display = "none";
+  }
+
+  modal.classList.add("open");
+}
+
+function closeOrderDetailModal() {
+  const modal = document.getElementById("orderDetailModal");
+  if (modal) modal.classList.remove("open");
+}
+
+// Modal & Archive event listeners
+document.getElementById("odCloseBtn").addEventListener("click", closeOrderDetailModal);
+document.getElementById("odCloseBtn2").addEventListener("click", closeOrderDetailModal);
+document.getElementById("orderDetailScrim").addEventListener("click", closeOrderDetailModal);
+
+document.getElementById("odEditBtn").addEventListener("click", () => {
+  if (!activeModalOrder) return;
+  const order = activeModalOrder;
+  closeOrderDetailModal();
+  openEdit(order);
+});
+
+document.getElementById("odReopenBtn").addEventListener("click", async () => {
+  if (!activeModalOrder) return;
+  const order = activeModalOrder;
+  const ok = await showConfirm("Reopen order?", `Move ${esc(order.customerName)}'s order back to Packed?`);
+  if (!ok) return;
+  try {
+    await ordersRef.doc(order.id).update({
+      status: "packed",
+      doneAt: null
+    });
+    closeOrderDetailModal();
+  } catch (err) {
+    alert("Could not reopen order. Check connection.");
+  }
+});
+
+document.getElementById("archiveToggleCal").addEventListener("click", () => {
+  const calWrap = document.getElementById("archiveCalendarWrap");
+  const btn = document.getElementById("archiveToggleCal");
+  const isHidden = calWrap.style.display === "none";
+  calWrap.style.display = isHidden ? "block" : "none";
+  btn.classList.toggle("active", isHidden);
+});
+
+document.getElementById("archiveToggleScope").addEventListener("click", () => {
+  const btn = document.getElementById("archiveToggleScope");
+  if (archiveScope === "older") {
+    archiveScope = "all";
+    btn.textContent = "Showing: All Completed";
+    btn.classList.add("active");
+  } else {
+    archiveScope = "older";
+    btn.textContent = "Showing: >3 Days Old";
+    btn.classList.remove("active");
+  }
+  renderDoneArchive(allOrders);
+});
+
+document.getElementById("archiveCalPrev").addEventListener("click", () => {
+  archiveCalMonth = new Date(archiveCalMonth.getFullYear(), archiveCalMonth.getMonth() - 1, 1);
+  renderDoneArchive(allOrders);
+});
+
+document.getElementById("archiveCalNext").addEventListener("click", () => {
+  archiveCalMonth = new Date(archiveCalMonth.getFullYear(), archiveCalMonth.getMonth() + 1, 1);
+  renderDoneArchive(allOrders);
+});
+
+document.getElementById("archiveFilterClear").addEventListener("click", () => {
+  archiveSelectedDateKey = null;
+  renderDoneArchive(allOrders);
+});
 
 /* ════════════════════════════════════════
    HORIZONTAL TIMELINE — multi-scale zoom
@@ -1302,10 +1926,33 @@ let salesPeriod="month",chart1Instance=null,chart2Instance=null;
 document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
 function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);return d>=ws;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
 function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);const totalRev=itemRev+deliveryRev;const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));document.getElementById("salesItemRev").textContent="RM"+itemRev;document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);renderChart1(orders);renderChart2();}
+function getThemeColors() {
+  const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const rootTheme = document.documentElement.getAttribute("data-theme");
+  const dark = rootTheme === "dark" || (!rootTheme && isDark);
+
+  return {
+    isDark: dark,
+    text: dark ? "#F3EBDD" : "#2B2118",
+    textSoft: dark ? "#CBBBA4" : "#5A4E40",
+    textMute: dark ? "#9C8C76" : "#8A7B68",
+    grid: dark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)",
+    gold: dark ? "#E6B96A" : "#D9A24B",
+    goldBar: dark ? "rgba(230, 185, 106, 0.78)" : "rgba(217, 162, 75, 0.82)",
+    goldBarBorder: dark ? "#E6B96A" : "#B97F2E",
+    revLine: dark ? "#4BA3E3" : "#0275B1",
+    barText: dark ? "#1C1712" : "#2B2118",
+    tooltipBg: dark ? "#33291D" : "#2B2118",
+    tooltipBorder: dark ? "#453623" : "rgba(0,0,0,0.1)",
+    tooltipText: dark ? "#F3EBDD" : "#FFFFFF"
+  };
+}
+
 const comboDataLabelsPlugin = {
   id: "comboDataLabels",
   afterDatasetsDraw(chart) {
     const ctx = chart.ctx;
+    const tc = chart.options.__themeColors || getThemeColors();
     chart.data.datasets.forEach((dataset, datasetIdx) => {
       const meta = chart.getDatasetMeta(datasetIdx);
       if (meta.hidden) return;
@@ -1318,9 +1965,10 @@ const comboDataLabelsPlugin = {
         if (dataset.type === "bar") {
           const x = element.x;
           const barH = element.base - element.y;
-          const y = barH >= 26 ? element.y + 15 : element.y - 8;
+          const inside = barH >= 26;
+          const y = inside ? element.y + 15 : element.y - 8;
           ctx.font = '700 10.5px "Work Sans", sans-serif';
-          ctx.fillStyle = "#2B2118";
+          ctx.fillStyle = inside ? tc.barText : tc.text;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           const txt = val + (val === 1 ? " order" : " orders");
@@ -1329,7 +1977,7 @@ const comboDataLabelsPlugin = {
           const x = element.x;
           const y = element.y - 10;
           ctx.font = '700 11px "Work Sans", sans-serif';
-          ctx.fillStyle = "#0275B1";
+          ctx.fillStyle = tc.revLine;
           ctx.textAlign = "center";
           ctx.textBaseline = "bottom";
           ctx.fillText("RM" + Math.round(val), x, y);
@@ -1443,6 +2091,7 @@ function renderChart1(orders){
   const maxRev = Math.max(...revData, 0);
   const yOrdersMax = Math.max(8, Math.ceil(maxOrders * 1.25));
   const yRevMax = Math.max(800, Math.ceil((maxRev * 1.15) / 100) * 100);
+  const tc = getThemeColors();
 
   chart1Instance = new Chart(ctx, {
     data: {
@@ -1452,10 +2101,10 @@ function renderChart1(orders){
           type: "bar",
           label: "Orders Count",
           data: countData,
-          backgroundColor: "#E8B667",
-          borderColor: "#D9A24B",
+          backgroundColor: tc.goldBar,
+          borderColor: tc.goldBarBorder,
           borderWidth: 0,
-          borderRadius: 2,
+          borderRadius: 3,
           barPercentage: 0.45,
           categoryPercentage: 0.65,
           yAxisID: "yOrders",
@@ -1465,14 +2114,14 @@ function renderChart1(orders){
           type: "line",
           label: "Revenue (RM)",
           data: revData,
-          borderColor: "#0275B1",
-          backgroundColor: "#0275B1",
+          borderColor: tc.revLine,
+          backgroundColor: tc.revLine,
           borderWidth: 2.8,
           pointStyle: "rect",
           pointRadius: 6,
           pointHoverRadius: 8,
-          pointBackgroundColor: "#0275B1",
-          pointBorderColor: "#0275B1",
+          pointBackgroundColor: tc.revLine,
+          pointBorderColor: tc.revLine,
           tension: 0,
           yAxisID: "yRevenue",
           order: 1
@@ -1482,6 +2131,7 @@ function renderChart1(orders){
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      __themeColors: tc,
       interaction: {
         mode: "index",
         intersect: false
@@ -1495,14 +2145,16 @@ function renderChart1(orders){
             boxWidth: 16,
             boxHeight: 10,
             padding: 16,
-            color: "#334155",
+            color: tc.textSoft,
             font: { size: 12, weight: "600", family: "'Work Sans', sans-serif" }
           }
         },
         tooltip: {
-          backgroundColor: "rgba(30, 41, 59, 0.95)",
-          titleColor: "#ffffff",
-          bodyColor: "#ffffff",
+          backgroundColor: tc.tooltipBg,
+          borderColor: tc.tooltipBorder,
+          borderWidth: tc.isDark ? 1 : 0,
+          titleColor: tc.tooltipText,
+          bodyColor: tc.tooltipText,
           padding: 10,
           cornerRadius: 8,
           callbacks: {
@@ -1518,15 +2170,15 @@ function renderChart1(orders){
       },
       scales: {
         x: {
-          grid: { color: "#E2E8F0" },
+          grid: { color: tc.grid },
           title: {
             display: true,
             text: xTitle,
-            color: "#2B2118",
+            color: tc.textSoft,
             font: { size: 12, weight: "bold", family: "'Work Sans', sans-serif" }
           },
           ticks: {
-            color: "#2B2118",
+            color: tc.textMute,
             font: { size: 11, weight: "500", family: "'Work Sans', sans-serif" },
             maxRotation: 0
           }
@@ -1540,16 +2192,16 @@ function renderChart1(orders){
           title: {
             display: true,
             text: "Order Count",
-            color: "#C28728",
+            color: tc.gold,
             font: { size: 12, weight: "bold", family: "'Work Sans', sans-serif" }
           },
           ticks: {
             stepSize: 1,
             precision: 0,
-            color: "#C28728",
+            color: tc.gold,
             font: { size: 11, weight: "700", family: "'Work Sans', sans-serif" }
           },
-          grid: { color: "#E2E8F0" }
+          grid: { color: tc.grid }
         },
         yRevenue: {
           type: "linear",
@@ -1560,11 +2212,11 @@ function renderChart1(orders){
           title: {
             display: true,
             text: "Revenue (RM)",
-            color: "#0275B1",
+            color: tc.revLine,
             font: { size: 12, weight: "bold", family: "'Work Sans', sans-serif" }
           },
           ticks: {
-            color: "#0275B1",
+            color: tc.revLine,
             font: { size: 11, weight: "700", family: "'Work Sans', sans-serif" },
             callback: v => v
           },
@@ -1575,7 +2227,7 @@ function renderChart1(orders){
     plugins: [comboDataLabelsPlugin]
   });
 }
-function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],sigData=[],beefData=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});let sig=0,beef=0;mo.forEach(o=>(o.items||[]).forEach(it=>{if(it.id==="signature")sig+=it.price*it.qty;else if(it.id==="beef")beef+=it.price*it.qty;}));sigData.push(sig);beefData.push(beef);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Signature (RM)",data:sigData,backgroundColor:"rgba(217,162,75,0.85)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:4,stack:"rev"},{label:"Beef (RM)",data:beefData,backgroundColor:"rgba(199,64,31,0.85)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:4,stack:"rev"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10}},tooltip:{callbacks:{label:c=>c.dataset.label+": RM"+c.parsed.y}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11}}},y:{stacked:true,grid:{color:"rgba(0,0,0,0.05)"},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10}}}}}});}
+function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const labels=[],sigData=[],beefData=[];for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(MONTHS[d.getMonth()]+" '"+String(d.getFullYear()).slice(2));const mo=allOrders.filter(o=>{const od=getOrderDate(o);return od&&od.getFullYear()===d.getFullYear()&&od.getMonth()===d.getMonth();});let sig=0,beef=0;mo.forEach(o=>(o.items||[]).forEach(it=>{if(it.id==="signature")sig+=it.price*it.qty;else if(it.id==="beef")beef+=it.price*it.qty;}));sigData.push(sig);beefData.push(beef);}const ctx=document.getElementById("chart2").getContext("2d");if(chart2Instance)chart2Instance.destroy();const tc=getThemeColors();chart2Instance=new Chart(ctx,{type:"bar",data:{labels,datasets:[{label:"Signature (RM)",data:sigData,backgroundColor:"rgba(217,162,75,0.85)",borderColor:"rgba(185,127,46,1)",borderWidth:1,borderRadius:4,stack:"rev"},{label:"Beef (RM)",data:beefData,backgroundColor:"rgba(199,64,31,0.85)",borderColor:"rgba(165,52,26,1)",borderWidth:1,borderRadius:4,stack:"rev"}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:"bottom",labels:{font:{size:11},boxWidth:12,padding:10,color:tc.textSoft}},tooltip:{backgroundColor:tc.tooltipBg,borderColor:tc.tooltipBorder,borderWidth:tc.isDark?1:0,titleColor:tc.tooltipText,bodyColor:tc.tooltipText,callbacks:{label:c=>c.dataset.label+": RM"+c.parsed.y}}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11},color:tc.textMute}},y:{stacked:true,grid:{color:tc.grid},beginAtZero:true,ticks:{callback:v=>"RM"+v,font:{size:10},color:tc.textMute}}}}});}
 
 /* ════════════════════════════════════════
    INVENTORY TRACKING (Production, Guest & Freezer Recount)
@@ -1966,6 +2618,7 @@ function startOrdersListener() {
       checkNewOrders(allOrders);
       renderEntryList(allOrders);
       renderKanban(allOrders);
+      renderDoneArchive(allOrders);
       updateKitchenSummary(allOrders);
       if (document.getElementById("timelineView").classList.contains("active")) renderTimeline();
       if (document.getElementById("salesView").classList.contains("active")) renderSales();
@@ -1993,6 +2646,12 @@ function stopOrdersListener() {
 
 window.addEventListener("online", () => { if (auth.currentUser) setConn(true); });
 window.addEventListener("offline", () => setConn(false));
+if (window.matchMedia) {
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    const sv = document.getElementById("salesView");
+    if (sv && sv.classList.contains("active")) renderSales();
+  });
+}
 
 /* ── Auth State Management ── */
 auth.onAuthStateChanged(user => {
