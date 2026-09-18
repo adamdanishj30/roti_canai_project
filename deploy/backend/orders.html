@@ -66,6 +66,13 @@ textarea{resize:vertical;min-height:50px}
 .btn-primary:active{background:var(--accent-deep)}
 .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 .form-actions{display:flex;gap:10px;margin-top:14px}.form-actions .btn{margin-top:0;flex:1}.btn-secondary{background:var(--surface-2);color:var(--text-soft);border:1px solid var(--border)}
+.name-suggest-wrap{position:relative}
+.name-suggest{position:absolute;top:100%;left:0;right:0;margin-top:4px;background:var(--surface);border:1px solid var(--border);border-radius:10px;max-height:180px;overflow-y:auto;z-index:6;box-shadow:0 6px 18px rgba(0,0,0,.14);display:none}
+.name-suggest.open{display:block}
+.name-suggest-item{padding:9px 12px;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--border)}
+.name-suggest-item:first-child{border-top:none}
+.name-suggest-item:hover{background:var(--surface-2)}
+.name-suggest-item .nsi-phone{color:var(--text-mute);font-size:12px;font-weight:500;white-space:nowrap}
 .error-text{color:var(--accent);font-size:12.5px;margin-top:4px}
 .list-title{font-size:13px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.03em;margin:22px 0 10px}
 /* Order cards */
@@ -301,7 +308,11 @@ textarea{resize:vertical;min-height:50px}
   <section id="entryView" class="active">
     <div class="entry-wrap">
       <form class="card" id="orderForm">
-        <label for="custName">Customer name</label><input type="text" id="custName" placeholder="Nana" required>
+        <label for="custName">Customer name</label>
+        <div class="name-suggest-wrap">
+          <input type="text" id="custName" placeholder="Nana" required autocomplete="off">
+          <div class="name-suggest" id="nameSuggest"></div>
+        </div>
         <label for="custPhone">Phone / WhatsApp</label><input type="tel" id="custPhone" placeholder="+601X-XXXXXXX" required>
         <label>Items</label>
         <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price">RM8 - 5 pieces</div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1">-</button><span id="qty-signature">0</span><button type="button" data-item="signature" data-delta="1">+</button></div></div>
@@ -408,6 +419,8 @@ const db=firebase.firestore(),ordersRef=db.collection("orders");
 const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14}};
 const STATUS_FLOW=["new","preparing","packed","done"],STATUS_LABEL={new:"New",preparing:"Preparing",packed:"Packed"};
 let qty={signature:0,beef:0},activeFilter="all",allOrders=[],selectedId=null;
+let customerDirectory=new Map();
+function buildCustomerDirectory(){const map=new Map();allOrders.forEach(o=>{const key=(o.customerName||"").trim().toLowerCase();if(!key||map.has(key))return;map.set(key,{name:o.customerName,phone:o.phone||"",fulfilment:o.fulfilment,address:o.address||"",deliveryCost:o.deliveryCost||0});});return map;}
 
 /* ── Utils ── */
 function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -460,10 +473,18 @@ function updateKitchenSummary(orders){const today=new Date().toDateString();cons
 document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});});
 function getDeliveryCost(){const value=Number(document.getElementById("deliveryCost").value);return Number.isFinite(value)&&value>0?value:0;}
 function updateTotal(){document.getElementById("totalOut").textContent="RM"+(qty.signature*8+qty.beef*14+getDeliveryCost()).toFixed(2);}
-function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0};document.getElementById("qty-signature").textContent=0;document.getElementById("qty-beef").textContent=0;document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);updateTotal();clearError();}
+function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0};document.getElementById("qty-signature").textContent=0;document.getElementById("qty-beef").textContent=0;document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);updateTotal();clearError();closeNameSuggest();}
 document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display=r.value==="delivery"&&r.checked?"block":"none";updateTotal();});});
 document.getElementById("deliveryCost").addEventListener("input",updateTotal);
 document.getElementById("clearBtn").addEventListener("click",resetOrderForm);
+/* ── Customer name suggestions ── */
+const nameInputEl=document.getElementById("custName"),nameSuggestEl=document.getElementById("nameSuggest");
+let nameSuggestItems=[];
+function closeNameSuggest(){nameSuggestEl.classList.remove("open");nameSuggestEl.innerHTML="";nameSuggestItems=[];}
+nameInputEl.addEventListener("input",()=>{const q=nameInputEl.value.trim().toLowerCase();if(!q){closeNameSuggest();return;}const matches=[...customerDirectory.values()].filter(c=>c.name.toLowerCase().includes(q)).slice(0,6);if(!matches.length){closeNameSuggest();return;}nameSuggestItems=matches;nameSuggestEl.innerHTML=matches.map((c,i)=>'<div class="name-suggest-item" data-idx="'+i+'"><span>'+esc(c.name)+'</span><span class="nsi-phone">'+esc(c.phone)+'</span></div>').join("");nameSuggestEl.classList.add("open");});
+nameInputEl.addEventListener("blur",()=>{setTimeout(closeNameSuggest,150);});
+nameSuggestEl.addEventListener("mousedown",e=>{const item=e.target.closest(".name-suggest-item");if(!item)return;const c=nameSuggestItems[Number(item.dataset.idx)];if(c)selectCustomerSuggestion(c);});
+async function selectCustomerSuggestion(c){nameInputEl.value=c.name;document.getElementById("custPhone").value=c.phone;closeNameSuggest();if(c.fulfilment==="delivery"&&c.address){const useSame=await showConfirm("Use same delivery address?","Last delivery: "+c.address);document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.checked=r.value==="delivery";});document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display="block";if(useSame){document.getElementById("custAddress").value=c.address;if(c.deliveryCost)document.getElementById("deliveryCost").value=c.deliveryCost;updateTotal();}else{document.getElementById("custAddress").value="";document.getElementById("custAddress").focus();}}}
 function showError(msg){const el=document.getElementById("formError");el.textContent=msg;el.style.display="block";}
 function clearError(){document.getElementById("formError").style.display="none";}
 document.getElementById("orderForm").addEventListener("submit",async e=>{e.preventDefault();clearError();const name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),fulfil=document.querySelector('input[name="fulfil"]:checked').value,address=document.getElementById("custAddress").value.trim(),notes=document.getElementById("custNotes").value.trim(),pickup=document.getElementById("pickupTime").value,orderDate=document.getElementById("orderDate").value,deliveryCost=fulfil==="delivery"?getDeliveryCost():0,items=Object.entries(qty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name){showError("Enter customer name.");return;}if(!phone){showError("Enter phone number.");return;}if(!items.length){showError("Add at least one item.");return;}if(fulfil==="delivery"&&!address){showError("Enter delivery address.");return;}const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("saveBtn");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.add({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,orderDate:orderDate||null,pickupTime:pickup||null,status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp()});resetOrderForm();}catch{showError("Could not save. Check connection.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save order";}});
@@ -732,14 +753,14 @@ function renderBucketView(mode){
       const maxBarH=150;
       const barH=Math.max(8,Math.round((c.total/maxCount)*maxBarH));
       const segs=[["created",c.created],["pickup",c.pickup],["delivery",c.delivery]].filter(s=>s[1]>0);
-      let stackTop=TL_AXIS_Y-8-barH,cursor=0;
+      let cursor=0;
       const segHtml=segs.map(([type,cnt])=>{
         const segH=Math.round((cnt/c.total)*barH);
-        const top=TL_AXIS_Y-8-cursor-segH;
+        const top=barH-cursor-segH;
         cursor+=segH;
-        return `<div style="position:absolute;left:${x}px;top:${top}px;width:22px;height:${segH}px;background:${DOT_COLORS[type]};transform:translateX(-50%);"></div>`;
+        return `<div style="position:absolute;left:3px;top:${top}px;width:22px;height:${segH}px;background:${DOT_COLORS[type]};"></div>`;
       }).join("");
-      html+=`<div class="tl-bucket-bar" data-idx="${i}" style="position:absolute;left:${x-14}px;top:${TL_AXIS_Y-8-barH}px;width:28px;height:${barH}px;cursor:pointer;border-radius:5px 5px 0 0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.15);">${segHtml}</div>`;
+      html+=`<div class="tl-bucket-bar" data-idx="${i}" style="position:absolute;left:${x-14}px;top:${TL_AXIS_Y-8-barH}px;width:28px;height:${barH}px;cursor:pointer;border-radius:5px 5px 0 0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.15);background:var(--surface-2);">${segHtml}</div>`;
       html+=`<div style="position:absolute;left:${x}px;top:${TL_AXIS_Y-16-barH}px;transform:translateX(-50%);font-size:10.5px;font-weight:700;color:var(--text);white-space:nowrap;">${c.total}</div>`;
     } else {
       html+=`<div class="tl-bucket-bar" data-idx="${i}" style="position:absolute;left:${x-14}px;top:${TL_AXIS_Y-14}px;width:28px;height:6px;cursor:pointer;border-radius:3px;background:var(--border);opacity:.5;"></div>`;
@@ -802,6 +823,7 @@ function renderChart2(){const now=new Date();const MONTHS=["Jan","Feb","Mar","Ap
 ordersRef.orderBy("createdAt","desc").limit(500).onSnapshot(
   snap=>{
     setConn(true);allOrders=snap.docs.map(d=>({id:d.id,...d.data()}));
+    customerDirectory=buildCustomerDirectory();
     checkNewOrders(allOrders);renderEntryList(allOrders);renderKanban(allOrders);updateKitchenSummary(allOrders);
     if(document.getElementById("timelineView").classList.contains("active"))renderTimeline();
     if(document.getElementById("salesView").classList.contains("active"))renderSales();
