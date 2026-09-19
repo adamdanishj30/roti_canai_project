@@ -115,6 +115,9 @@ input,textarea{border:1px solid var(--line);background:#fff;border-radius:10px;p
 .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* Mobile Enhancements & Components */
+.m-brand-sub{display:none!important}
+.m-hide{display:inline}
+small.m-hide{display:block}
 .hd-actions{display:flex;align-items:center;gap:8px}
 .m-soc-btn{display:none;width:34px;height:34px;border-radius:50%;background:#efe6dd;color:var(--ink);text-decoration:none;font-size:16px;font-weight:700;place-items:center;transition:background .2s,transform .2s}
 .m-soc-btn:active{transform:scale(.9)}
@@ -160,21 +163,22 @@ body{background:#fff}
 .rail{display:none}
 .main{overflow:visible;padding:max(14px, env(safe-area-inset-top, 14px)) 18px 115px}
 
-/* Top App Header - Balanced & airy */
-.hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 0 12px;margin-bottom:4px}
-.bar{display:flex;align-items:center;gap:10px;min-width:0}
-.bar img{display:block;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);box-shadow:0 2px 8px rgba(0,0,0,.06);object-fit:cover;flex:none}
+/* Top App Header - Compact & uncrowded on mobile */
+.hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:2px 0 6px;margin-bottom:2px}
+.bar{display:flex;align-items:center;gap:8px;min-width:0}
+.bar img{display:block;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);box-shadow:0 2px 6px rgba(0,0,0,.06);object-fit:cover;flex:none}
 .bar div{display:flex;flex-direction:column;min-width:0}
-.bar b{display:block;font:800 17px/1.1 Outfit,system-ui,sans-serif;letter-spacing:-0.01em;color:var(--ink);white-space:nowrap}
-.bar small{display:block;color:var(--or2);font-weight:700;font-size:10px;letter-spacing:0.04em;text-transform:uppercase;margin-top:2px;white-space:nowrap}
+.bar b{display:block;font:800 15px/1.1 Outfit,system-ui,sans-serif;letter-spacing:-0.01em;color:var(--ink);white-space:nowrap}
+.m-brand-sub{display:block!important;font-size:8.5px;font-weight:700;color:var(--or2);letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;line-height:1}
+.m-hide{display:none!important}
 
 /* Header action shortcuts */
-.hd-actions{display:flex;align-items:center;gap:6px;flex:none}
-.m-soc-btn{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#f7efe8;color:var(--or2);text-decoration:none;font-size:14px;font-weight:700;border:1px solid var(--line);transition:transform .2s,background .2s}
+.hd-actions{display:flex;align-items:center;gap:5px;flex:none}
+.m-soc-btn{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#f7efe8;color:var(--or2);text-decoration:none;font-size:13px;font-weight:700;border:1px solid var(--line);transition:transform .2s,background .2s}
 .m-soc-btn:active{transform:scale(.92);background:#ebdcd0}
-.lg{background:#f7efe8;border:1px solid var(--line);border-radius:99px;padding:2px;display:flex;gap:1px}
-.lg button{background:none;border-radius:99px;padding:4px 9px;font-weight:700;font-size:11px;color:var(--mut);min-width:26px;text-align:center}
-.lg button.on{background:var(--or);color:#fff;box-shadow:0 2px 6px rgba(184,92,56,.25)}
+.lg{background:#f7efe8;border:1px solid var(--line);border-radius:99px;padding:2px;display:flex;gap:1px;height:26px;align-items:center}
+.lg button{background:none;border-radius:99px;padding:2px 7px;font-weight:700;font-size:10px;color:var(--mut);min-width:22px;height:22px;text-align:center}
+.lg button.on{background:var(--or);color:#fff;box-shadow:0 2px 5px rgba(184,92,56,.25)}
 
 /* Hero Banner - Warm rounded card with breathing room */
 .top{display:none!important}
@@ -249,7 +253,7 @@ body{background:#fff}
 <a href="https://www.facebook.com/FrozenRotiCanaiByPaksu" target="_blank" rel="noopener" title="Official Facebook page" aria-label="Official Facebook page">f</a>
 <a href="https://wa.me/60122788627" target="_blank" rel="noopener" title="WhatsApp us" aria-label="WhatsApp us">✆</a></nav>
 <main class="main" id="top">
-<div class="hd"><div class="bar"><img alt="Jar&amp;Maz Homemade logo"><div><b>Jar&amp;Maz Homemade</b><small data-t="tag">Frozen roti canai, made by hand</small></div></div><div class="hd-actions"><a class="m-soc-btn" href="https://www.facebook.com/FrozenRotiCanaiByPaksu" target="_blank" rel="noopener" title="Official Facebook page" aria-label="Official Facebook page">f</a><a class="m-soc-btn" href="https://wa.me/60122788627" target="_blank" rel="noopener" title="WhatsApp us" aria-label="WhatsApp us">✆</a><div class="lg" role="group" aria-label="Language"><button data-lang="en" class="on">EN</button><button data-lang="ms">BM</button></div></div></div>
+<div class="hd"><div class="bar"><img alt="Jar&amp;Maz Homemade logo"><div><b>Jar&amp;Maz<span class="m-hide"> Homemade</span></b><small class="m-hide" data-t="tag">Frozen roti canai, made by hand</small><span class="m-brand-sub">HOMEMADE</span></div></div><div class="hd-actions"><a class="m-soc-btn" href="https://www.facebook.com/FrozenRotiCanaiByPaksu" target="_blank" rel="noopener" title="Official Facebook page" aria-label="Official Facebook page">f</a><a class="m-soc-btn" href="https://wa.me/60122788627" target="_blank" rel="noopener" title="WhatsApp us" aria-label="WhatsApp us">✆</a><div class="lg" role="group" aria-label="Language"><button data-lang="en" class="on">EN</button><button data-lang="ms">BM</button></div></div></div>
 <div class="top"><a class="tc" href="https://www.facebook.com/FrozenRotiCanaiByPaksu" target="_blank" rel="noopener"><span class="ti">f</span><span><b data-t="fbT">Follow our official Facebook page</b><small data-t="fbS">See new batches and updates from our kitchen.</small></span></a><button class="tc" data-go="chat"><span class="ti">💬</span><span><b data-t="chT">Chat with Roti Helper</b><small data-t="chS">Ask about the menu, delivery or cooking.</small></span></button></div>
 <section class="banner"><div class="bt"><span class="bt-pill" data-t="heroBadge">✨ Paksu's Kitchen</span><h1 data-t="hero">Homemade roti canai, golden in minutes.</h1><p data-t="heroP">Made by Paksu's family kitchen and frozen fresh for your freezer.</p><a class="btn" href="#menu" data-t="order">Order now</a></div><img id="hero" alt="Flaky roti canai on a plate"></section>
 <div id="menu"></div>
