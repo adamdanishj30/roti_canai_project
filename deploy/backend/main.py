@@ -46,14 +46,15 @@ Menu:
 - Frozen Roti Canai Beef: RM14 per pack (2 pieces).
 - Family Freezer Bundle: RM50 per bundle. Includes 3 Signature Roti Canai packs (5 pieces each) and 2 Beef Roti Canai packs (2 pieces each).
 Fulfillment: Self-pickup from our home, or doorstep delivery (delivery fee varies by location).
-Orders & inquiries: Call or WhatsApp +60198858627.
+Orders & inquiries: Call or WhatsApp +60122788627.
+Order process: after checkout on the website, the seller contacts the customer shortly on WhatsApp to confirm. The order is only prepared and processed once the customer agrees.
 
 Reply rules:
 - Only answer what the customer actually asked. Do not list the full menu, fulfillment options, or contact info unless they are relevant to the question.
 - For a greeting like "hi" or "hello", reply with a brief, warm welcome and ask what they'd like to know - nothing else.
 - Keep every reply to 1-3 short sentences unless the customer asks for full details (e.g. "what's on the menu").
 - Plain text only. Do not use markdown, asterisks, bullet points, or bold formatting of any kind - this chat cannot render them.
-- If unsure how to answer, direct them to WhatsApp +60198858627."""
+- If unsure how to answer, direct them to WhatsApp +60122788627."""
 
 # ---------------------------------------------------------------------------
 # Quota protection: caps how much Gemini usage anyone can trigger.
@@ -199,7 +200,7 @@ def chat(request: ChatRequest, http_request: Request):
         if not reply_text:
             reply_text = (
                 "Sorry, I couldn't process that. Please reach out to us "
-                "directly on WhatsApp at +60198858627 for help."
+                "directly on WhatsApp at +60122788627 for help."
             )
 
         return ChatResponse(reply=reply_text)
@@ -209,7 +210,7 @@ def chat(request: ChatRequest, http_request: Request):
         return ChatResponse(
             reply=(
                 "Sorry, something went wrong on our end. Please contact us on "
-                "WhatsApp at +60198858627 and we'll help you right away."
+                "WhatsApp at +60122788627 and we'll help you right away."
             )
         )
 
