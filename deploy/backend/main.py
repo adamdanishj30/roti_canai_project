@@ -4,13 +4,16 @@ FastAPI + Google Gemini (google-genai SDK)
 """
 
 import os
+import time
 import logging
+import threading
+from collections import defaultdict, deque
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
 from google import genai
@@ -53,6 +56,62 @@ Reply rules:
 - If unsure how to answer, direct them to WhatsApp +60198858627."""
 
 # ---------------------------------------------------------------------------
+# Quota protection: caps how much Gemini usage anyone can trigger.
+# All limits can be changed from Render environment variables.
+# ---------------------------------------------------------------------------
+
+MAX_MESSAGE_CHARS = int(os.environ.get("MAX_MESSAGE_CHARS", "500"))
+PER_IP_PER_MINUTE = int(os.environ.get("CHAT_PER_IP_PER_MINUTE", "6"))
+PER_IP_PER_DAY = int(os.environ.get("CHAT_PER_IP_PER_DAY", "40"))
+GLOBAL_PER_DAY = int(os.environ.get("CHAT_GLOBAL_PER_DAY", "500"))  # hard backstop
+
+_rate_lock = threading.Lock()
+_ip_hits = defaultdict(deque)  # ip -> timestamps of requests in the last 24h
+_global_day = {"date": None, "count": 0}
+
+
+def _client_ip(http_request: Request) -> str:
+    # Behind Render's proxy the real client IP is in X-Forwarded-For.
+    fwd = http_request.headers.get("x-forwarded-for")
+    if fwd:
+        return fwd.split(",")[0].strip()
+    return http_request.client.host if http_request.client else "unknown"
+
+
+def check_rate_limit(http_request: Request) -> None:
+    """Raises HTTP 429 if this request would exceed a usage cap."""
+    now = time.time()
+    today = time.strftime("%Y-%m-%d", time.gmtime(now))
+    ip = _client_ip(http_request)
+
+    with _rate_lock:
+        if _global_day["date"] != today:
+            _global_day["date"] = today
+            _global_day["count"] = 0
+
+        if _global_day["count"] >= GLOBAL_PER_DAY:
+            logger.warning("Global daily chat cap reached")
+            raise HTTPException(status_code=429, detail="Chat is busy right now. Please try again later.")
+
+        hits = _ip_hits[ip]
+        while hits and now - hits[0] > 86400:
+            hits.popleft()
+
+        if len(hits) >= PER_IP_PER_DAY:
+            raise HTTPException(status_code=429, detail="Daily chat limit reached. Please try again tomorrow.")
+        if sum(1 for t in hits if now - t <= 60) >= PER_IP_PER_MINUTE:
+            raise HTTPException(status_code=429, detail="Too many messages. Please wait a minute.")
+
+        hits.append(now)
+        _global_day["count"] += 1
+
+        # Keep memory bounded if someone floods with many different IPs.
+        if len(_ip_hits) > 5000:
+            for k in [k for k, v in _ip_hits.items() if not v or now - v[-1] > 86400]:
+                del _ip_hits[k]
+
+
+# ---------------------------------------------------------------------------
 # FastAPI app
 # ---------------------------------------------------------------------------
 
@@ -62,12 +121,21 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Set ALLOWED_ORIGINS in Render to your website(s), comma-separated, e.g.
+#   https://yourshop.com,https://www.yourshop.com
+# If unset it stays "*" so the site keeps working until you configure it.
+ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+    if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=False,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 
@@ -76,7 +144,7 @@ app.add_middleware(
 # ---------------------------------------------------------------------------
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(..., max_length=MAX_MESSAGE_CHARS)
 
 
 class ChatResponse(BaseModel):
@@ -101,7 +169,7 @@ def orders_page():
 
 
 @app.post("/chat", response_model=ChatResponse)
-def chat(request: ChatRequest):
+def chat(request: ChatRequest, http_request: Request):
     """
     Receives a customer message and returns the Gemini-generated reply,
     grounded in the business's fixed system instruction (menu, pricing,
@@ -111,6 +179,8 @@ def chat(request: ChatRequest):
 
     if not user_message:
         raise HTTPException(status_code=400, detail="Message cannot be empty.")
+
+    check_rate_limit(http_request)
 
     try:
         response = client.models.generate_content(
