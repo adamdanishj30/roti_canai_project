@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>RotiCanai Orders</title>
+<title>jar&amp;maz homemade</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -89,7 +89,6 @@ textarea{resize:vertical;min-height:50px}
 .order-times .pickup-time{color:var(--gold-deep);font-weight:600}
 .badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
 .badge-new{background:var(--surface-2);color:var(--gold-deep)}
-.badge-preparing{background:color-mix(in srgb,var(--accent) 15%,var(--surface));color:var(--accent-deep)}
 .badge-packed{background:color-mix(in srgb,var(--gold) 20%,var(--surface));color:var(--gold-deep)}
 .badge-done{background:var(--success-bg);color:var(--success)}
 .badge-unpaid{background:color-mix(in srgb,#C0392B 15%,var(--surface));color:#C0392B}
@@ -158,6 +157,8 @@ textarea{resize:vertical;min-height:50px}
 .tl-legend{display:flex;gap:14px;padding:0 16px 8px;flex-wrap:wrap}
 .tl-legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-mute)}
 .tl-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.tl-legend-item{cursor:pointer;user-select:none;-webkit-user-select:none}
+.tl-legend-item.off{opacity:.35;text-decoration:line-through}
 /* The scroll container */
 .tl-scroll-wrap{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--border) transparent;cursor:grab;user-select:none}
 .tl-scroll-wrap:active{cursor:grabbing}
@@ -200,6 +201,7 @@ textarea{resize:vertical;min-height:50px}
 .item-pill .ip-rev{font-size:11px;color:var(--text-mute)}
 .item-pill.sig .ip-qty{color:var(--gold-deep)}
 .item-pill.beef .ip-qty{color:var(--accent-deep)}
+.item-pill.cookie .ip-qty{color:#B07A4F}
 .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:14px}
 .chart-card h3{font-family:'Fraunces',serif;font-size:14px;color:var(--text);margin:0 0 14px}
 .chart-wrap{position:relative;width:100%;height:200px}
@@ -343,35 +345,88 @@ textarea{resize:vertical;min-height:50px}
 .auth-submit:disabled{opacity:.6;cursor:not-allowed}
 .auth-hint{margin-top:18px;font-size:11px;color:var(--text-mute);display:flex;align-items:center;justify-content:center;gap:6px}
 
-/* Done Archive & Calendar */
+/* Kitchen View Mode Switcher (Kanban vs Schedule Overview) */
+.kitchen-mode-bar{display:flex;gap:8px;padding:12px 16px 6px}
+.kv-mode-btn{flex:1;border:1.5px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.kv-mode-btn:hover{background:var(--surface-2);color:var(--text)}
+.kv-mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+
+/* Schedule & Fulfillment Overview Section */
 .kanban-archive-hint{margin-top:10px;padding:8px 10px;background:var(--surface-2);border:1px dashed var(--border);border-radius:10px;font-size:11.5px;font-weight:600;color:var(--text-soft);text-align:center;cursor:pointer;transition:all .15s}
 .kanban-archive-hint:hover{background:var(--border);color:var(--accent)}
-.done-archive-section{margin-top:24px;border-top:1px solid var(--border);padding-top:20px}
-.done-archive-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px}
-.done-archive-title-wrap{display:flex;align-items:center;gap:10px}
-.done-archive-icon{font-size:24px}
-.done-archive-title{font-family:'Fraunces',Georgia,serif;font-size:17px;color:var(--text);margin:0}
-.done-archive-sub{font-size:12px;color:var(--text-mute);margin:2px 0 0}
-.done-archive-controls{display:flex;align-items:center;gap:8px}
-.archive-view-btn{border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
-.archive-view-btn:hover{background:var(--surface-2);color:var(--text)}
-.archive-view-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.schedule-overview-section{margin-top:12px;padding:0 16px 40px}
+.schedule-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.schedule-title-wrap{display:flex;align-items:center;gap:10px}
+.schedule-icon{font-size:24px}
+.schedule-title{font-family:'Fraunces',Georgia,serif;font-size:18px;color:var(--text);margin:0}
+.schedule-sub{font-size:12px;color:var(--text-mute);margin:2px 0 0}
+.schedule-scope-bar{display:flex;gap:4px;background:var(--surface-2);padding:3px;border-radius:10px;border:1px solid var(--border)}
+.schedule-scope-chip{border:none;background:transparent;color:var(--text-soft);border-radius:7px;padding:5px 11px;font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.schedule-scope-chip:hover{color:var(--text)}
+.schedule-scope-chip.active{background:var(--surface);color:var(--accent-deep);box-shadow:0 1px 3px rgba(0,0,0,.1);font-weight:700}
+
+/* Legend & Month Stats */
+.schedule-legend-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px;padding:8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:12px}
+.schedule-legend-items{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.sched-legend-tag{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-soft)}
+.sched-dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex-shrink:0}
+.sched-dot.dot-delivery{background:var(--accent)}
+.sched-dot.dot-pickup{background:var(--gold)}
+.sched-dot.dot-done{background:var(--success)}
+.schedule-month-stats{font-size:12px;font-weight:700;color:var(--text-mute)}
 
 /* Calendar Picker */
-.archive-calendar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.schedule-calendar-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
 .archive-cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .archive-cal-nav .cal-nav-title{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--text)}
-.cal-nav-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:8px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cal-nav-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:8px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .cal-nav-btn:hover{background:var(--border)}
 .archive-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
 .cal-day-header{font-size:11px;font-weight:700;color:var(--text-mute);padding-bottom:4px}
-.cal-day-cell{min-height:48px;border:1px solid transparent;border-radius:8px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;position:relative;background:transparent;color:var(--text-mute);font-size:12px;font-weight:500;cursor:default}
-.cal-day-cell.other-month{opacity:0.3}
-.cal-day-cell.has-orders{background:var(--surface-2);border-color:color-mix(in srgb,var(--gold) 40%,transparent);color:var(--text);cursor:pointer;font-weight:700}
+.cal-day-cell{min-height:56px;border:1.5px solid transparent;border-radius:9px;padding:4px 3px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;position:relative;background:transparent;color:var(--text-mute);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.cal-day-cell.other-month{opacity:0.25;cursor:default}
+.cal-day-cell.has-orders{background:var(--surface-2);border-color:color-mix(in srgb,var(--border) 80%,transparent);color:var(--text)}
 .cal-day-cell.has-orders:hover{border-color:var(--gold);transform:scale(1.02)}
-.cal-day-cell.selected{border-color:var(--accent)!important;background:color-mix(in srgb,var(--accent) 18%,var(--surface))!important}
-.cal-day-badge{font-size:9.5px;font-weight:700;background:var(--gold);color:#1C1712;border-radius:10px;padding:1px 5px;margin-top:3px;line-height:1.2}
-.cal-day-today{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.cal-day-cell.selected{border-color:var(--accent)!important;background:color-mix(in srgb,var(--accent) 14%,var(--surface))!important;box-shadow:0 0 0 1px var(--accent)}
+.cal-day-today .cal-day-num{color:var(--accent-deep);font-weight:800;text-decoration:underline}
+.cal-day-top{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;font-weight:600;margin-bottom:2px;padding:0 2px}
+.cal-day-badges{display:flex;flex-direction:column;gap:2px;width:100%}
+.cal-badge{font-size:9.5px;font-weight:700;border-radius:4px;padding:1.5px 4px;line-height:1.2;text-align:center;display:flex;align-items:center;justify-content:center;gap:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-badge-delivery{background:var(--accent);color:#fff}
+.cal-badge-pickup{background:var(--gold);color:#2B2118}
+.cal-badge-done{background:var(--success-bg);color:var(--success);border:1px solid color-mix(in srgb,var(--success) 35%,transparent)}
+
+/* Selected Date Agenda */
+.schedule-agenda{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px}
+.agenda-header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.agenda-header-left{display:flex;align-items:center;gap:8px}
+.agenda-date-title{font-family:'Fraunces',Georgia,serif;font-size:16px;font-weight:600;color:var(--text);margin:0}
+.agenda-date-badge{font-size:11px;font-weight:700;background:var(--surface-2);color:var(--text-soft);padding:2px 8px;border-radius:99px;border:1px solid var(--border)}
+.agenda-date-badge.today{background:color-mix(in srgb,var(--gold) 20%,var(--surface));color:var(--gold-deep);border-color:var(--gold)}
+.agenda-all-btn{border:none;background:none;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;padding:2px 4px}
+.agenda-all-btn:hover{text-decoration:underline}
+.agenda-section{margin-bottom:16px}
+.agenda-section:last-child{margin-bottom:0}
+.agenda-sec-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;padding-bottom:4px;border-bottom:1.5px solid transparent}
+.agenda-sec-title.delivery{color:var(--accent);border-bottom-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+.agenda-sec-title.pickup{color:var(--gold-deep);border-bottom-color:color-mix(in srgb,var(--gold) 30%,transparent)}
+.agenda-card{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.agenda-card:hover{border-color:var(--gold);transform:translateY(-1px)}
+.agenda-card.delivery-card{border-left:4px solid var(--accent)}
+.agenda-card.pickup-card{border-left:4px solid var(--gold)}
+.agenda-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px}
+.agenda-cust-name{font-weight:700;font-size:14px;color:var(--text);display:flex;align-items:center;gap:6px}
+.agenda-order-total{font-weight:700;font-size:13.5px;color:var(--accent)}
+.agenda-meta-row{font-size:12px;color:var(--text-mute);margin-bottom:4px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.agenda-address{font-size:12px;color:var(--text-soft);margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.agenda-items-summary{font-size:12.5px;font-weight:500;color:var(--text-soft);margin-bottom:8px}
+.agenda-actions-row{display:flex;align-items:center;gap:8px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--border);flex-wrap:wrap}
+.agenda-wa-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:7px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);font-size:11.5px;font-weight:600;text-decoration:none;transition:all .15s}
+.agenda-wa-btn:hover{background:var(--surface-2);color:var(--text)}
+.agenda-btn-adv{margin-left:auto;border:none;background:var(--accent);color:#fff;border-radius:7px;padding:6px 13px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.agenda-btn-adv:hover{background:var(--accent-deep)}
+.agenda-btn-adv.btn-packed{background:var(--gold-deep);color:#fff}
+.agenda-btn-adv.btn-done{background:var(--success);color:#fff}
 
 /* Date Groups */
 .archive-date-group{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:14px;overflow:hidden}
@@ -423,7 +478,7 @@ textarea{resize:vertical;min-height:50px}
 
 <div id="authOverlay">
   <div class="auth-card">
-    <div class="auth-logo">Roti<span>Canai</span> Orders</div>
+    <div class="auth-logo">jar&amp;maz <span>homemade</span></div>
     <div class="auth-subtitle">Family Portal &bull; Sign in to access kitchen & orders</div>
     <form id="authForm" novalidate>
       <div class="auth-field">
@@ -459,6 +514,7 @@ textarea{resize:vertical;min-height:50px}
     <label>Items</label>
     <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price">RM8</div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-signature">0</span><button type="button" data-item="signature" data-delta="1" class="edit-stepper">+</button></div></div>
     <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price">RM14</div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-beef">0</span><button type="button" data-item="beef" data-delta="1" class="edit-stepper">+</button></div></div>
+    <div class="item-row"><div><div class="item-name">Almond Walnut Chocolate Chip Cookies</div><div class="item-price">RM38</div></div><div class="stepper"><button type="button" data-item="cookies" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-cookies">0</span><button type="button" data-item="cookies" data-delta="1" class="edit-stepper">+</button></div></div>
     <label>Fulfilment</label>
     <div class="radio-group" id="editFulfilGroup"><label class="checked"><input type="radio" name="editFulfil" value="pickup" checked> Self pickup</label><label><input type="radio" name="editFulfil" value="delivery"> Delivery</label></div>
     <div id="editAddressField" style="display:none"><label>Delivery address</label><input type="text" id="editAddress" placeholder="Jalan Putra Bahagia..."></div>
@@ -551,7 +607,7 @@ textarea{resize:vertical;min-height:50px}
 <div class="app" id="mainApp" style="display:none">
 <header>
   <div class="header-main">
-    <div class="brand"><h1>Roti<span>Canai</span> Orders</h1></div>
+    <div class="brand"><h1>jar&amp;maz <span>homemade</span></h1></div>
     <div class="header-right">
       <span class="conn" id="connStatus"><span class="dot"></span><span id="connLabel">Connecting</span></span>
       <button class="btn-signout" id="btnSignOut" type="button" title="Sign out of Family Portal">&#x21AA; Sign Out</button>
@@ -589,6 +645,7 @@ textarea{resize:vertical;min-height:50px}
         <label>Items</label>
         <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price">RM8 - 5 pieces</div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1">-</button><span id="qty-signature">0</span><button type="button" data-item="signature" data-delta="1">+</button></div></div>
         <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price">RM14 - 2 pieces</div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1">-</button><span id="qty-beef">0</span><button type="button" data-item="beef" data-delta="1">+</button></div></div>
+        <div class="item-row"><div><div class="item-name">Almond Walnut Chocolate Chip Cookies</div><div class="item-price">RM38 - 1 bekas</div></div><div class="stepper"><button type="button" data-item="cookies" data-delta="-1">-</button><span id="qty-cookies">0</span><button type="button" data-item="cookies" data-delta="1">+</button></div></div>
         <label>Fulfilment</label>
         <div class="radio-group" id="fulfilGroup"><label class="checked"><input type="radio" name="fulfil" value="pickup" checked> Self pickup</label><label><input type="radio" name="fulfil" value="delivery"> Delivery</label></div>
         <div id="addressField" style="display:none"><label for="custAddress">Delivery address</label><input type="text" id="custAddress" placeholder="Jalan Putra Bahagia..."><label for="deliveryCost">Delivery cost (RM)</label><input type="number" id="deliveryCost" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></div>
@@ -611,51 +668,81 @@ textarea{resize:vertical;min-height:50px}
       <span id="summaryItems" class="kitchen-summary-empty">No pending orders</span>
       <button class="notif-btn" id="notifBtn">&#128276; Remind</button>
     </div>
-    <div class="filter-bar" id="filterBar">
-      <button class="chip active" data-filter="all">All</button>
-      <button class="chip" data-filter="new">New</button>
-      <button class="chip" data-filter="preparing">Preparing</button>
-      <button class="chip" data-filter="packed">Packed</button>
-      <button class="chip" data-filter="done">Done</button>
-    </div>
-    <div class="kanban-scroll">
-      <div class="kanban-col" id="col-new" data-status="new"><div class="kanban-col-header"><span class="kanban-col-title">New</span><span class="kanban-count" id="count-new">0</span></div><div id="cards-new"><div class="empty"><div class="icon">&#128203;</div>No new orders</div></div></div>
-      <div class="kanban-col" id="col-preparing" data-status="preparing"><div class="kanban-col-header"><span class="kanban-col-title">Preparing</span><span class="kanban-count" id="count-preparing">0</span></div><div id="cards-preparing"><div class="empty"><div class="icon">&#127859;</div>Nothing cooking</div></div></div>
-      <div class="kanban-col" id="col-packed" data-status="packed"><div class="kanban-col-header"><span class="kanban-col-title">Packed</span><span class="kanban-count" id="count-packed">0</span></div><div id="cards-packed"><div class="empty"><div class="icon">&#128230;</div>Nothing packed</div></div></div>
-      <div class="kanban-col" id="col-done" data-status="done"><div class="kanban-col-header"><span class="kanban-col-title">Done</span><span class="kanban-count" id="count-done">0</span></div><div id="cards-done"><div class="empty"><div class="icon">&#9989;</div>No completed orders</div></div></div>
+    <div class="kitchen-mode-bar" id="kitchenModeBar">
+      <button type="button" class="kv-mode-btn active" id="btnKvKanban">📋 Kanban Board</button>
+      <button type="button" class="kv-mode-btn" id="btnKvSchedule">📅 Schedule &amp; Overview</button>
     </div>
 
-    <!-- Completed Orders Archive Section -->
-    <div class="done-archive-section" id="doneArchiveSection">
-      <div class="done-archive-header">
-        <div class="done-archive-title-wrap">
-          <span class="done-archive-icon">📦</span>
+    <!-- Kanban View Container -->
+    <div id="kanbanContainer">
+      <div class="filter-bar" id="filterBar">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="new">New</button>
+        <button class="chip" data-filter="packed">Packed</button>
+        <button class="chip" data-filter="done">Done</button>
+      </div>
+      <div class="kanban-scroll">
+        <div class="kanban-col" id="col-new" data-status="new"><div class="kanban-col-header"><span class="kanban-col-title">New</span><span class="kanban-count" id="count-new">0</span></div><div id="cards-new"><div class="empty"><div class="icon">&#128203;</div>No new orders</div></div></div>
+        <div class="kanban-col" id="col-packed" data-status="packed"><div class="kanban-col-header"><span class="kanban-col-title">Packed</span><span class="kanban-count" id="count-packed">0</span></div><div id="cards-packed"><div class="empty"><div class="icon">&#128230;</div>Nothing packed</div></div></div>
+        <div class="kanban-col" id="col-done" data-status="done"><div class="kanban-col-header"><span class="kanban-col-title">Done</span><span class="kanban-count" id="count-done">0</span></div><div id="cards-done"><div class="empty"><div class="icon">&#9989;</div>No completed orders</div></div></div>
+      </div>
+    </div>
+
+    <!-- Schedule & Fulfillment Overview Section -->
+    <div class="schedule-overview-section" id="scheduleOverviewSection" style="display:none">
+      <div class="schedule-header">
+        <div class="schedule-title-wrap">
+          <span class="schedule-icon">📅</span>
           <div>
-            <h3 class="done-archive-title">Completed Orders Archive</h3>
-            <p class="done-archive-sub" id="archiveSubtitle">Orders completed over 3 days ago are stored here</p>
+            <h3 class="schedule-title">Order Schedule &amp; Fulfillment</h3>
+            <p class="schedule-sub" id="scheduleSubtitle">Upcoming deliveries &amp; pickups overview</p>
           </div>
         </div>
-        <div class="done-archive-controls">
-          <button type="button" class="archive-view-btn" id="archiveToggleCal">📅 Calendar</button>
-          <button type="button" class="archive-view-btn active" id="archiveToggleScope" data-scope="older">Showing: &gt;3 Days Old</button>
+        <div class="schedule-controls">
+          <div class="schedule-scope-bar" id="scheduleScopeBar">
+            <button type="button" class="schedule-scope-chip active" id="scopeUpcoming" data-scope="upcoming">Upcoming</button>
+            <button type="button" class="schedule-scope-chip" id="scopeAll" data-scope="all">All Dates</button>
+            <button type="button" class="schedule-scope-chip" id="scopeDone" data-scope="done">Done Archive</button>
+          </div>
         </div>
       </div>
 
-      <!-- Calendar Picker Widget (Toggleable) -->
-      <div class="archive-calendar-wrap" id="archiveCalendarWrap" style="display:none">
+      <!-- Legend & Month Stats -->
+      <div class="schedule-legend-bar">
+        <div class="schedule-legend-items">
+          <div class="sched-legend-tag"><span class="sched-dot dot-delivery"></span> <span><strong>Delivery</strong> (Dark Orange)</span></div>
+          <div class="sched-legend-tag"><span class="sched-dot dot-pickup"></span> <span><strong>Pickup</strong> (Warm Gold)</span></div>
+        </div>
+        <div class="schedule-month-stats" id="scheduleMonthStats">0 Deliveries &bull; 0 Pickups</div>
+      </div>
+
+      <!-- Calendar Picker Widget -->
+      <div class="schedule-calendar-wrap" id="scheduleCalendarWrap">
         <div class="archive-cal-nav">
-          <button type="button" class="cal-nav-btn" id="archiveCalPrev" title="Previous Month">&larr;</button>
-          <span class="cal-nav-title" id="archiveCalTitle">Month Year</span>
+          <button type="button" class="cal-nav-btn" id="scheduleCalPrev" title="Previous Month">&larr;</button>
+          <span class="cal-nav-title" id="scheduleCalTitle">Month Year</span>
           <div style="display:flex;align-items:center;gap:6px">
-            <button type="button" class="archive-view-btn" id="archiveFilterClear" style="display:none;padding:4px 8px;font-size:11px">Clear filter</button>
-            <button type="button" class="cal-nav-btn" id="archiveCalNext" title="Next Month">&rarr;</button>
+            <button type="button" class="archive-view-btn" id="scheduleFilterClear" style="display:none;padding:4px 8px;font-size:11px">Clear filter</button>
+            <button type="button" class="cal-nav-btn" id="scheduleCalNext" title="Next Month">&rarr;</button>
           </div>
         </div>
-        <div class="archive-cal-grid" id="archiveCalGrid"></div>
+        <div class="archive-cal-grid" id="scheduleCalGrid"></div>
       </div>
 
-      <!-- Date-Grouped Orders List -->
-      <div id="archiveDateGroups"></div>
+      <!-- Selected Date Agenda -->
+      <div class="schedule-agenda" id="scheduleAgenda">
+        <div class="agenda-header" id="agendaHeader">
+          <div class="agenda-header-left">
+            <h4 class="agenda-date-title" id="agendaDateTitle">Orders for Today</h4>
+            <span class="agenda-date-badge today" id="agendaDateBadge">Today</span>
+          </div>
+          <button type="button" class="agenda-all-btn" id="agendaViewAllBtn" style="display:none">View all month</button>
+        </div>
+        <div id="agendaOrdersList"></div>
+      </div>
+
+      <!-- Date-Grouped Orders List (when looking at All Dates or Done Archive) -->
+      <div id="scheduleDateGroups" style="display:none"></div>
     </div>
   </section>
 
@@ -757,10 +844,7 @@ textarea{resize:vertical;min-height:50px}
       </div>
     </div>
     <!-- Legend -->
-    <div class="tl-legend">
-      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#6B7CB0"></div>Order placed</div>
-      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#D9A24B"></div>Pickup</div>
-      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:#C7401F"></div>Delivery</div>
+    <div class="tl-legend" id="tlLegend">
     </div>
     <!-- Scrollable canvas -->
     <div class="tl-scroll-wrap" id="tlScrollWrap">
@@ -788,6 +872,7 @@ textarea{resize:vertical;min-height:50px}
     <div class="item-breakdown">
       <div class="item-pill sig"><div class="ip-qty" id="salesSigQty">0</div><div class="ip-label">Signature</div><div class="ip-rev" id="salesSigRev">RM0</div></div>
       <div class="item-pill beef"><div class="ip-qty" id="salesBeefQty">0</div><div class="ip-label">Beef</div><div class="ip-rev" id="salesBeefRev">RM0</div></div>
+      <div class="item-pill cookie"><div class="ip-qty" id="salesCookieQty">0</div><div class="ip-label">Cookies</div><div class="ip-rev" id="salesCookieRev">RM0</div></div>
     </div>
     <div class="chart-card combo-card"><h3 id="chart1Title">Revenue Spike Correlates Directly with Order Volume Growth</h3><div class="chart-wrap combo-chart-wrap"><canvas id="chart1"></canvas></div></div>
     <div class="chart-card"><h3>Monthly Revenue Trend by Product</h3><div class="chart-wrap"><canvas id="chart2"></canvas></div></div>
@@ -821,9 +906,9 @@ const auth=firebase.auth(),db=firebase.firestore(),ordersRef=db.collection("orde
 auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 const invRef=db.collection("inventory_logs");
 let allInvLogs=[];
-const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14}};
-const STATUS_FLOW=["new","preparing","packed","done"],STATUS_LABEL={new:"New",preparing:"Preparing",packed:"Packed"};
-let qty={signature:0,beef:0},activeFilter="all",allOrders=[],selectedId=null;
+const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14},cookies:{name:"Almond Walnut Chocolate Chip Cookies",price:38}};
+const STATUS_FLOW=["new","packed","done"],STATUS_LABEL={new:"New",packed:"Packed"};
+let qty={signature:0,beef:0,cookies:0},activeFilter="all",allOrders=[],selectedId=null;
 let customerDirectory=new Map();
 function buildCustomerDirectory(){const map=new Map();allOrders.forEach(o=>{const key=(o.customerName||"").trim().toLowerCase();if(!key||map.has(key))return;map.set(key,{name:o.customerName,phone:o.phone||"",fulfilment:o.fulfilment,address:o.address||"",deliveryCost:o.deliveryCost||0});});return map;}
 
@@ -832,9 +917,9 @@ function esc(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function doneLabel(o){return o.fulfilment==="delivery"?"Delivered":"Picked up";}
 function nextStatus(s){const i=STATUS_FLOW.indexOf(s);return i>=0&&i<STATUS_FLOW.length-1?STATUS_FLOW[i+1]:null;}
 function prevStatus(s){const i=STATUS_FLOW.indexOf(s);return i>0?STATUS_FLOW[i-1]:null;}
-function advLabel(o){const n=nextStatus(o.status||"new");if(n==="preparing")return"Start preparing";if(n==="packed")return"Mark packed";if(n==="done")return doneLabel(o);return null;}
+function advLabel(o){const n=nextStatus(o.status||"new");if(n==="packed")return"Mark packed";if(n==="done")return doneLabel(o);return null;}
 function undLabel(o){const p=prevStatus(o.status||"new");if(!p)return null;return"Undo to "+(STATUS_LABEL[p]||p);}
-function bdgClass(s){return{preparing:"badge-preparing",packed:"badge-packed",done:"badge-done"}[s]||"badge-new";}
+function bdgClass(s){return{packed:"badge-packed",done:"badge-done"}[s]||"badge-new";}
 function bdgLabel(o){return o.status==="done"?doneLabel(o):STATUS_LABEL[o.status]||"New";}
 function fmtTime(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
 function fmtPickup(iso){if(!iso)return null;const d=new Date(iso);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
@@ -850,7 +935,7 @@ function setConn(ok){document.getElementById("connStatus").classList.toggle("off
 /* ── Tabs ── */
 const TAB_MAP={entry:"entryView",kitchen:"kitchenView",inventory:"inventoryView",timeline:"timelineView",sales:"salesView"};
 document.getElementById("tabEntry").addEventListener("click",()=>switchTab("entry"));
-document.getElementById("tabKitchen").addEventListener("click",()=>{switchTab("kitchen");renderDoneArchive(allOrders);});
+document.getElementById("tabKitchen").addEventListener("click",()=>{switchTab("kitchen");renderScheduleOverview(allOrders);setKitchenMode(kitchenViewMode);});
 document.getElementById("tabInventory").addEventListener("click",()=>{switchTab("inventory");renderInventory();});
 document.getElementById("tabTimeline").addEventListener("click",()=>{switchTab("timeline");renderTimeline();});
 document.getElementById("tabSales").addEventListener("click",()=>{switchTab("sales");renderSales();});
@@ -1084,7 +1169,7 @@ function sendPrepReminder(orders) {
   const prepMsg = entries.length ? entries.map(([n, q]) => q + "x " + n).join(", ") : "No pending orders today";
 
   const stockAlerts = getInventoryStockAlert();
-  let title = "RotiCanai Kitchen Prep \uD83E\uDD53";
+  let title = "jar&maz homemade Kitchen Prep \uD83E\uDD53";
   let body = "Today pending: " + prepMsg;
 
   if (stockAlerts.length > 0) {
@@ -1208,8 +1293,8 @@ function updateKitchenSummary(orders) {
 /* ── Entry form ── */
 document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});});
 function getDeliveryCost(){const value=Number(document.getElementById("deliveryCost").value);return Number.isFinite(value)&&value>0?value:0;}
-function updateTotal(){document.getElementById("totalOut").textContent="RM"+(qty.signature*8+qty.beef*14+getDeliveryCost()).toFixed(2);}
-function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0};document.getElementById("qty-signature").textContent=0;document.getElementById("qty-beef").textContent=0;document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.querySelectorAll("#paymentGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);updateTotal();clearError();closeNameSuggest();}
+function updateTotal(){document.getElementById("totalOut").textContent="RM"+(Object.entries(qty).reduce((s,[id,q])=>s+q*PRICES[id].price,0)+getDeliveryCost()).toFixed(2);}
+function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0,cookies:0};Object.keys(qty).forEach(id=>{document.getElementById("qty-"+id).textContent=0;});document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.querySelectorAll("#paymentGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);updateTotal();clearError();closeNameSuggest();}
 document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display=r.value==="delivery"&&r.checked?"block":"none";updateTotal();});});
 document.getElementById("deliveryCost").addEventListener("input",updateTotal);
 document.querySelectorAll('input[name="payment"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#paymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
@@ -1224,7 +1309,7 @@ nameSuggestEl.addEventListener("mousedown",e=>{const item=e.target.closest(".nam
 async function selectCustomerSuggestion(c){nameInputEl.value=c.name;document.getElementById("custPhone").value=c.phone;closeNameSuggest();if(c.fulfilment==="delivery"&&c.address){const useSame=await showConfirm("Use same delivery address?","Last delivery: "+c.address);document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.checked=r.value==="delivery";});document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display="block";if(useSame){document.getElementById("custAddress").value=c.address;if(c.deliveryCost)document.getElementById("deliveryCost").value=c.deliveryCost;updateTotal();}else{document.getElementById("custAddress").value="";document.getElementById("custAddress").focus();}}}
 function showError(msg){const el=document.getElementById("formError");el.textContent=msg;el.style.display="block";}
 function clearError(){document.getElementById("formError").style.display="none";}
-document.getElementById("orderForm").addEventListener("submit",async e=>{e.preventDefault();clearError();const name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),fulfil=document.querySelector('input[name="fulfil"]:checked').value,address=document.getElementById("custAddress").value.trim(),notes=document.getElementById("custNotes").value.trim(),pickup=document.getElementById("pickupTime").value,orderDate=document.getElementById("orderDate").value,deliveryCost=fulfil==="delivery"?getDeliveryCost():0,paymentStatus=document.querySelector('input[name="payment"]:checked').value,items=Object.entries(qty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name){showError("Enter customer name.");return;}if(!phone){showError("Enter phone number.");return;}if(!items.length){showError("Add at least one item.");return;}if(fulfil==="delivery"&&!address){showError("Enter delivery address.");return;}const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("saveBtn");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.add({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,paymentStatus,orderDate:orderDate||null,pickupTime:pickup||null,status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp()});resetOrderForm();}catch{showError("Could not save. Check connection.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save order";}});
+document.getElementById("orderForm").addEventListener("submit",async e=>{e.preventDefault();clearError();const name=document.getElementById("custName").value.trim(),phone=document.getElementById("custPhone").value.trim(),fulfil=document.querySelector('input[name="fulfil"]:checked').value,address=document.getElementById("custAddress").value.trim(),notes=document.getElementById("custNotes").value.trim(),pickup=document.getElementById("pickupTime").value,orderDate=document.getElementById("orderDate").value,deliveryCost=fulfil==="delivery"?getDeliveryCost():0,paymentStatus=document.querySelector('input[name="payment"]:checked').value,items=Object.entries(qty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name){showError("Enter customer name.");return;}if(!phone){showError("Enter phone number.");return;}if(!items.length){showError("Add at least one item.");return;}if(fulfil==="delivery"&&!address){showError("Enter delivery address.");return;}const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("saveBtn");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.add({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,paymentStatus,orderDate:orderDate||null,pickupTime:pickup||null,status:"new",createdAt:firebase.firestore.FieldValue.serverTimestamp(),paidAt:paymentStatus==="paid"?firebase.firestore.FieldValue.serverTimestamp():null});resetOrderForm();}catch{showError("Could not save. Check connection.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save order";}});
 resetOrderForm();
 
 /* ── Confirm sheet ── */
@@ -1236,25 +1321,46 @@ document.getElementById("confirmOk").addEventListener("click",()=>closeConfirm(t
 document.getElementById("confirmScrim").addEventListener("click",()=>closeConfirm(false));
 
 /* ── Edit sheet ── */
-let editOrderId=null,editQty={signature:0,beef:0};
+let editOrderId=null,editQty={signature:0,beef:0,cookies:0};
 document.querySelectorAll(".edit-stepper").forEach(btn=>{btn.addEventListener("click",()=>{editQty[btn.dataset.item]=Math.max(0,editQty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("edit-qty-"+btn.dataset.item).textContent=editQty[btn.dataset.item];});});
 function getEditDeliveryCost(){const v=Number(document.getElementById("editDeliveryCost").value);return Number.isFinite(v)&&v>0?v:0;}
 document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));const isD=r.value==="delivery"&&r.checked;document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editDeliveryCostField").style.display=isD?"block":"none";});});
 document.querySelectorAll('input[name="editPayment"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editPaymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
-function openEdit(order){editOrderId=order.id;editQty={signature:0,beef:0};(order.items||[]).forEach(i=>{if(editQty[i.id]!==undefined)editQty[i.id]=i.qty;});document.getElementById("editName").value=order.customerName||"";document.getElementById("editPhone").value=order.phone||"";document.getElementById("edit-qty-signature").textContent=editQty.signature;document.getElementById("edit-qty-beef").textContent=editQty.beef;const isD=order.fulfilment==="delivery";document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.checked=r.value===(isD?"delivery":"pickup");});document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editAddress").value=order.address||"";document.getElementById("editDeliveryCostField").style.display=isD?"block":"none";document.getElementById("editDeliveryCost").value=order.deliveryCost||"";const isUnpaid=order.paymentStatus==="unpaid";document.querySelectorAll('input[name="editPayment"]').forEach(r=>{r.checked=r.value===(isUnpaid?"unpaid":"paid");});document.querySelectorAll("#editPaymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editOrderDate").value=order.orderDate||"";document.getElementById("editPickupTime").value=order.pickupTime||"";document.getElementById("editNotes").value=order.notes||"";document.getElementById("editSheet").classList.add("open");}
+function openEdit(order){editOrderId=order.id;editQty={signature:0,beef:0,cookies:0};(order.items||[]).forEach(i=>{if(editQty[i.id]!==undefined)editQty[i.id]=i.qty;});document.getElementById("editName").value=order.customerName||"";document.getElementById("editPhone").value=order.phone||"";document.getElementById("edit-qty-signature").textContent=editQty.signature;document.getElementById("edit-qty-beef").textContent=editQty.beef;document.getElementById("edit-qty-cookies").textContent=editQty.cookies;const isD=order.fulfilment==="delivery";document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.checked=r.value===(isD?"delivery":"pickup");});document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editAddress").value=order.address||"";document.getElementById("editDeliveryCostField").style.display=isD?"block":"none";document.getElementById("editDeliveryCost").value=order.deliveryCost||"";const isUnpaid=order.paymentStatus==="unpaid";document.querySelectorAll('input[name="editPayment"]').forEach(r=>{r.checked=r.value===(isUnpaid?"unpaid":"paid");});document.querySelectorAll("#editPaymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("editOrderDate").value=order.orderDate||"";document.getElementById("editPickupTime").value=order.pickupTime||"";document.getElementById("editNotes").value=order.notes||"";document.getElementById("editSheet").classList.add("open");}
 function closeEdit(){document.getElementById("editSheet").classList.remove("open");editOrderId=null;}
 document.getElementById("editCancel").addEventListener("click",closeEdit);
 document.getElementById("editScrim").addEventListener("click",closeEdit);
-document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const o=allOrders.find(x=>x.id===editOrderId);const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,orderDate=document.getElementById("editOrderDate").value,notes=document.getElementById("editNotes").value.trim(),deliveryCost=fulfil==="delivery"?getEditDeliveryCost():0,paymentStatus=document.querySelector('input[name="editPayment"]:checked').value,items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const backup=o?{...o}:null;const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,paymentStatus,orderDate:orderDate||null,pickupTime:pickup||null});closeEdit();clearSelection();if(backup){setUndoAction({type:"edit",id:backup.id,name:backup.customerName||"Order",data:backup});}}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
+document.getElementById("editSave").addEventListener("click",async()=>{if(!editOrderId)return;const o=allOrders.find(x=>x.id===editOrderId);const name=document.getElementById("editName").value.trim(),phone=document.getElementById("editPhone").value.trim(),fulfil=document.querySelector('input[name="editFulfil"]:checked').value,address=document.getElementById("editAddress").value.trim(),pickup=document.getElementById("editPickupTime").value,orderDate=document.getElementById("editOrderDate").value,notes=document.getElementById("editNotes").value.trim(),deliveryCost=fulfil==="delivery"?getEditDeliveryCost():0,paymentStatus=document.querySelector('input[name="editPayment"]:checked').value,items=Object.entries(editQty).filter(([,q])=>q>0).map(([id,q])=>({id,name:PRICES[id].name,price:PRICES[id].price,qty:q}));if(!name||!phone||!items.length)return;const backup=o?{...o}:null;const itemSubtotal=items.reduce((s,i)=>s+i.price*i.qty,0),total=itemSubtotal+deliveryCost,saveBtn=document.getElementById("editSave");saveBtn.disabled=true;saveBtn.textContent="Saving...";try{await ordersRef.doc(editOrderId).update({customerName:name,phone,items,fulfilment:fulfil,address:fulfil==="delivery"?address:"",notes,itemSubtotal,deliveryCost,total,paymentStatus,orderDate:orderDate||null,pickupTime:pickup||null,...(o&&o.paymentStatus!==paymentStatus?{paidAt:paymentStatus==="paid"?firebase.firestore.FieldValue.serverTimestamp():null}:{})});closeEdit();clearSelection();if(backup){setUndoAction({type:"edit",id:backup.id,name:backup.customerName||"Order",data:backup});}}catch{alert("Could not save.");}finally{saveBtn.disabled=false;saveBtn.textContent="Save changes";}});
 
 /* ── Entry list (removed from entry page) ── */
 function renderEntryList(orders){const list=document.getElementById("entryList");if(!list)return;}
 
-/* ── Done Orders Archive & Calendar State ── */
-let archiveScope = "older"; // "older" (>3 days) or "all"
-let archiveCalMonth = new Date();
-let archiveSelectedDateKey = null;
+/* ── Kitchen View Mode & Schedule Overview State ── */
+let kitchenViewMode = "kanban"; // "kanban" or "schedule"
+let scheduleScope = "upcoming"; // "upcoming", "all", or "done"
+let scheduleCalMonth = new Date();
+let scheduleSelectedDateKey = toDateKey(new Date()); // default to today
 let activeModalOrder = null;
+
+// Backwards compatibility aliases
+let archiveScope = "older";
+let archiveCalMonth = scheduleCalMonth;
+let archiveSelectedDateKey = null;
+
+function getOrderFulfillDate(o) {
+  if (o.pickupTime) {
+    const d = new Date(o.pickupTime);
+    if (!isNaN(d.getTime())) return d;
+  }
+  if (o.status === "done" && (o.doneAt || o.updatedAt)) {
+    const val = o.doneAt || o.updatedAt;
+    const d = val.toDate ? val.toDate() : new Date(val);
+    if (!isNaN(d.getTime())) return d;
+  }
+  const val = o.orderDate || o.createdAt;
+  if (!val) return new Date();
+  return val.toDate ? val.toDate() : new Date(val);
+}
 
 function getOrderDoneDate(o) {
   const val = o.doneAt || o.updatedAt || o.orderDate || o.createdAt;
@@ -1277,14 +1383,18 @@ function toDateKey(d) {
 }
 
 function formatArchiveDateKey(key) {
+  if (!key) return "";
   const [y, m, d] = key.split("-").map(Number);
   const date = new Date(y, m - 1, d);
   const now = new Date();
   const todayKey = toDateKey(now);
   const yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
   const yestKey = toDateKey(yest);
+  const tom = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+  const tomKey = toDateKey(tom);
   let prefix = "";
   if (key === todayKey) prefix = "Today — ";
+  else if (key === tomKey) prefix = "Tomorrow — ";
   else if (key === yestKey) prefix = "Yesterday — ";
   return prefix + date.toLocaleDateString("en-MY", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
 }
@@ -1304,7 +1414,6 @@ function renderKanban(orders){
     if (!kEl) return;
     const em = {
       new: "No new orders",
-      preparing: "Nothing cooking",
       packed: "Nothing packed",
       done: "No recent completed orders"
     };
@@ -1332,7 +1441,9 @@ function renderKanban(orders){
       hint.className = "kanban-archive-hint";
       hint.innerHTML = `📦 ${olderDone.length} older completed order${olderDone.length > 1 ? 's' : ''} stored in Archive below &darr;`;
       hint.onclick = () => {
-        const arch = document.getElementById("doneArchiveSection");
+        setKitchenMode("schedule");
+        setScheduleScope("done");
+        const arch = document.getElementById("scheduleOverviewSection");
         if (arch) arch.scrollIntoView({ behavior: "smooth" });
       };
       kEl.appendChild(hint);
@@ -1362,6 +1473,7 @@ function wireButtons(c,orders){
       btn.disabled=true;
       try{
         const updateData = { status: next };
+        if (next === "packed") updateData.packedAt = firebase.firestore.FieldValue.serverTimestamp();
         if (next === "done") {
           updateData.doneAt = firebase.firestore.FieldValue.serverTimestamp();
         } else if (o.status === "done" && next !== "done") {
@@ -1385,6 +1497,7 @@ function wireButtons(c,orders){
       btn.disabled=true;
       try{
         const updateData = { status: prev };
+        if (o.status === "packed") updateData.packedAt = null;
         if (o.status === "done" && prev !== "done") {
           updateData.doneAt = null;
         }
@@ -1403,7 +1516,7 @@ function wireButtons(c,orders){
       if(!ok)return;
       btn.disabled=true;
       try{
-        await ordersRef.doc(o.id).update({paymentStatus:"paid"});
+        await ordersRef.doc(o.id).update({paymentStatus:"paid",paidAt:firebase.firestore.FieldValue.serverTimestamp()});
       }catch{
         btn.disabled=false;
       }
@@ -1411,115 +1524,118 @@ function wireButtons(c,orders){
   });
 }
 
-/* ── Completed Orders Archive & Calendar ── */
-function renderDoneArchive(orders) {
-  const container = document.getElementById("archiveDateGroups");
-  if (!container) return;
+/* ── Kitchen View Mode Switcher ── */
+function setKitchenMode(mode) {
+  kitchenViewMode = mode;
+  const btnKanban = document.getElementById("btnKvKanban");
+  const btnSchedule = document.getElementById("btnKvSchedule");
+  const kanbanContainer = document.getElementById("kanbanContainer");
+  const scheduleSection = document.getElementById("scheduleOverviewSection");
 
-  const allDone = orders.filter(o => (o.status || "new") === "done");
-  const olderDone = allDone.filter(o => !isRecentDoneOrder(o));
-  let displayedDone = archiveScope === "all" ? allDone : olderDone;
+  if (btnKanban) btnKanban.classList.toggle("active", mode === "kanban");
+  if (btnSchedule) btnSchedule.classList.toggle("active", mode === "schedule");
 
-  const subtitleEl = document.getElementById("archiveSubtitle");
-  if (subtitleEl) {
-    if (archiveScope === "older") {
-      subtitleEl.textContent = `${olderDone.length} order${olderDone.length !== 1 ? 's' : ''} completed over 3 days ago (${allDone.length} total completed)`;
-    } else {
-      subtitleEl.textContent = `All ${allDone.length} completed order${allDone.length !== 1 ? 's' : ''} across all dates`;
+  if (mode === "kanban") {
+    if (kanbanContainer) kanbanContainer.style.display = "block";
+    if (scheduleSection) scheduleSection.style.display = "none";
+  } else {
+    if (kanbanContainer) kanbanContainer.style.display = "none";
+    if (scheduleSection) {
+      scheduleSection.style.display = "block";
+      renderScheduleOverview(allOrders);
     }
   }
-
-  // Render Calendar with allDone so badges reflect order dates
-  renderArchiveCalendar(allDone);
-
-  // If a calendar date is selected, filter displayedDone
-  if (archiveSelectedDateKey) {
-    displayedDone = displayedDone.filter(o => toDateKey(getOrderDoneDate(o)) === archiveSelectedDateKey);
-  }
-
-  const clearBtn = document.getElementById("archiveFilterClear");
-  if (clearBtn) {
-    clearBtn.style.display = archiveSelectedDateKey ? "inline-block" : "none";
-    if (archiveSelectedDateKey) {
-      clearBtn.textContent = `Clear (${archiveSelectedDateKey})`;
-    }
-  }
-
-  if (!displayedDone.length) {
-    container.innerHTML = `<div class="empty" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px 20px;text-align:center"><div class="icon" style="font-size:28px;margin-bottom:8px">📦</div><div style="font-weight:600;color:var(--text-soft)">No archived orders ${archiveSelectedDateKey ? 'on ' + archiveSelectedDateKey : (archiveScope === "older" ? 'older than 3 days' : 'found')}</div><div style="font-size:12px;color:var(--text-mute);margin-top:4px">Completed orders appear here once they pass the 3-day viewing window.</div></div>`;
-    return;
-  }
-
-  // Group by date key (YYYY-MM-DD)
-  const groups = new Map();
-  displayedDone.forEach(o => {
-    const key = toDateKey(getOrderDoneDate(o));
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key).push(o);
-  });
-
-  // Sort dates descending (newest first)
-  const sortedKeys = [...groups.keys()].sort((a, b) => b.localeCompare(a));
-
-  container.innerHTML = sortedKeys.map(dateKey => {
-    const dateOrders = groups.get(dateKey);
-    const dayTotal = dateOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
-
-    const cardsHtml = dateOrders.map(o => {
-      const doneD = getOrderDoneDate(o);
-      const timeStr = doneD.toLocaleTimeString("en-MY", { hour: "2-digit", minute: "2-digit", hour12: true });
-      const itemsSummary = (o.items || []).map(i => `${i.qty}x ${i.name}`).join(", ");
-      const isUnpaid = o.paymentStatus === "unpaid";
-      const isDelivery = o.fulfilment === "delivery";
-
-      return `<div class="archive-order-card" data-order-id="${o.id}">
-        <div class="aoc-top">
-          <span class="aoc-name">${esc(o.customerName)}</span>
-          <span class="aoc-total">RM${(Number(o.total) || 0).toFixed(2)}</span>
-        </div>
-        <div class="aoc-items" title="${esc(itemsSummary)}">${esc(itemsSummary)}</div>
-        <div class="aoc-meta">
-          <span>${isDelivery ? '🚗 Delivery' : '🏪 Pickup'} &bull; ${timeStr}</span>
-          <span>${isUnpaid ? '<span class="badge badge-unpaid">Unpaid</span>' : '<span class="badge badge-paid">Paid</span>'}</span>
-        </div>
-      </div>`;
-    }).join("");
-
-    return `<div class="archive-date-group" id="group-${dateKey}">
-      <div class="archive-date-header">
-        <span>📅 ${formatArchiveDateKey(dateKey)}</span>
-        <span class="archive-date-meta">${dateOrders.length} order${dateOrders.length > 1 ? 's' : ''} &bull; RM${dayTotal.toFixed(2)}</span>
-      </div>
-      <div class="archive-orders-grid">
-        ${cardsHtml}
-      </div>
-    </div>`;
-  }).join("");
-
-  // Attach click listeners to cards
-  container.querySelectorAll(".archive-order-card").forEach(card => {
-    card.addEventListener("click", () => {
-      const order = allOrders.find(x => x.id === card.dataset.orderId);
-      if (order) openOrderDetailModal(order);
-    });
-  });
 }
 
-/* ── Archive Calendar Widget ── */
-function renderArchiveCalendar(doneOrders) {
-  const grid = document.getElementById("archiveCalGrid");
-  const title = document.getElementById("archiveCalTitle");
+function setScheduleScope(scope) {
+  scheduleScope = scope;
+  document.querySelectorAll("#scheduleScopeBar .schedule-scope-chip").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.scope === scope);
+  });
+  renderScheduleOverview(allOrders);
+}
+
+/* ── Order Schedule & Fulfillment Overview ── */
+function renderScheduleOverview(orders) {
+  const scheduleSection = document.getElementById("scheduleOverviewSection");
+  if (!scheduleSection) return;
+
+  // Filter scoped orders
+  let scopedOrders = [];
+  const allDone = orders.filter(o => (o.status || "new") === "done");
+  const activeOrders = orders.filter(o => (o.status || "new") !== "done");
+
+  if (scheduleScope === "upcoming") {
+    scopedOrders = activeOrders;
+  } else if (scheduleScope === "done") {
+    scopedOrders = allDone;
+  } else {
+    scopedOrders = orders; // all
+  }
+
+  // Update subtitle
+  const subtitleEl = document.getElementById("scheduleSubtitle");
+  if (subtitleEl) {
+    if (scheduleScope === "upcoming") {
+      subtitleEl.textContent = `${activeOrders.length} active order${activeOrders.length !== 1 ? 's' : ''} to prepare & deliver (New & Packed)`;
+    } else if (scheduleScope === "done") {
+      subtitleEl.textContent = `${allDone.length} completed order${allDone.length !== 1 ? 's' : ''} in archive`;
+    } else {
+      subtitleEl.textContent = `${orders.length} total orders across all dates`;
+    }
+  }
+
+  // Render Calendar
+  renderScheduleCalendar(scopedOrders);
+
+  // Render Agenda for selected date
+  renderScheduleAgenda(scopedOrders);
+}
+
+// Backwards compatibility alias
+function renderDoneArchive(orders) {
+  renderScheduleOverview(orders);
+}
+
+/* ── Schedule Calendar Widget ── */
+function renderScheduleCalendar(scopedOrders) {
+  const grid = document.getElementById("scheduleCalGrid");
+  const title = document.getElementById("scheduleCalTitle");
+  const statsEl = document.getElementById("scheduleMonthStats");
   if (!grid || !title) return;
 
-  const year = archiveCalMonth.getFullYear();
-  const month = archiveCalMonth.getMonth();
-  title.textContent = archiveCalMonth.toLocaleDateString("en-MY", { month: "long", year: "numeric" });
+  const year = scheduleCalMonth.getFullYear();
+  const month = scheduleCalMonth.getMonth();
+  title.textContent = scheduleCalMonth.toLocaleDateString("en-MY", { month: "long", year: "numeric" });
 
-  const counts = new Map();
-  doneOrders.forEach(o => {
-    const key = toDateKey(getOrderDoneDate(o));
-    counts.set(key, (counts.get(key) || 0) + 1);
+  // Map orders to date keys (YYYY-MM-DD)
+  const dateMap = new Map();
+  let monthDeliveries = 0;
+  let monthPickups = 0;
+
+  scopedOrders.forEach(o => {
+    const d = getOrderFulfillDate(o);
+    const key = toDateKey(d);
+    if (!dateMap.has(key)) dateMap.set(key, { deliveries: [], pickups: [], done: [] });
+    const isDelivery = o.fulfilment === "delivery";
+    if (isDelivery) {
+      dateMap.get(key).deliveries.push(o);
+    } else {
+      dateMap.get(key).pickups.push(o);
+    }
+    if (o.status === "done") {
+      dateMap.get(key).done.push(o);
+    }
+
+    if (d.getFullYear() === year && d.getMonth() === month) {
+      if (isDelivery) monthDeliveries++;
+      else monthPickups++;
+    }
   });
+
+  if (statsEl) {
+    statsEl.innerHTML = `<strong>${monthDeliveries}</strong> Deliveries &bull; <strong>${monthPickups}</strong> Pickups in ${scheduleCalMonth.toLocaleDateString("en-MY", { month: "short" })}`;
+  }
 
   const firstDayOfWeek = new Date(year, month, 1).getDay(); // 0 = Sun
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -1533,24 +1649,46 @@ function renderArchiveCalendar(doneOrders) {
   // Previous month trailing days
   for (let i = firstDayOfWeek - 1; i >= 0; i--) {
     const dayNum = daysInPrevMonth - i;
-    html += `<div class="cal-day-cell other-month"><span>${dayNum}</span></div>`;
+    html += `<div class="cal-day-cell other-month"><div class="cal-day-top"><span class="cal-day-num">${dayNum}</span></div></div>`;
   }
 
   // Current month days
   for (let day = 1; day <= daysInMonth; day++) {
     const dKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    const count = counts.get(dKey) || 0;
-    const isSelected = archiveSelectedDateKey === dKey;
+    const dayData = dateMap.get(dKey) || { deliveries: [], pickups: [], done: [] };
+    const numDeliv = dayData.deliveries.length;
+    const numPickup = dayData.pickups.length;
+    const numDone = dayData.done.length;
+    const hasOrders = numDeliv > 0 || numPickup > 0;
+    const isSelected = scheduleSelectedDateKey === dKey;
     const isToday = todayKey === dKey;
 
     let classes = ["cal-day-cell"];
-    if (count > 0) classes.push("has-orders");
+    if (hasOrders) classes.push("has-orders");
     if (isSelected) classes.push("selected");
     if (isToday) classes.push("cal-day-today");
 
+    let badgesHtml = "";
+    if (hasOrders) {
+      badgesHtml = '<div class="cal-day-badges">';
+      if (numDeliv > 0) {
+        badgesHtml += `<span class="cal-badge cal-badge-delivery" title="${numDeliv} Deliveries">🚗 ${numDeliv} Deliv</span>`;
+      }
+      if (numPickup > 0) {
+        badgesHtml += `<span class="cal-badge cal-badge-pickup" title="${numPickup} Pickups">🏪 ${numPickup} Pickup</span>`;
+      }
+      if (scheduleScope === "all" && numDone > 0) {
+        badgesHtml += `<span class="cal-badge cal-badge-done" title="${numDone} Completed">✓ ${numDone} done</span>`;
+      }
+      badgesHtml += '</div>';
+    }
+
     html += `<div class="${classes.join(" ")}" data-date="${dKey}">
-      <span>${day}</span>
-      ${count > 0 ? `<span class="cal-day-badge">${count}</span>` : ''}
+      <div class="cal-day-top">
+        <span class="cal-day-num">${day}</span>
+        ${isToday ? '<span style="font-size:8.5px;font-weight:800;color:var(--gold-deep)">TODAY</span>' : ''}
+      </div>
+      ${badgesHtml}
     </div>`;
   }
 
@@ -1558,25 +1696,255 @@ function renderArchiveCalendar(doneOrders) {
   const totalCells = firstDayOfWeek + daysInMonth;
   const remaining = (7 - (totalCells % 7)) % 7;
   for (let i = 1; i <= remaining; i++) {
-    html += `<div class="cal-day-cell other-month"><span>${i}</span></div>`;
+    html += `<div class="cal-day-cell other-month"><div class="cal-day-top"><span class="cal-day-num">${i}</span></div></div>`;
   }
 
   grid.innerHTML = html;
 
-  // Click handlers on days with orders
-  grid.querySelectorAll(".cal-day-cell.has-orders").forEach(cell => {
+  // Clear filter button state
+  const clearBtn = document.getElementById("scheduleFilterClear");
+  if (clearBtn) {
+    clearBtn.style.display = scheduleSelectedDateKey ? "inline-block" : "none";
+    if (scheduleSelectedDateKey) {
+      clearBtn.textContent = `Clear (${scheduleSelectedDateKey})`;
+    }
+  }
+
+  // Cell click handlers
+  grid.querySelectorAll(".cal-day-cell:not(.other-month)").forEach(cell => {
     cell.addEventListener("click", () => {
       const d = cell.dataset.date;
-      if (archiveSelectedDateKey === d) {
-        archiveSelectedDateKey = null;
+      if (scheduleSelectedDateKey === d) {
+        scheduleSelectedDateKey = null;
       } else {
-        archiveSelectedDateKey = d;
+        scheduleSelectedDateKey = d;
       }
-      renderDoneArchive(allOrders);
-      if (archiveSelectedDateKey) {
-        const groupEl = document.getElementById("group-" + archiveSelectedDateKey);
-        if (groupEl) groupEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      renderScheduleOverview(allOrders);
+      if (scheduleSelectedDateKey) {
+        const agendaEl = document.getElementById("scheduleAgenda");
+        if (agendaEl) agendaEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }
+    });
+  });
+}
+
+/* ── Selected Date Agenda ── */
+function renderScheduleAgenda(scopedOrders) {
+  const container = document.getElementById("agendaOrdersList");
+  const titleEl = document.getElementById("agendaDateTitle");
+  const badgeEl = document.getElementById("agendaDateBadge");
+  const viewAllBtn = document.getElementById("agendaViewAllBtn");
+  const dateGroupsContainer = document.getElementById("scheduleDateGroups");
+  if (!container || !titleEl) return;
+
+  const todayKey = toDateKey(new Date());
+  const targetDateKey = scheduleSelectedDateKey || todayKey;
+
+  if (titleEl) {
+    if (scheduleSelectedDateKey) {
+      titleEl.textContent = `Orders for ${formatArchiveDateKey(scheduleSelectedDateKey)}`;
+    } else {
+      titleEl.textContent = `Orders for Today (${formatArchiveDateKey(todayKey)})`;
+    }
+  }
+
+  const dayOrders = scopedOrders.filter(o => toDateKey(getOrderFulfillDate(o)) === targetDateKey);
+
+  if (badgeEl) {
+    if (targetDateKey === todayKey) {
+      badgeEl.className = "agenda-date-badge today";
+      badgeEl.textContent = "Today";
+    } else {
+      badgeEl.className = "agenda-date-badge";
+      badgeEl.textContent = `${dayOrders.length} order${dayOrders.length !== 1 ? 's' : ''}`;
+    }
+  }
+
+  if (viewAllBtn) {
+    viewAllBtn.style.display = scopedOrders.length > 0 ? "inline-block" : "none";
+    viewAllBtn.textContent = dateGroupsContainer && dateGroupsContainer.style.display === "block" ? "Hide all month" : "View all month";
+  }
+
+  if (!dayOrders.length) {
+    container.innerHTML = `
+      <div class="empty" style="background:var(--surface-2);border:1px dashed var(--border);border-radius:12px;padding:28px 16px;text-align:center">
+        <div class="icon" style="font-size:24px;margin-bottom:6px">🕊️</div>
+        <div style="font-weight:600;font-size:13.5px;color:var(--text-soft)">No orders scheduled for this date</div>
+        <div style="font-size:12px;color:var(--text-mute);margin-top:3px">
+          ${scheduleScope === "upcoming" ? "Orders scheduled for this day will appear here." : "No orders found for " + targetDateKey}
+        </div>
+      </div>`;
+  } else {
+    const deliveries = dayOrders.filter(o => o.fulfilment === "delivery");
+    const pickups = dayOrders.filter(o => o.fulfilment !== "delivery");
+
+    let html = "";
+
+    // 🚗 Deliveries Section (Dark Orange)
+    if (deliveries.length > 0) {
+      html += `
+        <div class="agenda-section">
+          <div class="agenda-sec-title delivery">
+            <span>🚗 Doorstep Deliveries (${deliveries.length})</span>
+          </div>
+          ${deliveries.map(o => renderAgendaCard(o, true)).join("")}
+        </div>`;
+    }
+
+    // 🏪 Pickups Section (Warm Gold)
+    if (pickups.length > 0) {
+      html += `
+        <div class="agenda-section">
+          <div class="agenda-sec-title pickup">
+            <span>🏪 Customer Pickups (${pickups.length})</span>
+          </div>
+          ${pickups.map(o => renderAgendaCard(o, false)).join("")}
+        </div>`;
+    }
+
+    container.innerHTML = html;
+
+    // Attach listeners to agenda cards
+    container.querySelectorAll(".agenda-card").forEach(card => {
+      card.addEventListener("click", e => {
+        if (e.target.closest(".agenda-btn-adv, .agenda-wa-btn")) return;
+        const order = allOrders.find(x => x.id === card.dataset.orderId);
+        if (order) openOrderDetailModal(order);
+      });
+    });
+
+    // Wire action buttons on agenda cards
+    container.querySelectorAll(".agenda-btn-adv").forEach(btn => {
+      btn.addEventListener("click", async e => {
+        e.stopPropagation();
+        const o = allOrders.find(x => x.id === btn.dataset.id);
+        if (!o) return;
+        const next = nextStatus(o.status || "new");
+        if (!next) return;
+        const ok = await showConfirm(advLabel(o) + "?", esc(o.customerName) + " - " + (o.items || []).map(i => i.qty + "x " + i.name).join(", "));
+        if (!ok) return;
+        btn.disabled = true;
+        try {
+          const updateData = { status: next };
+          if (next === "packed") updateData.packedAt = firebase.firestore.FieldValue.serverTimestamp();
+          if (next === "done") updateData.doneAt = firebase.firestore.FieldValue.serverTimestamp();
+          await ordersRef.doc(o.id).update(updateData);
+        } catch {
+          btn.disabled = false;
+        }
+      });
+    });
+  }
+
+  // Render Date Groups (full month list below agenda)
+  renderDateGroupsList(scopedOrders);
+}
+
+function renderAgendaCard(o, isDelivery) {
+  const isUnpaid = o.paymentStatus === "unpaid";
+  const itemsSummary = (o.items || []).map(i => `${i.qty}x ${i.name}`).join(", ");
+  const timeStr = o.pickupTime ? fmtPickup(o.pickupTime) : fmtTime(o.createdAt);
+  const status = o.status || "new";
+  const rawPhone = String(o.phone || "").replace(/\D/g, "");
+
+  let statusActionHtml = "";
+  if (status === "new") {
+    statusActionHtml = `<button type="button" class="agenda-btn-adv btn-packed" data-id="${o.id}">Mark packed</button>`;
+  } else if (status === "packed") {
+    statusActionHtml = `<button type="button" class="agenda-btn-adv btn-done" data-id="${o.id}">${isDelivery ? '🚗 Mark Delivered' : '🏪 Mark Picked Up'}</button>`;
+  } else if (status === "done") {
+    statusActionHtml = `<span class="badge badge-done">&#10003; ${isDelivery ? 'Delivered' : 'Picked up'}</span>`;
+  }
+
+  return `
+    <div class="agenda-card ${isDelivery ? 'delivery-card' : 'pickup-card'}" data-order-id="${o.id}">
+      <div class="agenda-card-top">
+        <span class="agenda-cust-name">
+          ${isDelivery ? '🚗' : '🏪'} ${esc(o.customerName)}
+          ${isUnpaid ? '<span class="badge badge-unpaid">Unpaid</span>' : '<span class="badge badge-paid">Paid</span>'}
+        </span>
+        <span class="agenda-order-total">RM${(Number(o.total) || 0).toFixed(2)}</span>
+      </div>
+      <div class="agenda-meta-row">
+        <span>⏰ ${timeStr}</span>
+        ${isDelivery && o.deliveryCost ? `<span>&bull; Delivery fee: RM${Number(o.deliveryCost).toFixed(2)}</span>` : ''}
+      </div>
+      ${isDelivery && o.address ? `
+        <div class="agenda-address">
+          <span>📍</span> <span>${esc(o.address)}</span>
+        </div>` : ''}
+      <div class="agenda-items-summary">
+        📦 ${esc(itemsSummary)}
+      </div>
+      ${o.notes ? `<div class="order-note" style="margin-bottom:8px">"${esc(o.notes)}"</div>` : ''}
+      <div class="agenda-actions-row">
+        ${o.phone ? `
+          <a href="https://wa.me/${rawPhone}" target="_blank" rel="noopener" class="agenda-wa-btn">
+            💬 WhatsApp
+          </a>` : ''}
+        ${statusActionHtml}
+      </div>
+    </div>`;
+}
+
+/* ── Full Month Grouped List ── */
+function renderDateGroupsList(scopedOrders) {
+  const container = document.getElementById("scheduleDateGroups");
+  if (!container) return;
+
+  if (!scopedOrders.length) {
+    container.innerHTML = `<div class="empty" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px 20px;text-align:center"><div class="icon" style="font-size:28px;margin-bottom:8px">📦</div><div style="font-weight:600;color:var(--text-soft)">No orders found</div></div>`;
+    return;
+  }
+
+  // Group by date key
+  const groups = new Map();
+  scopedOrders.forEach(o => {
+    const key = toDateKey(getOrderFulfillDate(o));
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(o);
+  });
+
+  const sortedKeys = [...groups.keys()].sort((a, b) => b.localeCompare(a));
+
+  container.innerHTML = sortedKeys.map(dateKey => {
+    const dateOrders = groups.get(dateKey);
+    const dayTotal = dateOrders.reduce((sum, o) => sum + (Number(o.total) || 0), 0);
+
+    const cardsHtml = dateOrders.map(o => {
+      const isDelivery = o.fulfilment === "delivery";
+      const isUnpaid = o.paymentStatus === "unpaid";
+      const itemsSummary = (o.items || []).map(i => `${i.qty}x ${i.name}`).join(", ");
+      const timeStr = o.pickupTime ? fmtPickup(o.pickupTime) : fmtTime(o.createdAt);
+
+      return `<div class="archive-order-card" data-order-id="${o.id}">
+        <div class="aoc-top">
+          <span class="aoc-name">${isDelivery ? '🚗' : '🏪'} ${esc(o.customerName)}</span>
+          <span class="aoc-total">RM${(Number(o.total) || 0).toFixed(2)}</span>
+        </div>
+        <div class="aoc-items" title="${esc(itemsSummary)}">${esc(itemsSummary)}</div>
+        <div class="aoc-meta">
+          <span>${isDelivery ? 'Delivery' : 'Pickup'} &bull; ${timeStr}</span>
+          <span>${isUnpaid ? '<span class="badge badge-unpaid">Unpaid</span>' : '<span class="badge badge-paid">Paid</span>'}</span>
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="archive-date-group" id="sched-group-${dateKey}">
+      <div class="archive-date-header">
+        <span>📅 ${formatArchiveDateKey(dateKey)}</span>
+        <span class="archive-date-meta">${dateOrders.length} order${dateOrders.length > 1 ? 's' : ''} &bull; RM${dayTotal.toFixed(2)}</span>
+      </div>
+      <div class="archive-orders-grid">
+        ${cardsHtml}
+      </div>
+    </div>`;
+  }).join("");
+
+  container.querySelectorAll(".archive-order-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const order = allOrders.find(x => x.id === card.dataset.orderId);
+      if (order) openOrderDetailModal(order);
     });
   });
 }
@@ -1704,48 +2072,76 @@ document.getElementById("odReopenBtn").addEventListener("click", async () => {
   }
 });
 
-document.getElementById("archiveToggleCal").addEventListener("click", () => {
-  const calWrap = document.getElementById("archiveCalendarWrap");
-  const btn = document.getElementById("archiveToggleCal");
-  const isHidden = calWrap.style.display === "none";
-  calWrap.style.display = isHidden ? "block" : "none";
-  btn.classList.toggle("active", isHidden);
-});
+// Kitchen View Mode Switcher buttons
+const btnKvKanban = document.getElementById("btnKvKanban");
+if (btnKvKanban) btnKvKanban.addEventListener("click", () => setKitchenMode("kanban"));
+const btnKvSchedule = document.getElementById("btnKvSchedule");
+if (btnKvSchedule) btnKvSchedule.addEventListener("click", () => setKitchenMode("schedule"));
 
-document.getElementById("archiveToggleScope").addEventListener("click", () => {
-  const btn = document.getElementById("archiveToggleScope");
-  if (archiveScope === "older") {
-    archiveScope = "all";
-    btn.textContent = "Showing: All Completed";
-    btn.classList.add("active");
-  } else {
-    archiveScope = "older";
-    btn.textContent = "Showing: >3 Days Old";
-    btn.classList.remove("active");
-  }
-  renderDoneArchive(allOrders);
-});
+// Schedule Scope Chips
+const scopeUpcoming = document.getElementById("scopeUpcoming");
+if (scopeUpcoming) scopeUpcoming.addEventListener("click", () => setScheduleScope("upcoming"));
+const scopeAll = document.getElementById("scopeAll");
+if (scopeAll) scopeAll.addEventListener("click", () => setScheduleScope("all"));
+const scopeDone = document.getElementById("scopeDone");
+if (scopeDone) scopeDone.addEventListener("click", () => setScheduleScope("done"));
 
-document.getElementById("archiveCalPrev").addEventListener("click", () => {
-  archiveCalMonth = new Date(archiveCalMonth.getFullYear(), archiveCalMonth.getMonth() - 1, 1);
-  renderDoneArchive(allOrders);
-});
+// Schedule Month Navigation
+const schedCalPrev = document.getElementById("scheduleCalPrev");
+if (schedCalPrev) {
+  schedCalPrev.addEventListener("click", () => {
+    scheduleCalMonth = new Date(scheduleCalMonth.getFullYear(), scheduleCalMonth.getMonth() - 1, 1);
+    renderScheduleOverview(allOrders);
+  });
+}
+const schedCalNext = document.getElementById("scheduleCalNext");
+if (schedCalNext) {
+  schedCalNext.addEventListener("click", () => {
+    scheduleCalMonth = new Date(scheduleCalMonth.getFullYear(), scheduleCalMonth.getMonth() + 1, 1);
+    renderScheduleOverview(allOrders);
+  });
+}
 
-document.getElementById("archiveCalNext").addEventListener("click", () => {
-  archiveCalMonth = new Date(archiveCalMonth.getFullYear(), archiveCalMonth.getMonth() + 1, 1);
-  renderDoneArchive(allOrders);
-});
+// Clear Schedule Date Filter
+const schedFilterClear = document.getElementById("scheduleFilterClear");
+if (schedFilterClear) {
+  schedFilterClear.addEventListener("click", () => {
+    scheduleSelectedDateKey = null;
+    renderScheduleOverview(allOrders);
+  });
+}
 
-document.getElementById("archiveFilterClear").addEventListener("click", () => {
-  archiveSelectedDateKey = null;
-  renderDoneArchive(allOrders);
-});
+// Toggle View All Month
+const agendaViewAllBtn = document.getElementById("agendaViewAllBtn");
+if (agendaViewAllBtn) {
+  agendaViewAllBtn.addEventListener("click", () => {
+    const groupsEl = document.getElementById("scheduleDateGroups");
+    if (!groupsEl) return;
+    const isHidden = groupsEl.style.display === "none";
+    groupsEl.style.display = isHidden ? "block" : "none";
+    agendaViewAllBtn.textContent = isHidden ? "Hide all month" : "View all month";
+    if (isHidden) groupsEl.scrollIntoView({ behavior: "smooth" });
+  });
+}
 
 /* ════════════════════════════════════════
    HORIZONTAL TIMELINE — multi-scale zoom
    (hour → day → week → month, like a map)
    ════════════════════════════════════════ */
-const DOT_COLORS={created:"#6B7CB0",pickup:"#D9A24B",delivery:"#C7401F"};
+/* Every kind of event the timeline can show. Order lifecycle + stock activity. */
+const EVENT_TYPES={
+  created:{label:"Order placed",color:"#6B7CB0"},
+  packed:{label:"Packed",color:"#9B6FB5"},
+  done:{label:"Completed",color:"#3E9B62"},
+  paid:{label:"Paid",color:"#2AA5A0"},
+  pickup:{label:"Pickup due",color:"#D9A24B"},
+  delivery:{label:"Delivery due",color:"#C7401F"},
+  production:{label:"Production",color:"#8C6A46"},
+  guest:{label:"Guest pack",color:"#D96C9A"},
+  recount:{label:"Recount",color:"#7F8C8D"}
+};
+const TL_ORDER=Object.keys(EVENT_TYPES);
+const DOT_COLORS=Object.fromEntries(TL_ORDER.map(t=>[t,EVENT_TYPES[t].color]));
 const TL_CANVAS_H=440,TL_AXIS_Y=210;
 
 // Zoom ladder: 3 fixed views — Day, Week, Month
@@ -1804,7 +2200,7 @@ function updateZoomLabel(){document.getElementById("tlZoomLabel").textContent=ZO
 
 /* Build a flat list of every timeline-relevant event across ALL orders
    (order-placed + pickup/delivery), each with a concrete Date/time. */
-function getAllTimelineEvents(){
+function getBaseTimelineEvents(){
   const events=[];
   allOrders.forEach(o=>{
     const d1=getOrderDate(o);
@@ -1820,6 +2216,46 @@ function getAllTimelineEvents(){
   events.sort((a,b)=>a.time-b.time);
   return events;
 }
+
+/* ── Full event log: order lifecycle (placed/packed/completed/paid/due) + inventory activity ── */
+function tsDate(v){if(!v)return null;const d=v.toDate?v.toDate():new Date(v);return isNaN(d)?null:d;}
+const TL_HIDE_KEY="tlHiddenTypes";
+let tlHidden=new Set();
+try{tlHidden=new Set(JSON.parse(localStorage.getItem(TL_HIDE_KEY)||"[]").filter(t=>EVENT_TYPES[t]));}catch(e){}
+
+function getAllTimelineEvents(){
+  const events=getBaseTimelineEvents();
+  allOrders.forEach(o=>{
+    const pk=tsDate(o.packedAt);
+    if(pk)events.push({type:"packed",time:pk,order:o,label:"Packed",color:DOT_COLORS.packed});
+    const dn=tsDate(o.doneAt);
+    if(dn&&o.status==="done")events.push({type:"done",time:dn,order:o,label:doneLabel(o),color:DOT_COLORS.done});
+    const pd=tsDate(o.paidAt);
+    if(pd&&o.paymentStatus==="paid")events.push({type:"paid",time:pd,order:o,label:"Paid",color:DOT_COLORS.paid});
+  });
+  allInvLogs.forEach(l=>{
+    const t=tsDate(l.createdAt);
+    if(!t)return;
+    const isRecount=l.physicalCount!==undefined||l.type==="audit";
+    const type=isRecount?"recount":(l.type==="production"||l.tag==="Production")?"production":(l.type==="guest"||l.tag==="Guest")?"guest":"recount";
+    events.push({type,time:t,inv:l,label:EVENT_TYPES[type].label,color:DOT_COLORS[type]});
+  });
+  return events.filter(ev=>!tlHidden.has(ev.type)).sort((a,b)=>a.time-b.time);
+}
+
+function renderTlLegend(){
+  const el=document.getElementById("tlLegend");
+  if(!el)return;
+  el.innerHTML=TL_ORDER.map(t=>`<div class="tl-legend-item${tlHidden.has(t)?" off":""}" data-type="${t}" title="Tap to show/hide"><div class="tl-legend-dot" style="background:${DOT_COLORS[t]}"></div>${EVENT_TYPES[t].label}</div>`).join("");
+  el.querySelectorAll(".tl-legend-item").forEach(item=>item.addEventListener("click",()=>{
+    const t=item.dataset.type;
+    if(tlHidden.has(t))tlHidden.delete(t);else tlHidden.add(t);
+    try{localStorage.setItem(TL_HIDE_KEY,JSON.stringify([...tlHidden]));}catch(e){}
+    renderTlLegend();
+    renderTimeline();
+  }));
+}
+renderTlLegend();
 
 function renderTimeline(){
   renderBucketView(curMode());
@@ -1859,8 +2295,8 @@ function renderBucketView(mode){
   let maxCount=1;
   const counted=buckets.map(b=>{
     const inBucket=events.filter(ev=>cfg.contains(b,ev.time));
-    const c={created:0,pickup:0,delivery:0,total:inBucket.length,rev:0};
-    inBucket.forEach(ev=>{c[ev.type]++;if(ev.type!=="created")c.rev+=ev.order.total||0;});
+    const c={by:{},total:inBucket.length};
+    inBucket.forEach(ev=>{c.by[ev.type]=(c.by[ev.type]||0)+1;});
     maxCount=Math.max(maxCount,c.total);
     return c;
   });
@@ -1876,7 +2312,7 @@ function renderBucketView(mode){
     if(c.total>0){
       const maxBarH=150;
       const barH=Math.max(8,Math.round((c.total/maxCount)*maxBarH));
-      const segs=[["created",c.created],["pickup",c.pickup],["delivery",c.delivery]].filter(s=>s[1]>0);
+      const segs=TL_ORDER.filter(t=>c.by[t]).map(t=>[t,c.by[t]]);
       let cursor=0;
       const segHtml=segs.map(([type,cnt])=>{
         const segH=Math.round((cnt/c.total)*barH);
@@ -1917,10 +2353,24 @@ function renderBucketView(mode){
 
 function renderTlList(events,titleText,showDate){
   const list=document.getElementById("tlList");
-  if(!events.length){list.innerHTML='<div class="tl-list-empty">No orders or pickups in view.</div>';return;}
-  list.innerHTML='<div class="tl-list-title">'+(titleText?"All events — "+titleText:"All events")+'</div>'
-    +events.slice(0,200).map(ev=>{
+  if(!events.length){list.innerHTML='<div class="tl-list-empty">Nothing to show in this view.</div>';return;}
+  const total=events.length;
+  if(total>200){events=events.slice().sort((a,b)=>Math.abs(a.time-tlAnchor)-Math.abs(b.time-tlAnchor)).slice(0,200).sort((a,b)=>a.time-b.time);}
+  list.innerHTML='<div class="tl-list-title">'+(titleText?"All events — "+titleText:"All events")+(total>200?" (nearest 200 of "+total+")":"")+'</div>'
+    +events.map(ev=>{
       const col=ev.color;
+      if(ev.inv){
+        const l=ev.inv,prodName=l.product==="beef"?"Beef":"Signature";
+        const when=fmtHHMM(ev.time)+(showDate?" &middot; "+ev.time.toLocaleDateString("en-MY",{day:"numeric",month:"short"}):"");
+        const isPos=l.type==="production"||l.tag==="Production";
+        const qn=Number(l.qty)||0,sign=isPos?"+":(qn?"-":"");
+        const tagClass=ev.type==="production"?"tag-production":ev.type==="guest"?"tag-guest":"tag-recount";
+        return`<div class="tl-list-card"><div class="tl-list-card-left">`
+          +`<div class="tl-list-card-name">${esc(prodName)} &bull; ${esc(ev.label)}</div>`
+          +`<div class="tl-list-card-sub">${sign}${qn} pack${qn!==1?"s":""}${l.note?" &mdash; "+esc(l.note):""}</div>`
+          +`<div class="tl-list-card-time" style="color:${col};">${esc(ev.label)} &middot; ${when}</div>`
+          +`</div><span class="inv-tag ${tagClass}">${esc(l.tag||ev.label)}</span></div>`;
+      }
       const dateBit=showDate?fmtHHMM(ev.time)+" · "+ev.time.toLocaleDateString("en-MY",{day:"numeric",month:"short"}):fmtHHMM(ev.time);
       return`<div class="tl-list-card">`
         +`<div class="tl-list-card-left">`
@@ -1939,7 +2389,7 @@ function renderTlList(events,titleText,showDate){
 let salesPeriod="month",chart1Instance=null,chart2Instance=null;
 document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
 function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);return d>=ws;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
-function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);const totalRev=itemRev+deliveryRev;const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;}));document.getElementById("salesItemRev").textContent="RM"+itemRev;document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);renderChart1(orders);renderChart2();}
+function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);const totalRev=itemRev+deliveryRev;const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0,cookieQty=0,cookieRev=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;if(i.id==="cookies"){cookieQty+=i.qty;cookieRev+=(Number(i.price)||38)*i.qty;}}));document.getElementById("salesItemRev").textContent="RM"+itemRev;document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);document.getElementById("salesCookieQty").textContent=cookieQty;document.getElementById("salesCookieRev").textContent="RM"+cookieRev;renderChart1(orders);renderChart2();}
 function getThemeColors() {
   const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   const rootTheme = document.documentElement.getAttribute("data-theme");
@@ -2303,7 +2753,7 @@ function renderChart2() {
   if (!el) return;
   const now = new Date();
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const labels = [], sigData = [], beefData = [];
+  const labels = [], sigData = [], beefData = [], cookieData = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     labels.push(MONTHS[d.getMonth()] + " '" + String(d.getFullYear()).slice(2));
@@ -2311,15 +2761,17 @@ function renderChart2() {
       const od = getOrderDate(o);
       return od && od.getFullYear() === d.getFullYear() && od.getMonth() === d.getMonth();
     });
-    let sig = 0, beef = 0;
+    let sig = 0, beef = 0, cookie = 0;
     mo.forEach(o => (o.items || []).forEach(it => {
       const qty = Number(it.qty) || 0;
-      const price = Number(it.price) || (it.id === "beef" ? 14 : 8);
+      const price = Number(it.price) || (PRICES[it.id] ? PRICES[it.id].price : 8);
       if (it.id === "signature") sig += price * qty;
       else if (it.id === "beef") beef += price * qty;
+      else if (it.id === "cookies") cookie += price * qty;
     }));
     sigData.push(sig);
     beefData.push(beef);
+    cookieData.push(cookie);
   }
   const ctx = el.getContext("2d");
   if (chart2Instance) chart2Instance.destroy();
@@ -2343,6 +2795,15 @@ function renderChart2() {
           data: beefData,
           backgroundColor: tc.isDark ? "rgba(226, 112, 58, 0.85)" : "rgba(199, 64, 31, 0.85)",
           borderColor: tc.isDark ? "#C7401F" : "rgba(165, 52, 26, 1)",
+          borderWidth: 1,
+          borderRadius: 4,
+          stack: "rev"
+        },
+        {
+          label: "Cookies (RM)",
+          data: cookieData,
+          backgroundColor: "rgba(140, 90, 60, 0.85)",
+          borderColor: "rgba(110, 70, 45, 1)",
           borderWidth: 1,
           borderRadius: 4,
           stack: "rev"
@@ -2767,6 +3228,7 @@ function startInventoryListener() {
   unsubscribeInventory = invRef.orderBy("createdAt", "desc").limit(300).onSnapshot(
     snap => {
       allInvLogs = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      if (document.getElementById("timelineView").classList.contains("active")) renderTimeline();
       renderInventory();
       updateKitchenSummary(allOrders);
     },
@@ -2792,13 +3254,13 @@ function startOrdersListener() {
   unsubscribeOrders = ordersRef.orderBy("createdAt","desc").limit(500).onSnapshot(
     snap => {
       setConn(true);
-      allOrders = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      allOrders = snap.docs.map(d => { const data = d.data(); return {id: d.id, ...data, status: data.status === "preparing" ? "packed" : data.status}; }); // legacy: old "preparing" orders now count as Packed
       customerDirectory = buildCustomerDirectory();
       renderInventory();
       checkNewOrders(allOrders);
       renderEntryList(allOrders);
       renderKanban(allOrders);
-      renderDoneArchive(allOrders);
+      renderScheduleOverview(allOrders);
       updateKitchenSummary(allOrders);
       if (document.getElementById("timelineView").classList.contains("active")) renderTimeline();
       if (document.getElementById("salesView").classList.contains("active")) renderSales();
