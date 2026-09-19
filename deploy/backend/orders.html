@@ -2297,6 +2297,107 @@ function renderChart1(orders){
     plugins: [comboDataLabelsPlugin]
   });
 }
+
+function renderChart2() {
+  const el = document.getElementById("chart2");
+  if (!el) return;
+  const now = new Date();
+  const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const labels = [], sigData = [], beefData = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    labels.push(MONTHS[d.getMonth()] + " '" + String(d.getFullYear()).slice(2));
+    const mo = allOrders.filter(o => {
+      const od = getOrderDate(o);
+      return od && od.getFullYear() === d.getFullYear() && od.getMonth() === d.getMonth();
+    });
+    let sig = 0, beef = 0;
+    mo.forEach(o => (o.items || []).forEach(it => {
+      const qty = Number(it.qty) || 0;
+      const price = Number(it.price) || (it.id === "beef" ? 14 : 8);
+      if (it.id === "signature") sig += price * qty;
+      else if (it.id === "beef") beef += price * qty;
+    }));
+    sigData.push(sig);
+    beefData.push(beef);
+  }
+  const ctx = el.getContext("2d");
+  if (chart2Instance) chart2Instance.destroy();
+  const tc = getThemeColors();
+  chart2Instance = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Signature (RM)",
+          data: sigData,
+          backgroundColor: tc.goldBar || "rgba(217, 162, 75, 0.82)",
+          borderColor: tc.goldBarBorder || "rgba(185, 127, 46, 1)",
+          borderWidth: 1,
+          borderRadius: 4,
+          stack: "rev"
+        },
+        {
+          label: "Beef (RM)",
+          data: beefData,
+          backgroundColor: tc.isDark ? "rgba(226, 112, 58, 0.85)" : "rgba(199, 64, 31, 0.85)",
+          borderColor: tc.isDark ? "#C7401F" : "rgba(165, 52, 26, 1)",
+          borderWidth: 1,
+          borderRadius: 4,
+          stack: "rev"
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: "bottom",
+          labels: {
+            font: { size: 11, family: "'Work Sans', sans-serif" },
+            boxWidth: 12,
+            padding: 10,
+            color: tc.textSoft
+          }
+        },
+        tooltip: {
+          backgroundColor: tc.tooltipBg,
+          borderColor: tc.tooltipBorder,
+          borderWidth: tc.isDark ? 1 : 0,
+          titleColor: tc.tooltipText,
+          bodyColor: tc.tooltipText,
+          callbacks: {
+            label: c => c.dataset.label + ": RM" + Number(c.parsed.y || 0).toLocaleString()
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { display: false },
+          ticks: {
+            font: { size: 11, family: "'Work Sans', sans-serif" },
+            color: tc.textMute
+          }
+        },
+        y: {
+          stacked: true,
+          grid: { color: tc.grid },
+          beginAtZero: true,
+          ticks: {
+            callback: v => "RM" + v,
+            font: { size: 10, family: "'Work Sans', sans-serif" },
+            color: tc.textMute
+          }
+        }
+      }
+    }
+  });
+}
+
 let chartResizeTimer = null;
 window.addEventListener("resize", () => {
   if (chartResizeTimer) clearTimeout(chartResizeTimer);
