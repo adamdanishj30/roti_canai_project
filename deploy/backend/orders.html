@@ -381,9 +381,9 @@ textarea{resize:vertical;min-height:50px}
 .archive-cal-nav .cal-nav-title{font-family:'Fraunces',Georgia,serif;font-size:15px;font-weight:600;color:var(--text)}
 .cal-nav-btn{background:var(--surface-2);border:1px solid var(--border);color:var(--text);width:32px;height:32px;border-radius:8px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .cal-nav-btn:hover{background:var(--border)}
-.archive-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center}
+.archive-cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center}
 .cal-day-header{font-size:11px;font-weight:700;color:var(--text-mute);padding-bottom:4px}
-.cal-day-cell{min-height:56px;border:1.5px solid transparent;border-radius:9px;padding:4px 3px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;position:relative;background:transparent;color:var(--text-mute);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.cal-day-cell{min-width:0;min-height:56px;border:1.5px solid transparent;border-radius:9px;padding:4px 3px;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;position:relative;background:transparent;color:var(--text-mute);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
 .cal-day-cell.other-month{opacity:0.25;cursor:default}
 .cal-day-cell.has-orders{background:var(--surface-2);border-color:color-mix(in srgb,var(--border) 80%,transparent);color:var(--text)}
 .cal-day-cell.has-orders:hover{border-color:var(--gold);transform:scale(1.02)}
@@ -395,6 +395,18 @@ textarea{resize:vertical;min-height:50px}
 .cal-badge-delivery{background:var(--accent);color:#fff}
 .cal-badge-pickup{background:var(--gold);color:#2B2118}
 .cal-badge-done{background:var(--success-bg);color:var(--success);border:1px solid color-mix(in srgb,var(--success) 35%,transparent)}
+/* Calendar: compact layout so all 7 columns fit on phones */
+@media(max-width:640px){
+  .schedule-calendar-wrap{padding:10px 8px}
+  .archive-cal-grid{gap:3px}
+  .cal-day-header{font-size:10px}
+  .cal-day-cell{min-height:58px;padding:3px 2px;border-radius:7px;border-width:1px}
+  .cal-day-top{justify-content:center;font-size:12px;margin-bottom:3px;padding:0}
+  .cal-today-tag{display:none}
+  .cal-day-cell.cal-day-today:not(.selected){border-color:var(--gold-deep)}
+  .cal-badge{font-size:10px;padding:2px 1px;gap:2px}
+  .cal-badge-txt{display:none}
+}
 
 /* Selected Date Agenda */
 .schedule-agenda{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px}
@@ -1672,13 +1684,13 @@ function renderScheduleCalendar(scopedOrders) {
     if (hasOrders) {
       badgesHtml = '<div class="cal-day-badges">';
       if (numDeliv > 0) {
-        badgesHtml += `<span class="cal-badge cal-badge-delivery" title="${numDeliv} Deliveries">🚗 ${numDeliv} Deliv</span>`;
+        badgesHtml += `<span class="cal-badge cal-badge-delivery" title="${numDeliv} Deliveries">🚗 ${numDeliv}<span class="cal-badge-txt"> Deliv</span></span>`;
       }
       if (numPickup > 0) {
-        badgesHtml += `<span class="cal-badge cal-badge-pickup" title="${numPickup} Pickups">🏪 ${numPickup} Pickup</span>`;
+        badgesHtml += `<span class="cal-badge cal-badge-pickup" title="${numPickup} Pickups">🏪 ${numPickup}<span class="cal-badge-txt"> Pickup</span></span>`;
       }
       if (scheduleScope === "all" && numDone > 0) {
-        badgesHtml += `<span class="cal-badge cal-badge-done" title="${numDone} Completed">✓ ${numDone} done</span>`;
+        badgesHtml += `<span class="cal-badge cal-badge-done" title="${numDone} Completed">✓ ${numDone}<span class="cal-badge-txt"> done</span></span>`;
       }
       badgesHtml += '</div>';
     }
@@ -1686,7 +1698,7 @@ function renderScheduleCalendar(scopedOrders) {
     html += `<div class="${classes.join(" ")}" data-date="${dKey}">
       <div class="cal-day-top">
         <span class="cal-day-num">${day}</span>
-        ${isToday ? '<span style="font-size:8.5px;font-weight:800;color:var(--gold-deep)">TODAY</span>' : ''}
+        ${isToday ? '<span class="cal-today-tag" style="font-size:8.5px;font-weight:800;color:var(--gold-deep)">TODAY</span>' : ''}
       </div>
       ${badgesHtml}
     </div>`;
