@@ -426,6 +426,7 @@ $('rl').innerHTML=items.map(i=>`<div><span>${i.name} × ${i.q}</span><span>${mon
 $('rnote').innerHTML='<b>'+tr('rnH')+'</b> '+tr('rnB')+(mode==='Delivery'?' '+tr('rnD'):'');
 closeP();$('modal').classList.add('show');$('bd').classList.add('show')};
 function closeR(){$('modal').classList.remove('show');$('bd').classList.remove('show')}$('closeR').onclick=closeR;$('print').onclick=()=>window.print();
+const WA='60192788617';
 $('wa').onclick=()=>{if(!last)return;const ls=last.items.map(i=>`• ${i.name} x${i.q} — ${money(i.price*i.q)}`).join('\n');
 const tx=`${tr('waH')} (${last.no}):\n${ls}\n\n${tr('total')}: ${money(last.total)}\n${tr('wName')}: ${last.name}\n${tr('wPhone')}: ${last.phone}\n${tr('wFul')}: ${tr(last.mode==='Delivery'?'mDel':'mPick')}${last.address?'\n'+tr('wAddr')+': '+last.address+(last.dlv?'\n'+tr('eRcpt')+': ≈ '+money(last.dlv.total)+' ('+last.dlv.km.toFixed(1)+' km)\n'+tr('eMapL')+': https://www.google.com/maps?q='+last.dlv.lat+','+last.dlv.lng+(last.dlv.ok?' ✓':''):''):''}${last.notes?'\n'+tr('wNotes')+': '+last.notes:''}\n\n${tr('waF')}`;
 window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(tx),'_blank','noopener')};
