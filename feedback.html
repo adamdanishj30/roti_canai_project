@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#b85c38">
+<title>Customer Feedback &amp; Our Story | Jar&amp;Maz Homemade</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --or:#b85c38;
+  --or2:#8f4322;
+  --cu:#b87050;
+  --bg:#f5ede6;
+  --ink:#1a1512;
+  --mut:#6e625a;
+  --line:#efe3da;
+  --ok:#4f7d3a;
+  --card-bg:#ffffff;
+  --tint:#fbf3ec;
+}
+*{box-sizing:border-box}
+html, body{
+  margin:0;
+  padding:0;
+  overflow-x:hidden;
+  background:var(--bg);
+  color:var(--ink);
+  font:15px/1.6 Outfit,system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+:focus-visible{outline:3px solid #1b6ef3;outline-offset:2px}
+
+.wrap{
+  max-width:860px;
+  width:calc(100% - 24px);
+  margin:16px auto 40px;
+  box-sizing:border-box;
+}
+
+/* Header */
+.top-nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:20px;
+  padding:12px 20px;
+  box-shadow:0 4px 16px rgba(143,67,34,.06);
+  margin-bottom:20px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+}
+.brand-img{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:1.5px solid var(--line);
+  object-fit:cover;
+}
+.brand-txt b{
+  display:block;
+  font:700 17px Cinzel,Georgia,serif;
+  letter-spacing:.04em;
+  color:var(--ink);
+}
+.brand-sub{
+  font-size:9.5px;
+  font-weight:700;
+  color:var(--or2);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.lg{
+  display:flex;
+  background:#efe6dd;
+  border-radius:99px;
+  padding:3px;
+}
+.lg button{
+  background:none;
+  border-radius:99px;
+  padding:5px 12px;
+  font-weight:700;
+  font-size:12px;
+  color:var(--mut);
+  transition:all .2s;
+}
+.lg button.on{
+  background:var(--or);
+  color:#fff;
+  box-shadow:0 2px 6px rgba(184,92,56,.25);
+}
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#f7efe8;
+  color:var(--or2);
+  border:1px solid #ebdcd0;
+  border-radius:12px;
+  padding:8px 14px;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  transition:all .2s;
+}
+.back-btn:hover{
+  background:var(--or);
+  color:#fff;
+  border-color:var(--or);
+}
+
+/* Founder Story Card */
+.story-card{
+  background:linear-gradient(145deg,#fffdfa 0%,#fbf2eb 100%);
+  border:2px solid var(--cu);
+  border-radius:24px;
+  padding:32px 30px;
+  box-shadow:0 12px 30px rgba(143,67,34,.1);
+  margin-bottom:28px;
+  position:relative;
+  overflow:hidden;
+}
+.story-card::before{
+  content:'';
+  position:absolute;
+  top:-40px;
+  right:-40px;
+  width:160px;
+  height:160px;
+  background:radial-gradient(circle,rgba(184,92,56,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--or);
+  color:#fff;
+  padding:4px 12px;
+  border-radius:99px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+.story-card h1{
+  margin:0 0 14px;
+  font:700 clamp(24px,3.8vw,34px)/1.15 "Cormorant Garamond",Georgia,serif;
+  color:var(--or2);
+}
+.story-body p{
+  margin:0 0 14px;
+  color:#312822;
+  font-size:15px;
+  line-height:1.65;
+}
+.story-callout{
+  background:#fff;
+  border-left:4px solid var(--or);
+  border-radius:0 14px 14px 0;
+  padding:16px 18px;
+  margin:18px 0;
+  box-shadow:0 4px 12px rgba(143,67,34,.06);
+}
+.story-callout b{
+  color:var(--or2);
+  display:block;
+  margin-bottom:4px;
+  font-size:15px;
+}
+.story-callout p{
+  margin:0;
+  font-size:14px;
+  color:var(--ink);
+  line-height:1.55;
+}
+.signature{
+  margin-top:20px;
+  padding-top:16px;
+  border-top:1px dashed #d8c3b4;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.sig-author{
+  font-size:13.5px;
+  color:var(--mut);
+}
+.sig-author b{
+  color:var(--ink);
+  display:block;
+  font-size:14.5px;
+}
+.sig-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#f1ded0;
+  color:var(--or2);
+  padding:6px 12px;
+  border-radius:10px;
+  font-size:12px;
+  font-weight:700;
+}
+
+/* Form Container */
+.form-card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:30px;
+  box-shadow:0 10px 30px rgba(143,67,34,.06);
+}
+.form-card h2{
+  margin:0 0 4px;
+  font:700 24px "Cormorant Garamond",Georgia,serif;
+  color:var(--ink);
+}
+.form-card .desc{
+  margin:0 0 24px;
+  color:var(--mut);
+  font-size:14px;
+}
+.sec{
+  margin-bottom:26px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--line);
+}
+.sec:last-child{
+  border-bottom:0;
+  padding-bottom:0;
+  margin-bottom:0;
+}
+.sec-title{
+  font-size:14px;
+  font-weight:700;
+  color:var(--or2);
+  letter-spacing:.02em;
+  margin-bottom:12px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:4px 8px;
+}
+.sec-title span{
+  color:var(--mut);
+  font-weight:400;
+  font-size:12px;
+}
+
+/* Rating Grid */
+.rate-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:14px;
+}
+.rate-item{
+  background:#fbf8f5;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.rate-label{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--ink);
+}
+.rate-hint{
+  font-size:11.5px;
+  color:var(--mut);
+  margin-top:-4px;
+}
+.stars{
+  display:flex;
+  gap:6px;
+}
+.star-btn{
+  background:none;
+  font-size:24px;
+  color:#d5c6ba;
+  padding:2px 4px;
+  line-height:1;
+  transition:transform .15s,color .15s;
+}
+.star-btn:hover,
+.star-btn.on{
+  color:#e59124;
+  transform:scale(1.15);
+}
+
+/* Product Choice Pills */
+.chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.chip{
+  background:#f7efe8;
+  color:var(--ink);
+  border:1px solid #ebdcd0;
+  border-radius:99px;
+  padding:8px 16px;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  user-select:none;
+}
+.chip:hover{
+  border-color:var(--cu);
+}
+.chip.selected{
+  background:var(--or);
+  color:#fff;
+  border-color:var(--or);
+  box-shadow:0 3px 10px rgba(184,92,56,.25);
+}
+
+/* Text Inputs */
+.critique-box{
+  background:#fffdfa;
+  border:2px solid #e2a88e;
+  border-radius:16px;
+  padding:14px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.critique-box:focus-within{
+  border-color:var(--or);
+  box-shadow:0 0 0 3px rgba(184,92,56,.15);
+}
+.critique-box textarea{
+  width:100%;
+  border:0;
+  background:transparent;
+  resize:vertical;
+  min-height:95px;
+  font-size:14.5px;
+  outline:none;
+  padding:0;
+}
+.suggest-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+  align-items:center;
+}
+.suggest-tag{
+  background:#f5ede6;
+  color:var(--mut);
+  border:1px dashed #dccab8;
+  border-radius:6px;
+  padding:4px 8px;
+  font-size:11.5px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .15s;
+}
+.suggest-tag:hover{
+  background:#ebdcd0;
+  color:var(--or2);
+}
+
+.input-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.field label{
+  font-size:12.5px;
+  font-weight:700;
+  color:var(--mut);
+}
+.field input, .field textarea{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:12px;
+  padding:11px 14px;
+  font-size:14px;
+  transition:border-color .2s;
+}
+.field input:focus, .field textarea:focus{
+  border-color:var(--or);
+  outline:none;
+}
+
+/* Action Buttons */
+.form-actions{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:24px;
+}
+.btn-wa{
+  background:#25D366;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  padding:14px 20px;
+  border-radius:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  box-shadow:0 6px 20px rgba(37,211,102,.3);
+  text-decoration:none;
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-wa:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(37,211,102,.4);
+}
+.btn-wa:active{
+  transform:scale(.98);
+}
+.btn-submit{
+  background:var(--or);
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+  padding:14px 20px;
+  border-radius:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:0 6px 20px rgba(184,92,56,.25);
+  transition:transform .2s,background .2s;
+}
+.btn-submit:hover{
+  background:var(--or2);
+  transform:translateY(-2px);
+}
+.btn-submit:active{
+  transform:scale(.98);
+}
+
+/* Success Modal */
+.modal-bd{
+  position:fixed;
+  inset:0;
+  background:rgba(30,20,12,.6);
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:90;
+}
+.modal-bd.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.success-modal{
+  position:fixed;
+  inset:0;
+  display:grid;
+  place-items:center;
+  padding:20px;
+  z-index:95;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+}
+.success-modal.show{
+  opacity:1;
+  pointer-events:auto;
+}
+.success-card{
+  background:#fff;
+  max-width:460px;
+  width:100%;
+  border-radius:24px;
+  padding:32px 26px;
+  text-align:center;
+  box-shadow:0 20px 50px rgba(30,20,12,.3);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+}
+.success-icon{
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:#e8f4e2;
+  color:var(--ok);
+  font-size:36px;
+  display:grid;
+  place-items:center;
+}
+.success-card h3{
+  margin:0;
+  font:700 24px "Cormorant Garamond",Georgia,serif;
+  color:var(--ink);
+}
+.success-card p{
+  margin:0;
+  color:var(--mut);
+  font-size:14px;
+  line-height:1.55;
+}
+.success-actions{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  gap:8px;
+  margin-top:14px;
+}
+
+@media(max-width:700px){
+  .wrap{margin:10px auto 36px;width:calc(100% - 16px)}
+  .top-nav{padding:8px 12px;margin-bottom:14px;gap:6px;border-radius:16px}
+  .brand{gap:8px;min-width:0}
+  .brand-img{width:36px;height:36px;flex:none}
+  .brand-txt b{font-size:14px;white-space:nowrap}
+  .brand-sub{font-size:8px}
+  .nav-actions{gap:6px;flex:none}
+  .back-btn{padding:5px 9px;font-size:12px;border-radius:10px}
+  .back-btn .btn-lbl{display:none}
+  .lg{padding:2px}
+  .lg button{padding:3px 8px;font-size:11px}
+  .story-card{padding:18px 14px;margin-bottom:18px;border-radius:18px}
+  .story-card h1{font-size:clamp(20px,5.5vw,26px);line-height:1.2;margin-bottom:10px}
+  .story-body p{font-size:14px;line-height:1.55;margin-bottom:10px}
+  .story-callout{padding:12px 14px;margin:14px 0;border-radius:0 10px 10px 0}
+  .form-card{padding:16px 12px;border-radius:18px}
+  .rate-grid{grid-template-columns:1fr;gap:10px}
+  .rate-item{padding:12px 14px}
+  .chips .chip{font-size:12px;padding:6px 12px}
+  .suggest-tags{gap:4px}
+  .suggest-tag{font-size:10.5px;padding:3px 6px}
+  .input-row{grid-template-columns:1fr}
+  .stars{gap:3px}
+  .star-btn{font-size:20px;padding:1px 2px}
+  .sec-title{flex-direction:column;align-items:flex-start;gap:2px}
+  .btn-wa, .btn-submit{font-size:14px;padding:12px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Top Navigation Header -->
+  <header class="top-nav">
+    <a href="index.html" class="brand" title="Back to Jar&Maz Homepage">
+      <img class="brand-img" src="data:image/jpeg;base64,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" onerror="this.onerror=null;this.src='assets/logo.jpg'" alt="Jar&amp;Maz Homemade logo">
+      <div class="brand-txt">
+        <b>Jar&amp;Maz</b>
+        <span class="brand-sub">HOMEMADE</span>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <a href="index.html" class="back-btn">
+        <span>←</span> <span class="btn-lbl" data-t="backMenu">Back to Menu</span>
+      </a>
+      <div class="lg" role="group" aria-label="Language">
+        <button data-lang="en" class="on">EN</button>
+        <button data-lang="ms">BM</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Founder Story & Gratitude Card (Permanently in English) -->
+  <article class="story-card">
+    <span class="badge">🎓 A Message from the Founder</span>
+    <h1>Thank you from the bottom of our hearts.</h1>
+    
+    <div class="story-body">
+      <p>
+        Hello! I am a 3rd-year university student, and I personally built this website to help my parents (Paksu Jar &amp; Maksu Maz) alongside my sister share their homemade frozen roti canai with families across our community.
+      </p>
+      <p>
+        Every single pack of roti canai you purchase directly supports my parents and our family — your trust and support truly mean the world to us.
+      </p>
+
+      <div class="story-callout">
+        <b>Why we need your critical criticism:</b>
+        <p>
+          We want our roti canai and our service to be the absolute best they can be. Please do not hold back on what didn't work for you! Whether it's the texture, dough flakiness, seasoned beef filling, freezer packaging seal, delivery timing, or our website — your honest, constructive criticism is the most valuable gift you can give us to help our family learn and improve.
+        </p>
+      </div>
+
+      <div class="signature">
+        <div class="sig-author">
+          <b>Adam · 3rd-Year Uni Student</b>
+          <span>Son &amp; Web Creator for Dapur Paksu Jar &amp; Maksu Maz</span>
+        </div>
+        <div class="sig-badge">
+          ❤️ Family-Run Since Day One
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Feedback Form -->
+  <main class="form-card">
+    <h2 data-t="formH">Share Your Feedback &amp; Criticism</h2>
+    <p class="desc" data-t="formSub">Help our family serve you better. Every response is read directly by us.</p>
+
+    <form id="feedbackForm">
+      <!-- Section 1: Experience Ratings -->
+      <div class="sec">
+        <div class="sec-title">
+          <span data-t="sec1H">1. Rate Your Experience</span>
+          <span data-t="sec1Sub">(Tap to score 1 to 5 stars)</span>
+        </div>
+        
+        <div class="rate-grid">
+          <div class="rate-item">
+            <span class="rate-label" data-t="rRoti">Roti Quality &amp; Flakiness</span>
+            <span class="rate-hint" data-t="rRotiH">Crispy on the outside, fluffy on the inside</span>
+            <div class="stars" data-rate="roti">
+              <button type="button" class="star-btn" data-v="1" aria-label="1 star">★</button>
+              <button type="button" class="star-btn" data-v="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-btn" data-v="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-btn" data-v="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-btn" data-v="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+
+          <div class="rate-item">
+            <span class="rate-label" data-t="rBeef">Savory Beef Filling</span>
+            <span class="rate-hint" data-t="rBeefH">Flavor, aroma &amp; generous portion (if ordered)</span>
+            <div class="stars" data-rate="beef">
+              <button type="button" class="star-btn" data-v="1" aria-label="1 star">★</button>
+              <button type="button" class="star-btn" data-v="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-btn" data-v="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-btn" data-v="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-btn" data-v="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+
+          <div class="rate-item">
+            <span class="rate-label" data-t="rPack">Freezer Packaging &amp; Condition</span>
+            <span class="rate-hint" data-t="rPackH">Sturdy seal, easy freezer storage</span>
+            <div class="stars" data-rate="pack">
+              <button type="button" class="star-btn" data-v="1" aria-label="1 star">★</button>
+              <button type="button" class="star-btn" data-v="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-btn" data-v="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-btn" data-v="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-btn" data-v="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+
+          <div class="rate-item">
+            <span class="rate-label" data-t="rService">Ordering &amp; Delivery</span>
+            <span class="rate-hint" data-t="rServiceH">Website simplicity &amp; WhatsApp communication</span>
+            <div class="stars" data-rate="service">
+              <button type="button" class="star-btn" data-v="1" aria-label="1 star">★</button>
+              <button type="button" class="star-btn" data-v="2" aria-label="2 stars">★</button>
+              <button type="button" class="star-btn" data-v="3" aria-label="3 stars">★</button>
+              <button type="button" class="star-btn" data-v="4" aria-label="4 stars">★</button>
+              <button type="button" class="star-btn" data-v="5" aria-label="5 stars">★</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Items Ordered -->
+      <div class="sec">
+        <div class="sec-title">
+          <span data-t="sec2H">2. Which products did you try?</span>
+          <span data-t="sec2Sub">(Select all that apply)</span>
+        </div>
+        <div class="chips">
+          <button type="button" class="chip" data-item="Signature Frozen Roti Canai (5pcs)" data-t="itemRoti">🥞 Signature Roti Canai (5 pcs)</button>
+          <button type="button" class="chip" data-item="Frozen Beef Roti Canai (2pcs)" data-t="itemBeef">🥩 Frozen Beef Roti Canai (2 pcs)</button>
+          <button type="button" class="chip" data-item="Family Freezer Bundle" data-t="itemBundle">📦 Family Freezer Bundle (8 packs)</button>
+        </div>
+      </div>
+
+      <!-- Section 3: Critical Criticism (Crucial Part) -->
+      <div class="sec">
+        <div class="sec-title">
+          <b style="color:#c0392b" data-t="sec3H">3. Critical Criticism &amp; Areas to Improve *</b>
+          <span data-t="sec3Sub">(Be completely honest — we take zero offense!)</span>
+        </div>
+        <div class="critique-box">
+          <textarea id="critique" required rows="3" data-ph="critiquePh" placeholder="What fell short or could be done better? e.g., Roti flakiness, seasoning/spiciness of the beef filling, packaging seal, cooking instructions, delivery fees, or website glitches..."></textarea>
+        </div>
+        <div class="suggest-tags">
+          <span style="font-size:11.5px;color:var(--mut)" data-t="quickAdd">Tap to insert topic:</span>
+          <button type="button" class="suggest-tag" data-insert="Roti texture & flakiness" data-t="tagRoti">Roti texture &amp; flakiness</button>
+          <button type="button" class="suggest-tag" data-insert="Beef filling flavor & portion" data-t="tagBeef">Beef filling flavor &amp; portion</button>
+          <button type="button" class="suggest-tag" data-insert="Packaging seal in freezer" data-t="tagPack">Packaging seal</button>
+          <button type="button" class="suggest-tag" data-insert="Delivery timing & fee" data-t="tagDlv">Delivery timing &amp; fee</button>
+          <button type="button" class="suggest-tag" data-insert="Cooking / heating instructions" data-t="tagCook">Cooking instructions</button>
+          <button type="button" class="suggest-tag" data-insert="Website & ordering experience" data-t="tagWeb">Website experience</button>
+        </div>
+      </div>
+
+      <!-- Section 4: What Did You Love? -->
+      <div class="sec">
+        <div class="sec-title">
+          <span data-t="sec4H">4. What did you love most? (Optional)</span>
+        </div>
+        <div class="field">
+          <textarea id="positives" rows="2" data-ph="positivesPh" placeholder="Any standout favorites or compliments for Paksu Jar & Maksu Maz?"></textarea>
+        </div>
+      </div>
+
+      <!-- Section 5: Customer Details (Optional) -->
+      <div class="sec">
+        <div class="sec-title">
+          <span data-t="sec5H">5. Your Details (Optional)</span>
+          <span data-t="sec5Sub">(If you'd like us to reach out or make something right)</span>
+        </div>
+        <div class="input-row">
+          <div class="field">
+            <label for="cName" data-t="lName">Your Name</label>
+            <input type="text" id="cName" data-ph="pName" placeholder="e.g. Sarah / Johan">
+          </div>
+          <div class="field">
+            <label for="cPhone" data-t="lPhone">WhatsApp / Phone</label>
+            <input type="tel" id="cPhone" inputmode="tel" data-ph="pPhone" placeholder="01X-XXXXXXX">
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn-wa" id="btnWhatsApp">
+          <span style="font-size:18px">💬</span> <span data-t="btnWa">Send Feedback via WhatsApp</span>
+        </button>
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          <span data-t="btnSite">Submit Feedback on Website</span> →
+        </button>
+      </div>
+    </form>
+  </main>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-bd" id="modalBd"></div>
+<div class="success-modal" id="successModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="success-card">
+    <div class="success-icon">✓</div>
+    <h3 id="modalTitle">Thank you so much!</h3>
+    <p>Your constructive feedback and criticism have been received. It means the world to our student founder and his parents as we work hard every day to improve.</p>
+    
+    <div class="success-actions">
+      <button type="button" class="btn-wa" id="mWaBtn" style="font-size:14px;padding:11px 16px">
+        <span>💬</span> <span data-t="mWa">Also Send to WhatsApp</span>
+      </button>
+      <a href="index.html" class="back-btn" style="justify-content:center;padding:12px">
+        <span data-t="mBack">Return to Menu</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+const WA_PHONE = '60192788617';
+// Google Apps Script Web App URL for live Google Sheet collection:
+const GOOGLE_SHEET_URL = window.ROTI_FEEDBACK_SHEET_URL || 'https://script.google.com/macros/s/AKfycbzq_hL25uGIGuBaf6ZlPNVPnSpUQmm1Jad1-Al6LzeNrWaG3CQhGU42RVBqkyI9VrtE/exec';
+
+// State
+let ratings = { roti: 0, beef: 0, pack: 0, service: 0 };
+let selectedItems = new Set();
+let lang = 'en';
+
+// Star rating logic
+document.querySelectorAll('.stars').forEach(group => {
+  const cat = group.dataset.rate;
+  const btns = group.querySelectorAll('.star-btn');
+  
+  btns.forEach(btn => {
+    btn.addEventListener('mouseenter', () => {
+      const v = Number(btn.dataset.v);
+      highlightStars(btns, v);
+    });
+    btn.addEventListener('click', () => {
+      const v = Number(btn.dataset.v);
+      ratings[cat] = v;
+      highlightStars(btns, v);
+    });
+  });
+
+  group.addEventListener('mouseleave', () => {
+    highlightStars(btns, ratings[cat] || 0);
+  });
+});
+
+function highlightStars(btns, val) {
+  btns.forEach(b => {
+    const v = Number(b.dataset.v);
+    b.classList.toggle('on', v <= val);
+  });
+}
+
+// Product chip multi-select
+document.querySelectorAll('.chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.dataset.item;
+    if (selectedItems.has(item)) {
+      selectedItems.delete(item);
+      btn.classList.remove('selected');
+    } else {
+      selectedItems.add(item);
+      btn.classList.add('selected');
+    }
+  });
+});
+
+// Quick suggestion tags into textarea
+document.querySelectorAll('.suggest-tag').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const ta = document.getElementById('critique');
+    const txt = btn.dataset.insert;
+    const cur = ta.value.trim();
+    if (!cur) {
+      ta.value = txt + ': ';
+    } else {
+      ta.value = cur + '\n• ' + txt + ': ';
+    }
+    ta.focus();
+  });
+});
+
+// WhatsApp Message Formatter
+function buildWhatsAppMessage() {
+  const name = document.getElementById('cName').value.trim() || 'Customer';
+  const phone = document.getElementById('cPhone').value.trim();
+  const critique = document.getElementById('critique').value.trim();
+  const positives = document.getElementById('positives').value.trim();
+  const items = Array.from(selectedItems).join(', ') || 'General Order';
+
+  const starText = n => n > 0 ? '★'.repeat(n) + '☆'.repeat(5 - n) + ` (${n}/5)` : 'Not rated';
+
+  let msg = `*Customer Feedback for Dapur Paksu Jar & Maksu Maz*\n\n`;
+  msg += `*From:* ${name}${phone ? ' (' + phone + ')' : ''}\n`;
+  msg += `*Items Tried:* ${items}\n\n`;
+  
+  msg += `*Ratings:*\n`;
+  msg += `• Roti Quality: ${starText(ratings.roti)}\n`;
+  msg += `• Beef Filling: ${starText(ratings.beef)}\n`;
+  msg += `• Packaging: ${starText(ratings.pack)}\n`;
+  msg += `• Service & Delivery: ${starText(ratings.service)}\n\n`;
+
+  if (critique) {
+    msg += `*Critical Criticism & Areas to Improve:*\n${critique}\n\n`;
+  }
+  if (positives) {
+    msg += `*What I Loved Most:*\n${positives}\n\n`;
+  }
+
+  msg += `_Sent from Jar&Maz Feedback Page by Adam_`;
+  return msg;
+}
+
+function openWhatsApp() {
+  const critique = document.getElementById('critique').value.trim();
+  if (!critique) {
+    alert(tr('alertCritique'));
+    document.getElementById('critique').focus();
+    return;
+  }
+  const text = buildWhatsAppMessage();
+  const url = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank', 'noopener');
+}
+
+document.getElementById('btnWhatsApp').addEventListener('click', openWhatsApp);
+document.getElementById('mWaBtn').addEventListener('click', openWhatsApp);
+
+// Form Submission on Web
+const feedbackForm = document.getElementById('feedbackForm');
+const modalBd = document.getElementById('modalBd');
+const successModal = document.getElementById('successModal');
+
+feedbackForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const critique = document.getElementById('critique').value.trim();
+  if (!critique) {
+    alert(tr('alertCritique'));
+    document.getElementById('critique').focus();
+    return;
+  }
+
+  const btnSubmit = document.getElementById('btnSubmit');
+  const origBtnContent = btnSubmit.innerHTML;
+  btnSubmit.disabled = true;
+  btnSubmit.innerHTML = `<span>⏳</span> ${tr('submitting')}`;
+
+  const feedbackData = {
+    date: new Date().toISOString(),
+    name: document.getElementById('cName').value.trim() || 'Anonymous',
+    phone: document.getElementById('cPhone').value.trim(),
+    items: Array.from(selectedItems),
+    ratings: { ...ratings },
+    critique: critique,
+    positives: document.getElementById('positives').value.trim()
+  };
+
+  // 1. Send to Google Sheets if URL configured
+  if (GOOGLE_SHEET_URL && GOOGLE_SHEET_URL.startsWith('http')) {
+    try {
+      await fetch(GOOGLE_SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(feedbackData)
+      });
+    } catch (err) {
+      console.warn('Google Sheets transmission note:', err);
+    }
+  }
+
+  // 2. Keep local backup in browser
+  try {
+    const list = JSON.parse(localStorage.getItem('rotiFeedbackList') || '[]');
+    list.push(feedbackData);
+    localStorage.setItem('rotiFeedbackList', JSON.stringify(list));
+  } catch (err) {
+    console.error('Storage error', err);
+  }
+
+  // 3. Reset form
+  btnSubmit.disabled = false;
+  btnSubmit.innerHTML = origBtnContent;
+  feedbackForm.reset();
+  ratings = { roti: 0, beef: 0, pack: 0, service: 0 };
+  document.querySelectorAll('.stars .star-btn').forEach(b => b.classList.remove('on'));
+  selectedItems.clear();
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+
+  // 4. Show thank you modal
+  modalBd.classList.add('show');
+  successModal.classList.add('show');
+});
+
+modalBd.addEventListener('click', () => {
+  modalBd.classList.remove('show');
+  successModal.classList.remove('show');
+});
+
+// Bilingual Dictionary
+const L = {
+  en: {
+    backMenu: "Back to Menu",
+    formH: "Share Your Feedback & Criticism",
+    formSub: "Help our family serve you better. Every response is read directly by us.",
+    sec1H: "1. Rate Your Experience",
+    sec1Sub: "(Tap to score 1 to 5 stars)",
+    rRoti: "Roti Quality & Flakiness",
+    rRotiH: "Crispy on the outside, fluffy on the inside",
+    rBeef: "Savory Beef Filling",
+    rBeefH: "Flavor, aroma & generous portion (if ordered)",
+    rPack: "Freezer Packaging & Condition",
+    rPackH: "Sturdy seal, easy freezer storage",
+    rService: "Ordering & Delivery",
+    rServiceH: "Website simplicity & WhatsApp communication",
+    sec2H: "2. Which products did you try?",
+    sec2Sub: "(Select all that apply)",
+    itemRoti: "🥞 Signature Roti Canai (5 pcs)",
+    itemBeef: "🥩 Frozen Beef Roti Canai (2 pcs)",
+    itemBundle: "📦 Family Freezer Bundle (8 packs)",
+    sec3H: "3. Critical Criticism & Areas to Improve *",
+    sec3Sub: "(Be completely honest — we take zero offense!)",
+    critiquePh: "What fell short or could be done better? e.g., Roti flakiness, seasoning/spiciness of the beef filling, packaging seal, cooking instructions, delivery fees, or website glitches...",
+    quickAdd: "Tap to insert topic:",
+    tagRoti: "Roti texture & flakiness",
+    tagBeef: "Beef filling flavor & portion",
+    tagPack: "Packaging seal in freezer",
+    tagDlv: "Delivery timing & fee",
+    tagCook: "Cooking instructions",
+    tagWeb: "Website experience",
+    sec4H: "4. What did you love most? (Optional)",
+    positivesPh: "Any standout favorites or compliments for Paksu Jar & Maksu Maz?",
+    sec5H: "5. Your Details (Optional)",
+    sec5Sub: "(If you'd like us to reach out or make something right)",
+    lName: "Your Name",
+    pName: "e.g. Sarah / Johan",
+    lPhone: "WhatsApp / Phone",
+    pPhone: "01X-XXXXXXX",
+    btnWa: "Send Feedback via WhatsApp",
+    btnSite: "Submit Feedback on Website",
+    submitting: "Submitting...",
+    mWa: "Also Send to WhatsApp",
+    mBack: "Return to Menu",
+    alertCritique: "Please provide a sentence or two under Critical Criticism so we know where we can improve!"
+  },
+  ms: {
+    backMenu: "Kembali ke Menu",
+    formH: "Kongsi Maklum Balas & Kritikan Anda",
+    formSub: "Bantu keluarga kami memberikan yang terbaik. Setiap maklum balas dibaca terus oleh kami.",
+    sec1H: "1. Nilaikan Pengalaman Anda",
+    sec1Sub: "(Tekan untuk pilih 1 hingga 5 bintang)",
+    rRoti: "Kualiti & Kegaringan Roti",
+    rRotiH: "Garing di luar, gebu di dalam",
+    rBeef: "Inti Daging Berempah",
+    rBeefH: "Rasa, aroma & kepuasan inti (jika ada memesan)",
+    rPack: "Pembungkusan & Ketahanan Freezer",
+    rPackH: "Kekedapan pek & kemudahan simpanan",
+    rService: "Tempahan & Penghantaran",
+    rServiceH: "Kemudahan laman web & servis WhatsApp",
+    sec2H: "2. Produk yang anda telah cuba?",
+    sec2Sub: "(Pilih mana yang berkaitan)",
+    itemRoti: "🥞 Roti Canai Biasa (5 keping)",
+    itemBeef: "🥩 Roti Canai Daging (2 keping)",
+    itemBundle: "📦 Family Freezer Bundle (8 pek)",
+    sec3H: "3. Kritikan Membina & Ruang Penambahbaikan *",
+    sec3Sub: "(Bercakaplah dengan jujur — kami langsung tidak berkecil hati!)",
+    critiquePh: "Apa yang kurang atau boleh diperbaiki? Contoh: tekstur roti, rasa inti daging, kekedapan pek, arahan memasak, kos penghantaran atau isu laman web...",
+    quickAdd: "Tekan untuk tambah topik:",
+    tagRoti: "Tekstur & kegaringan roti",
+    tagBeef: "Rasa & kuantiti inti daging",
+    tagPack: "Kekedapan pek dalam freezer",
+    tagDlv: "Masa & caj penghantaran",
+    tagCook: "Arahan memasak / memanaskan",
+    tagWeb: "Pengalaman laman web",
+    sec4H: "4. Apa yang paling anda sukai? (Pilihan)",
+    positivesPh: "Pujian atau keenakan kegemaran anda untuk Paksu Jar & Maksu Maz?",
+    sec5H: "5. Maklumat Anda (Pilihan)",
+    sec5Sub: "(Jika anda sudi untuk kami hubungi semula)",
+    lName: "Nama Anda",
+    pName: "cth: Sarah / Johan",
+    lPhone: "WhatsApp / Telefon",
+    pPhone: "01X-XXXXXXX",
+    btnWa: "Hantar Maklum Balas ke WhatsApp",
+    btnSite: "Hantar Maklum Balas di Laman Web",
+    submitting: "Menghantar...",
+    mWa: "Hantar juga ke WhatsApp",
+    mBack: "Kembali ke Menu",
+    alertCritique: "Sila tulis sedikit pandangan di bawah ruangan Kritikan Membina supaya kami tahu apa yang boleh diperbaiki!"
+  }
+};
+
+const tr = k => L[lang][k] ?? L.en[k] ?? k;
+
+function setLang(l) {
+  lang = l;
+  try { localStorage.setItem('rotiLang', l); } catch(e) {}
+  document.documentElement.lang = l;
+  
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.dataset.t;
+    if (L[lang][key]) el.innerHTML = L[lang][key];
+  });
+  document.querySelectorAll('[data-ph]').forEach(el => {
+    const key = el.dataset.ph;
+    if (L[lang][key]) el.placeholder = L[lang][key];
+  });
+  document.querySelectorAll('[data-lang]').forEach(b => {
+    b.classList.toggle('on', b.dataset.lang === l);
+  });
+}
+
+document.querySelectorAll('[data-lang]').forEach(b => {
+  b.addEventListener('click', () => setLang(b.dataset.lang));
+});
+
+// Initialize language from localStorage
+try {
+  const saved = localStorage.getItem('rotiLang');
+  if (saved === 'ms') setLang('ms');
+  else setLang('en');
+} catch(e) {
+  setLang('en');
+}
+</script>
+</body>
+</html>
