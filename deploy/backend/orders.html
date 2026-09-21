@@ -534,7 +534,11 @@ textarea{resize:vertical;min-height:50px}
     <label>Payment</label>
     <div class="radio-group" id="editPaymentGroup"><label class="checked"><input type="radio" name="editPayment" value="paid" checked> Paid</label><label><input type="radio" name="editPayment" value="unpaid"> Pay later</label></div>
     <label>Order date</label><input type="datetime-local" id="editOrderDate">
-    <label>Pickup / delivery time (optional)</label><input type="datetime-local" id="editPickupTime">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 5px;">
+      <label for="editPickupTime" style="margin:0">Pickup / delivery time (optional)</label>
+      <button type="button" style="background:none;border:none;color:var(--accent);font-size:11.5px;font-weight:600;cursor:pointer;padding:0;" onclick="document.getElementById('editPickupTime').value=''">Clear time</button>
+    </div>
+    <input type="datetime-local" id="editPickupTime">
     <label>Notes (optional)</label><textarea id="editNotes" placeholder="Special request..."></textarea>
     <div class="edit-save-btns"><button class="edit-cancel" id="editCancel">Cancel</button><button class="edit-save" id="editSave">Save changes</button></div>
   </div>
@@ -664,7 +668,11 @@ textarea{resize:vertical;min-height:50px}
         <label>Payment</label>
         <div class="radio-group" id="paymentGroup"><label class="checked"><input type="radio" name="payment" value="paid" checked> Paid</label><label><input type="radio" name="payment" value="unpaid"> Pay later</label></div>
         <label for="orderDate">Order date</label><input type="datetime-local" id="orderDate">
-        <label for="pickupTime">Pickup / delivery time (optional)</label><input type="datetime-local" id="pickupTime">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 5px;">
+          <label for="pickupTime" style="margin:0">Pickup / delivery time (optional)</label>
+          <button type="button" style="background:none;border:none;color:var(--accent);font-size:11.5px;font-weight:600;cursor:pointer;padding:0;" onclick="document.getElementById('pickupTime').value=''">Clear time</button>
+        </div>
+        <input type="datetime-local" id="pickupTime">
         <label for="custNotes">Notes (optional)</label><textarea id="custNotes" placeholder="Special request..."></textarea>
         <div class="total-row"><span>Total</span><span id="totalOut">RM0</span></div>
         <div id="formError" class="error-text" style="display:none"></div>
@@ -935,7 +943,9 @@ function bdgClass(s){return{packed:"badge-packed",done:"badge-done"}[s]||"badge-
 function bdgLabel(o){return o.status==="done"?doneLabel(o):STATUS_LABEL[o.status]||"New";}
 function fmtTime(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
 function fmtPickup(iso){if(!iso)return null;const d=new Date(iso);return d.toLocaleTimeString("en-MY",{hour:"2-digit",minute:"2-digit",hour12:true})+" - "+d.toLocaleDateString("en-MY",{day:"numeric",month:"short"});}
-function getOrderDate(o){const value=o.orderDate||o.createdAt;if(!value)return null;return value.toDate?value.toDate():new Date(value);}
+function getOrderDate(o){if(!o)return null;const value=o.orderDate||o.createdAt;if(!value)return null;return value.toDate?value.toDate():new Date(value);}
+function toDateKey(d){if(!d)return"";const yr=d.getFullYear();const mo=String(d.getMonth()+1).padStart(2,"0");const day=String(d.getDate()).padStart(2,"0");return `${yr}-${mo}-${day}`;}
+function getOrderFulfillDate(o){if(!o)return new Date();if(o.pickupTime){const d=new Date(o.pickupTime);if(!isNaN(d.getTime()))return d;}const val=o.orderDate||o.createdAt||o.doneAt||o.updatedAt;if(!val)return new Date();const d=val.toDate?val.toDate():new Date(val);return isNaN(d.getTime())?new Date():d;}
 function toDateStr(ts){if(!ts)return null;const d=ts.toDate?ts.toDate():new Date(ts);return d.toISOString().slice(0,10);}
 function isoDateStr(iso){return iso?iso.slice(0,10):null;}
 function computeTotals(orders){const t={};orders.forEach(o=>(o.items||[]).forEach(i=>{t[i.name]=(t[i.name]||0)+i.qty;}));return t;}
@@ -1173,8 +1183,8 @@ function sendPrepReminder(orders) {
   const today = new Date().toDateString();
   const pending = orders.filter(o => {
     if (o.status === "done") return false;
-    if (!o.createdAt) return true;
-    return getOrderDate(o).toDateString() === today;
+    if (!o.createdAt && !o.pickupTime && !o.orderDate) return true;
+    return getOrderFulfillDate(o).toDateString() === today;
   });
   const t = computeTotals(pending);
   const entries = Object.entries(t);
@@ -1276,8 +1286,8 @@ function updateKitchenSummary(orders) {
   const today = new Date().toDateString();
   const pending = orders.filter(o => {
     if (o.status === "done") return false;
-    if (!o.createdAt) return true;
-    return getOrderDate(o).toDateString() === today;
+    if (!o.createdAt && !o.pickupTime && !o.orderDate) return true;
+    return getOrderFulfillDate(o).toDateString() === today;
   });
   const t = computeTotals(pending);
   const entries = Object.entries(t);
@@ -1306,7 +1316,7 @@ function updateKitchenSummary(orders) {
 document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});});
 function getDeliveryCost(){const value=Number(document.getElementById("deliveryCost").value);return Number.isFinite(value)&&value>0?value:0;}
 function updateTotal(){document.getElementById("totalOut").textContent="RM"+(Object.entries(qty).reduce((s,[id,q])=>s+q*PRICES[id].price,0)+getDeliveryCost()).toFixed(2);}
-function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0,cookies:0};Object.keys(qty).forEach(id=>{document.getElementById("qty-"+id).textContent=0;});document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.querySelectorAll("#paymentGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);updateTotal();clearError();closeNameSuggest();}
+function resetOrderForm(){document.getElementById("orderForm").reset();qty={signature:0,beef:0,cookies:0};Object.keys(qty).forEach(id=>{document.getElementById("qty-"+id).textContent=0;});document.getElementById("addressField").style.display="none";document.querySelectorAll("#fulfilGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.querySelectorAll("#paymentGroup label").forEach((l,i)=>l.classList.toggle("checked",i===0));document.getElementById("orderDate").value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);document.getElementById("pickupTime").value="";updateTotal();clearError();closeNameSuggest();}
 document.querySelectorAll('input[name="fulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#fulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));document.getElementById("addressField").style.display=r.value==="delivery"&&r.checked?"block":"none";updateTotal();});});
 document.getElementById("deliveryCost").addEventListener("input",updateTotal);
 document.querySelectorAll('input[name="payment"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#paymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
@@ -1359,21 +1369,6 @@ let archiveScope = "older";
 let archiveCalMonth = scheduleCalMonth;
 let archiveSelectedDateKey = null;
 
-function getOrderFulfillDate(o) {
-  if (o.pickupTime) {
-    const d = new Date(o.pickupTime);
-    if (!isNaN(d.getTime())) return d;
-  }
-  if (o.status === "done" && (o.doneAt || o.updatedAt)) {
-    const val = o.doneAt || o.updatedAt;
-    const d = val.toDate ? val.toDate() : new Date(val);
-    if (!isNaN(d.getTime())) return d;
-  }
-  const val = o.orderDate || o.createdAt;
-  if (!val) return new Date();
-  return val.toDate ? val.toDate() : new Date(val);
-}
-
 function getOrderDoneDate(o) {
   const val = o.doneAt || o.updatedAt || o.orderDate || o.createdAt;
   if (!val) return new Date();
@@ -1385,13 +1380,6 @@ function isRecentDoneOrder(o) {
   const now = new Date();
   const cutoff = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2, 0, 0, 0, 0);
   return d.getTime() >= cutoff.getTime();
-}
-
-function toDateKey(d) {
-  const yr = d.getFullYear();
-  const mo = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${yr}-${mo}-${day}`;
 }
 
 function formatArchiveDateKey(key) {
@@ -2400,7 +2388,7 @@ function renderTlList(events,titleText,showDate){
    ════════════════════════════════════════ */
 let salesPeriod="month",chart1Instance=null,chart2Instance=null;
 document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
-function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);return d>=ws;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
+function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderFulfillDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const we=new Date(ws);we.setDate(ws.getDate()+7);return d>=ws&&d<we;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
 function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);const totalRev=itemRev+deliveryRev;const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0,cookieQty=0,cookieRev=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;if(i.id==="cookies"){cookieQty+=i.qty;cookieRev+=(Number(i.price)||38)*i.qty;}}));document.getElementById("salesItemRev").textContent="RM"+itemRev;document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);document.getElementById("salesCookieQty").textContent=cookieQty;document.getElementById("salesCookieRev").textContent="RM"+cookieRev;renderChart1(orders);renderChart2();}
 function getThemeColors() {
   const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -2512,7 +2500,7 @@ function renderChart1(orders){
     xTitle = "Hour";
     const hoursRev = {}, hoursCount = {};
     orders.forEach(o => {
-      const d = getOrderDate(o);
+      const d = getOrderFulfillDate(o);
       if (!d) return;
       const h = d.getHours();
       hoursRev[h] = (hoursRev[h] || 0) + (o.total || 0);
@@ -2533,9 +2521,10 @@ function renderChart1(orders){
     const dtRev = [0, 0, 0, 0, 0, 0, 0];
     const dtCount = [0, 0, 0, 0, 0, 0, 0];
     orders.forEach(o => {
-      const d = getOrderDate(o);
+      const d = getOrderFulfillDate(o);
       if (!d) return;
-      const idx = Math.floor((d - ws) / 86400000);
+      const dMid = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const idx = Math.round((dMid - ws) / 86400000);
       if (idx >= 0 && idx < 7) {
         dtRev[idx] += (o.total || 0);
         dtCount[idx] += 1;
@@ -2556,12 +2545,19 @@ function renderChart1(orders){
       wkStart.setDate(curWeekStart.getDate() - i * 7);
       const wkEnd = new Date(wkStart);
       wkEnd.setDate(wkStart.getDate() + 7);
-      const dayStr = String(wkStart.getDate()).padStart(2, "0");
-      const moStr = wkStart.toLocaleDateString("en-MY", { month: "short" });
-      wkLabels.push(dayStr + " " + moStr);
+      const wkEndInclusive = new Date(wkStart);
+      wkEndInclusive.setDate(wkStart.getDate() + 6);
+      const startDay = String(wkStart.getDate()).padStart(2, "0");
+      const endDay = String(wkEndInclusive.getDate()).padStart(2, "0");
+      const startMo = wkStart.toLocaleDateString("en-MY", { month: "short" });
+      const endMo = wkEndInclusive.toLocaleDateString("en-MY", { month: "short" });
+      const label = (startMo === endMo)
+        ? `${startDay}–${endDay} ${startMo}`
+        : `${startDay} ${startMo}–${endDay} ${endMo}`;
+      wkLabels.push(label);
       let rev = 0, count = 0;
       allOrders.forEach(o => {
-        const d = getOrderDate(o);
+        const d = getOrderFulfillDate(o);
         if (d && d >= wkStart && d < wkEnd) {
           rev += (o.total || 0);
           count += 1;
@@ -2580,14 +2576,14 @@ function renderChart1(orders){
     for (let i = 29; i >= 0; i--) {
       const d = new Date(now);
       d.setDate(now.getDate() - i);
-      const k = d.toISOString().slice(0, 10);
+      const k = toDateKey(d);
       dayMapRev[k] = 0;
       dayMapCount[k] = 0;
     }
     orders.forEach(o => {
-      const d = getOrderDate(o);
+      const d = getOrderFulfillDate(o);
       if (!d) return;
-      const k = d.toISOString().slice(0, 10);
+      const k = toDateKey(d);
       if (k in dayMapRev) {
         dayMapRev[k] += (o.total || 0);
         dayMapCount[k] += 1;
@@ -2770,7 +2766,7 @@ function renderChart2() {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     labels.push(MONTHS[d.getMonth()] + " '" + String(d.getFullYear()).slice(2));
     const mo = allOrders.filter(o => {
-      const od = getOrderDate(o);
+      const od = getOrderFulfillDate(o);
       return od && od.getFullYear() === d.getFullYear() && od.getMonth() === d.getMonth();
     });
     let sig = 0, beef = 0, cookie = 0;
