@@ -462,7 +462,7 @@ d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate
    2. Klang Valley (KV): Local distance-based estimation via Nominatim geocoding + OSRM routing.
    3. Outside Klang Valley (NKV): Ninja Van Cold Chain frozen delivery walk-in rate card by total cart weight + 6% SST.
 */
-var SHOP={lat:2.9985,lng:101.5755},RATE={base:5,perKm:0.70,buf:0.2},dlv=null,estOpen=false,estBusy=false,estErr='',estCache={};
+var SHOP={lat:2.9985,lng:101.5755},RATE={base:5,perKm:0.60,buf:0.2},dlv=null,estOpen=false,estBusy=false,estErr='',estCache={};
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 function isPutraHeights(addr){
   if(!addr)return false;
