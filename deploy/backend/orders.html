@@ -186,6 +186,10 @@ textarea{resize:vertical;min-height:50px}
 .period-bar::-webkit-scrollbar{display:none}
 .period-chip{flex-shrink:0;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:99px;padding:5px 14px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
 .period-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.period-chip-select-wrap{position:relative;display:inline-flex;align-items:center;flex-shrink:0}
+.period-select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:26px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%238A7B68' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer}
+.period-select.active{background-color:var(--accent);color:#fff;border-color:var(--accent);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23ffffff' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E")}
+.period-select option{background:var(--surface);color:var(--text)}
 .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
 .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px}
 .summary-card .sc-label{font-size:11px;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
@@ -878,12 +882,16 @@ textarea{resize:vertical;min-height:50px}
 
   <!-- Sales -->
   <section id="salesView">
-    <div class="sales-header"><h2>Sales Summary</h2><p>All confirmed orders</p></div>
+    <div class="sales-header"><h2>Sales Summary</h2><p id="salesHeaderSub">All confirmed orders</p></div>
     <div class="period-bar" id="periodBar">
-      <button class="period-chip active" data-period="month">This Month</button>
-      <button class="period-chip" data-period="week">This Week</button>
-      <button class="period-chip" data-period="today">Today</button>
-      <button class="period-chip" data-period="all">All Time</button>
+      <button class="period-chip active" data-period="this-month" id="btnThisMonth">This Month</button>
+      <button class="period-chip" data-period="last-month" id="btnLastMonth">Last Month</button>
+      <div class="period-chip-select-wrap">
+        <select class="period-chip period-select" id="salesMonthSelect" aria-label="Choose specific month">
+          <option value="" disabled selected>Select Month ▾</option>
+        </select>
+      </div>
+      <button class="period-chip" data-period="all" id="btnAllTime">All Time</button>
     </div>
     <div class="summary-grid">
       <div class="summary-card"><div class="sc-label">Revenue</div><div class="sc-value-row"><span class="sc-value" id="salesItemRev">RM0</span><span class="sc-delivery-add" id="salesDeliveryAdd"></span></div><div class="sc-sub" id="salesTotalOrders">0 orders</div><div class="sc-total-faint" id="salesGrandTotal"></div></div>
@@ -2386,10 +2394,152 @@ function renderTlList(events,titleText,showDate){
 /* ════════════════════════════════════════
    SALES
    ════════════════════════════════════════ */
-let salesPeriod="month",chart1Instance=null,chart2Instance=null;
-document.getElementById("periodBar").addEventListener("click",ev=>{const chip=ev.target.closest(".period-chip");if(!chip)return;document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));chip.classList.add("active");salesPeriod=chip.dataset.period;renderSales();});
-function filterByPeriod(orders,period){const now=new Date();return orders.filter(o=>{const d=getOrderFulfillDate(o);if(!d)return false;if(period==="today")return d.toDateString()===now.toDateString();if(period==="week"){const ws=new Date(now);ws.setDate(now.getDate()-now.getDay());ws.setHours(0,0,0,0);const we=new Date(ws);we.setDate(ws.getDate()+7);return d>=ws&&d<we;}if(period==="month")return d.getFullYear()===now.getFullYear()&&d.getMonth()===now.getMonth();return true;});}
-function renderSales(){const orders=filterByPeriod(allOrders,salesPeriod);const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);const totalRev=itemRev+deliveryRev;const totalOrders=orders.length;const avg=totalOrders?Math.round(totalRev/totalOrders):0;let sigQty=0,beefQty=0,cookieQty=0,cookieRev=0;orders.forEach(o=>(o.items||[]).forEach(i=>{if(i.id==="signature")sigQty+=i.qty;if(i.id==="beef")beefQty+=i.qty;if(i.id==="cookies"){cookieQty+=i.qty;cookieRev+=(Number(i.price)||38)*i.qty;}}));document.getElementById("salesItemRev").textContent="RM"+itemRev;document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");document.getElementById("salesAvg").textContent="RM"+avg;document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";document.getElementById("salesSigQty").textContent=sigQty;document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);document.getElementById("salesBeefQty").textContent=beefQty;document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);document.getElementById("salesCookieQty").textContent=cookieQty;document.getElementById("salesCookieRev").textContent="RM"+cookieRev;renderChart1(orders);renderChart2();}
+let salesPeriod="this-month",customMonth="",chart1Instance=null,chart2Instance=null;
+
+function populateMonthOptions(){
+  const sel=document.getElementById("salesMonthSelect");
+  if(!sel)return;
+  const curVal=sel.value;
+  const monthsSet=new Set();
+  const now=new Date();
+  for(let i=0;i<24;i++){
+    const d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    const y=d.getFullYear();
+    const m=String(d.getMonth()+1).padStart(2,"0");
+    monthsSet.add(`${y}-${m}`);
+  }
+  allOrders.forEach(o=>{
+    const d=getOrderFulfillDate(o);
+    if(d){
+      const y=d.getFullYear();
+      const m=String(d.getMonth()+1).padStart(2,"0");
+      monthsSet.add(`${y}-${m}`);
+    }
+  });
+  const sorted=Array.from(monthsSet).sort().reverse();
+  const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  let html='<option value="" disabled'+(!curVal?' selected':'')+'>Select Month ▾</option>';
+  sorted.forEach(ym=>{
+    const [yStr,mStr]=ym.split("-");
+    const y=parseInt(yStr,10);
+    const m=parseInt(mStr,10)-1;
+    const label=`${MONTH_NAMES[m]} ${y}`;
+    html+=`<option value="${ym}"${curVal===ym?' selected':''}>${label}</option>`;
+  });
+  sel.innerHTML=html;
+}
+
+document.getElementById("periodBar").addEventListener("click",ev=>{
+  const chip=ev.target.closest(".period-chip");
+  if(!chip||chip.tagName==="SELECT")return;
+  document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));
+  chip.classList.add("active");
+  const sel=document.getElementById("salesMonthSelect");
+  if(sel){sel.value="";sel.classList.remove("active");}
+  salesPeriod=chip.dataset.period;
+  renderSales();
+});
+
+document.getElementById("salesMonthSelect").addEventListener("change",ev=>{
+  const val=ev.target.value;
+  if(!val)return;
+  salesPeriod="custom";
+  customMonth=val;
+  document.querySelectorAll(".period-chip").forEach(c=>c.classList.remove("active"));
+  ev.target.classList.add("active");
+  renderSales();
+});
+
+function filterByPeriod(orders,period){
+  const now=new Date();
+  const thisYear=now.getFullYear();
+  const thisMonth=now.getMonth();
+
+  if(period==="this-month"||period==="month"){
+    return orders.filter(o=>{
+      const d=getOrderFulfillDate(o);
+      return d&&d.getFullYear()===thisYear&&d.getMonth()===thisMonth;
+    });
+  }
+  if(period==="last-month"){
+    const lm=new Date(thisYear,thisMonth-1,1);
+    const lmYear=lm.getFullYear();
+    const lmMonth=lm.getMonth();
+    return orders.filter(o=>{
+      const d=getOrderFulfillDate(o);
+      return d&&d.getFullYear()===lmYear&&d.getMonth()===lmMonth;
+    });
+  }
+  if(period==="custom"){
+    const sel=document.getElementById("salesMonthSelect");
+    const activeYM=customMonth||(sel?sel.value:"");
+    if(!activeYM)return orders;
+    const [yStr,mStr]=activeYM.split("-");
+    const tYear=parseInt(yStr,10);
+    const tMonth=parseInt(mStr,10)-1;
+    return orders.filter(o=>{
+      const d=getOrderFulfillDate(o);
+      return d&&d.getFullYear()===tYear&&d.getMonth()===tMonth;
+    });
+  }
+  // "all" - All Time
+  return orders;
+}
+
+function renderSales(){
+  populateMonthOptions();
+  const orders=filterByPeriod(allOrders,salesPeriod);
+  const itemRev=orders.reduce((s,o)=>{const dc=o.deliveryCost||0;const isub=(typeof o.itemSubtotal==="number")?o.itemSubtotal:(o.total||0)-dc;return s+isub;},0);
+  const deliveryRev=orders.reduce((s,o)=>s+(o.deliveryCost||0),0);
+  const totalRev=itemRev+deliveryRev;
+  const totalOrders=orders.length;
+  const avg=totalOrders?Math.round(totalRev/totalOrders):0;
+  let sigQty=0,beefQty=0,cookieQty=0,cookieRev=0;
+  orders.forEach(o=>(o.items||[]).forEach(i=>{
+    if(i.id==="signature")sigQty+=i.qty;
+    if(i.id==="beef")beefQty+=i.qty;
+    if(i.id==="cookies"){cookieQty+=i.qty;cookieRev+=(Number(i.price)||38)*i.qty;}
+  }));
+  document.getElementById("salesItemRev").textContent="RM"+itemRev;
+  document.getElementById("salesDeliveryAdd").textContent=deliveryRev>0?"+ (RM"+deliveryRev+") delivery":"";
+  document.getElementById("salesGrandTotal").textContent=deliveryRev>0?"Total RM"+totalRev:"";
+  document.getElementById("salesTotalOrders").textContent=totalOrders+" order"+(totalOrders!==1?"s":"");
+  document.getElementById("salesAvg").textContent="RM"+avg;
+  document.getElementById("salesAvgSub").textContent=totalOrders?"per order":"";
+  document.getElementById("salesSigQty").textContent=sigQty;
+  document.getElementById("salesSigRev").textContent="RM"+(sigQty*8);
+  document.getElementById("salesBeefQty").textContent=beefQty;
+  document.getElementById("salesBeefRev").textContent="RM"+(beefQty*14);
+  document.getElementById("salesCookieQty").textContent=cookieQty;
+  document.getElementById("salesCookieRev").textContent="RM"+cookieRev;
+
+  const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const subEl=document.getElementById("salesHeaderSub");
+  if(subEl){
+    const now=new Date();
+    if(salesPeriod==="this-month"||salesPeriod==="month"){
+      subEl.textContent=`${MONTH_NAMES[now.getMonth()]} ${now.getFullYear()} • Confirmed orders`;
+    }else if(salesPeriod==="last-month"){
+      const lm=new Date(now.getFullYear(),now.getMonth()-1,1);
+      subEl.textContent=`${MONTH_NAMES[lm.getMonth()]} ${lm.getFullYear()} • Confirmed orders`;
+    }else if(salesPeriod==="custom"){
+      const sel=document.getElementById("salesMonthSelect");
+      const activeYM=customMonth||(sel?sel.value:"");
+      if(activeYM){
+        const [yStr,mStr]=activeYM.split("-");
+        const m=parseInt(mStr,10)-1;
+        subEl.textContent=`${MONTH_NAMES[m]} ${yStr} • Confirmed orders`;
+      }else{
+        subEl.textContent="Selected month • Confirmed orders";
+      }
+    }else{
+      subEl.textContent="All time • All confirmed orders";
+    }
+  }
+
+  renderChart1(orders);
+  renderChart2();
+}
 function getThemeColors() {
   const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   const rootTheme = document.documentElement.getAttribute("data-theme");
@@ -2495,104 +2645,98 @@ const comboDataLabelsPlugin = {
 function renderChart1(orders){
   const now = new Date();
   let labels = [], revData = [], countData = [], title = "", xTitle = "Week";
-  if (salesPeriod === "today") {
-    title = "Revenue & Orders by Hour (Today)";
-    xTitle = "Hour";
-    const hoursRev = {}, hoursCount = {};
-    orders.forEach(o => {
+  const MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const MONTH_FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  if (salesPeriod === "all") {
+    title = "Monthly Revenue & Orders (All Time)";
+    xTitle = "Month";
+
+    // Build list of months from earliest order (or at least past 6 months) up to current month
+    let earliest = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+    allOrders.forEach(o => {
       const d = getOrderFulfillDate(o);
-      if (!d) return;
-      const h = d.getHours();
-      hoursRev[h] = (hoursRev[h] || 0) + (o.total || 0);
-      hoursCount[h] = (hoursCount[h] || 0) + 1;
-    });
-    for (let h = 6; h <= 22; h++) {
-      labels.push((h % 12 === 0 ? 12 : h % 12) + "" + (h < 12 ? "am" : "pm"));
-      revData.push(hoursRev[h] || 0);
-      countData.push(hoursCount[h] || 0);
-    }
-  } else if (salesPeriod === "week") {
-    title = "Revenue & Orders by Day (This Week)";
-    xTitle = "Day";
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const ws = new Date(now);
-    ws.setDate(now.getDate() - now.getDay());
-    ws.setHours(0, 0, 0, 0);
-    const dtRev = [0, 0, 0, 0, 0, 0, 0];
-    const dtCount = [0, 0, 0, 0, 0, 0, 0];
-    orders.forEach(o => {
-      const d = getOrderFulfillDate(o);
-      if (!d) return;
-      const dMid = new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      const idx = Math.round((dMid - ws) / 86400000);
-      if (idx >= 0 && idx < 7) {
-        dtRev[idx] += (o.total || 0);
-        dtCount[idx] += 1;
+      if (d && d < earliest) {
+        earliest = new Date(d.getFullYear(), d.getMonth(), 1);
       }
     });
-    labels = days;
-    revData = dtRev;
-    countData = dtCount;
-  } else if (salesPeriod === "month") {
-    title = "Revenue Spike Correlates Directly with Order Volume Growth";
-    xTitle = "Week";
-    const curWeekStart = new Date(now);
-    curWeekStart.setDate(now.getDate() - now.getDay());
-    curWeekStart.setHours(0, 0, 0, 0);
-    const wkLabels = [], wkRev = [], wkCount = [];
-    for (let i = 4; i >= 0; i--) {
-      const wkStart = new Date(curWeekStart);
-      wkStart.setDate(curWeekStart.getDate() - i * 7);
-      const wkEnd = new Date(wkStart);
-      wkEnd.setDate(wkStart.getDate() + 7);
-      const wkEndInclusive = new Date(wkStart);
-      wkEndInclusive.setDate(wkStart.getDate() + 6);
-      const startDay = String(wkStart.getDate()).padStart(2, "0");
-      const endDay = String(wkEndInclusive.getDate()).padStart(2, "0");
-      const startMo = wkStart.toLocaleDateString("en-MY", { month: "short" });
-      const endMo = wkEndInclusive.toLocaleDateString("en-MY", { month: "short" });
-      const label = (startMo === endMo)
-        ? `${startDay}–${endDay} ${startMo}`
-        : `${startDay} ${startMo}–${endDay} ${endMo}`;
-      wkLabels.push(label);
+
+    const monthMap = {};
+    const curMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const dIter = new Date(earliest.getFullYear(), earliest.getMonth(), 1);
+    while (dIter <= curMonthStart) {
+      const ymKey = `${dIter.getFullYear()}-${String(dIter.getMonth() + 1).padStart(2, '0')}`;
+      const lbl = `${MONTH_SHORT[dIter.getMonth()]} '${String(dIter.getFullYear()).slice(2)}`;
+      monthMap[ymKey] = { label: lbl, rev: 0, count: 0 };
+      dIter.setMonth(dIter.getMonth() + 1);
+    }
+
+    allOrders.forEach(o => {
+      const d = getOrderFulfillDate(o);
+      if (!d) return;
+      const ymKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (monthMap[ymKey]) {
+        monthMap[ymKey].rev += (o.total || 0);
+        monthMap[ymKey].count += 1;
+      }
+    });
+
+    const monthEntries = Object.values(monthMap);
+    labels = monthEntries.map(e => e.label);
+    revData = monthEntries.map(e => e.rev);
+    countData = monthEntries.map(e => e.count);
+  } else {
+    // Specific month view: "this-month", "last-month", or "custom"
+    let targetYear = now.getFullYear();
+    let targetMonth = now.getMonth();
+
+    if (salesPeriod === "last-month") {
+      const lm = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      targetYear = lm.getFullYear();
+      targetMonth = lm.getMonth();
+    } else if (salesPeriod === "custom") {
+      const sel = document.getElementById("salesMonthSelect");
+      const activeYM = customMonth || (sel ? sel.value : "");
+      if (activeYM) {
+        const [yStr, mStr] = activeYM.split("-");
+        targetYear = parseInt(yStr, 10);
+        targetMonth = parseInt(mStr, 10) - 1;
+      }
+    }
+
+    const monthName = MONTH_FULL[targetMonth];
+    const monthShort = MONTH_SHORT[targetMonth];
+    title = `Weekly Revenue & Orders (${monthName} ${targetYear})`;
+    xTitle = "Week of Month";
+
+    const daysInMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
+    const weekBuckets = [
+      { startDay: 1, endDay: 7 },
+      { startDay: 8, endDay: 14 },
+      { startDay: 15, endDay: 21 },
+      { startDay: 22, endDay: 28 }
+    ];
+    if (daysInMonth > 28) {
+      weekBuckets.push({ startDay: 29, endDay: daysInMonth });
+    }
+
+    weekBuckets.forEach(b => {
+      const label = `${b.startDay}–${b.endDay} ${monthShort}`;
+      labels.push(label);
       let rev = 0, count = 0;
-      allOrders.forEach(o => {
+      orders.forEach(o => {
         const d = getOrderFulfillDate(o);
-        if (d && d >= wkStart && d < wkEnd) {
-          rev += (o.total || 0);
-          count += 1;
+        if (d && d.getFullYear() === targetYear && d.getMonth() === targetMonth) {
+          const day = d.getDate();
+          if (day >= b.startDay && day <= b.endDay) {
+            rev += (o.total || 0);
+            count += 1;
+          }
         }
       });
-      wkRev.push(rev);
-      wkCount.push(count);
-    }
-    labels = wkLabels;
-    revData = wkRev;
-    countData = wkCount;
-  } else {
-    title = "Revenue & Orders by Day (Last 30 Days)";
-    xTitle = "Date";
-    const dayMapRev = {}, dayMapCount = {};
-    for (let i = 29; i >= 0; i--) {
-      const d = new Date(now);
-      d.setDate(now.getDate() - i);
-      const k = toDateKey(d);
-      dayMapRev[k] = 0;
-      dayMapCount[k] = 0;
-    }
-    orders.forEach(o => {
-      const d = getOrderFulfillDate(o);
-      if (!d) return;
-      const k = toDateKey(d);
-      if (k in dayMapRev) {
-        dayMapRev[k] += (o.total || 0);
-        dayMapCount[k] += 1;
-      }
+      revData.push(rev);
+      countData.push(count);
     });
-    const ent = Object.entries(dayMapRev).sort(([a], [b]) => a.localeCompare(b));
-    labels = ent.map(([k]) => k.slice(5).replace("-", "/"));
-    revData = ent.map(([, v]) => v);
-    countData = ent.map(([k]) => dayMapCount[k] || 0);
   }
 
   document.getElementById("chart1Title").textContent = title;
@@ -3264,6 +3408,7 @@ function startOrdersListener() {
       setConn(true);
       allOrders = snap.docs.map(d => { const data = d.data(); return {id: d.id, ...data, status: data.status === "preparing" ? "packed" : data.status}; }); // legacy: old "preparing" orders now count as Packed
       customerDirectory = buildCustomerDirectory();
+      populateMonthOptions();
       renderInventory();
       checkNewOrders(allOrders);
       renderEntryList(allOrders);
