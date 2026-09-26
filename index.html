@@ -13,7 +13,7 @@ button,input,textarea{font:inherit;color:inherit}button{cursor:pointer;border:0}
 .rail a,.rail button{width:44px;height:44px;border-radius:14px;background:none;display:grid;place-items:center;text-decoration:none;font-size:20px;font-weight:700;color:var(--mut)}
 .rail a:hover,.rail button:hover{background:var(--bg);color:var(--or2)}.sp{flex:1}
 .main{overflow:auto;padding:24px 28px}
-.banner{display:grid;grid-template-columns:1.05fr 1fr;background:var(--or);color:#fff;border-radius:20px;overflow:hidden;margin:18px 0 24px;min-height:190px}
+.banner{position:relative;display:grid;grid-template-columns:1.05fr 1fr;background:var(--or);color:#fff;border-radius:20px;overflow:hidden;margin:18px 0 24px;min-height:190px}
 .bt{padding:26px 28px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:14px}
 .bt-pill{display:inline-flex;align-items:center;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;letter-spacing:.02em;backdrop-filter:blur(4px)}
 .bt h1{margin:0;font:700 clamp(30px,3.6vw,42px)/1.05 "Cormorant Garamond",Georgia,serif}.bt p{margin:0;opacity:.92;font-size:14px}
@@ -125,15 +125,40 @@ input,textarea{border:1px solid var(--line);background:#fff;border-radius:10px;p
 .banner img{animation:canvaAscend .85s cubic-bezier(.16,1,.3,1) backwards;animation-delay:180ms}
 .tabs{animation:canvaAscendSoft .65s cubic-bezier(.16,1,.3,1) backwards;animation-delay:200ms}
 .grid.anim .card{animation:canvaAscend .75s cubic-bezier(.16,1,.3,1) backwards;animation-delay:calc(80ms + var(--i,0)*80ms);will-change:transform,opacity}
-.steps div{animation:canvaAscend .7s cubic-bezier(.16,1,.3,1) backwards}
-.steps div:nth-child(1){animation-delay:360ms}
-.steps div:nth-child(2){animation-delay:460ms}
-.steps div:nth-child(3){animation-delay:560ms}
 .line.new{animation:slideIn .4s cubic-bezier(.2,.8,.2,1)}
 .heart.pop{animation:pop .4s}.bump{animation:bump .4s}.b{animation:pop .25s}
 .tc:hover .ti{animation:none}
 .fly{position:fixed;width:38px;height:38px;border-radius:50%;background:var(--or) center/cover;z-index:70;pointer-events:none;box-shadow:0 6px 16px rgba(0,0,0,.25)}
 .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* --- HAZIM KHALIM MOTION SUITE --- */
+.jm-grain{position:fixed;inset:0;pointer-events:none;z-index:90;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")}
+.jm-scroll-progress{position:fixed;top:0;left:0;right:0;height:3.5px;background:linear-gradient(90deg,var(--or),#e58d5f,var(--or2));transform-origin:left;transform:scaleX(0);z-index:100;pointer-events:none;transition:transform .06s linear}
+.jm-marquee-wrap{overflow:hidden;background:var(--ink);color:#fff;border-radius:14px;margin:16px 0 22px;padding:9px 0;position:relative;box-shadow:0 6px 18px rgba(26,21,18,.08);display:flex;user-select:none}
+.jm-marquee-wrap::before,.jm-marquee-wrap::after{content:'';position:absolute;top:0;bottom:0;width:34px;z-index:2;pointer-events:none}
+.jm-marquee-wrap::before{left:0;background:linear-gradient(to right,var(--ink),transparent)}
+.jm-marquee-wrap::after{right:0;background:linear-gradient(to left,var(--ink),transparent)}
+@keyframes jm-marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.jm-marquee-track{display:flex;width:max-content;animation:jm-marquee 30s linear infinite;white-space:nowrap}
+.jm-marquee-track:hover{animation-play-state:paused}
+.jm-marquee-item{display:inline-flex;align-items:center;gap:10px;font-size:11.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:0 14px;color:#fdf8f4}
+.jm-marquee-dot{color:#e58d5f;font-size:13px}
+@keyframes jm-spin{to{transform:rotate(1turn)}}
+.jm-seal{position:absolute;right:18px;top:18px;width:82px;height:82px;z-index:5;pointer-events:none;display:flex;align-items:center;justify-content:center}
+.jm-seal-ring{position:absolute;inset:0;width:100%;height:100%;animation:jm-spin 18s linear infinite}
+.jm-seal-center{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.94);color:var(--or2);display:grid;place-items:center;font-size:20px;box-shadow:0 4px 12px rgba(0,0,0,.22)}
+@media(max-width:600px){
+  .jm-seal{width:60px;height:60px;right:10px;top:10px}
+  .jm-seal-center{width:30px;height:30px;font-size:14px}
+}
+.reveal-on-scroll{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.16,1,.3,1),transform .65s cubic-bezier(.16,1,.3,1);will-change:opacity,transform}
+.reveal-on-scroll.is-revealed{opacity:1;transform:translateY(0)}
+.card.reveal-on-scroll{transition-delay:calc(var(--i,0)*.055s)}
+.steps div.reveal-on-scroll:nth-child(1){transition-delay:.05s}
+.steps div.reveal-on-scroll:nth-child(2){transition-delay:.15s}
+.steps div.reveal-on-scroll:nth-child(3){transition-delay:.25s}
+@keyframes jm-ping{0%{transform:scale(1);opacity:.75}80%,100%{transform:scale(1.7);opacity:0}}
+.jm-pulse-ring{position:absolute;inset:0;border-radius:inherit;background:inherit;animation:jm-ping 2.2s cubic-bezier(0,0,.2,1) infinite;pointer-events:none;z-index:-1}
 
 /* Mobile Enhancements & Components */
 .m-brand-sub{display:none!important}
@@ -196,6 +221,31 @@ small.m-hide{display:block}
 .est-map{height:220px;border-radius:12px;border:1px solid var(--line);position:relative;z-index:0;isolation:isolate;margin:6px 0 8px}
 .est-pin{background:none;border:0}.est-pin i{display:block;width:26px;height:26px;background:var(--or);border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 6px rgba(0,0,0,.35)}
 .est-r a{color:var(--or2);font-weight:700;font-size:12px;align-self:center}
+.pickup-tip{background:#fff;border:1px solid #ebdcd0;border-left:4px solid var(--or);border-radius:10px;padding:9px 12px;display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:1.35;margin-top:2px}
+.pickup-tip-txt{color:#4a3f35}
+.pickup-tip-btn{align-self:flex-start;background:#fbf1ea;color:var(--or2);border:1px solid #ebdcd0;border-radius:99px;padding:4px 12px;font-weight:700;font-size:11px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:.15s all}
+.pickup-tip-btn:hover{background:var(--or);color:#fff;border-color:var(--or)}
+/* Delivery Option Comparison Cards */
+.del-comp-wrap{display:grid;gap:8px;margin-top:8px;overflow:hidden}
+.del-card{background:#fff;border:1.5px solid #ebdcd0;border-radius:12px;padding:11px 12px;cursor:pointer;transition:.15s all;position:relative;display:flex;flex-direction:column;box-sizing:border-box;overflow:hidden}
+.del-card:hover{border-color:var(--or)}
+.del-card.active{border:2px solid var(--or);background:#fffaf7;box-shadow:0 2px 8px rgba(184,92,56,.12)}
+.del-card.disabled{opacity:0.65;background:#fbf9f7;border-color:#e8e1da;cursor:not-allowed}
+.del-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.del-card-label{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.del-card input[type="radio"]{width:18px!important;height:18px!important;min-width:18px!important;max-width:18px!important;padding:0!important;margin:0!important;accent-color:var(--or)!important;cursor:pointer;flex:none;box-shadow:none!important;border:none!important;background:none!important}
+.del-card-name{font-size:13px;font-weight:700;color:var(--ink);line-height:1.2;flex:1}
+.del-card-price{font-size:15px;font-weight:800;color:var(--or2);flex:none;text-align:right}
+.del-card-meta{display:flex;align-items:center;gap:6px;margin-top:5px;margin-left:26px;flex-wrap:wrap}
+.del-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:10px;font-weight:700;line-height:1.2}
+.del-badge-best{background:#eaf4e6;color:var(--ok);border:1px solid #c8e2bd}
+.del-badge-cool{background:#e8f1fb;color:#2b6cb0;border:1px solid #bee3f8}
+.del-badge-fast{background:#fdf2e9;color:var(--or2);border:1px solid #fad7bc}
+.del-badge-nosurge{background:#eaf4e6;color:var(--ok);border:1px solid #c8e2bd}
+.del-badge-surge{background:#fff3e0;color:#c05621;border:1px solid #fed7aa;font-weight:700}
+.del-card-calc{font-size:10.5px;color:var(--mut);font-family:monospace}
+.del-card-desc{font-size:11.5px;color:var(--mut);line-height:1.35;margin:5px 0 0 26px}
+
 
 @media(max-width:999px){
 /* Page container & breathing room */
@@ -343,8 +393,10 @@ body{background:#fff}
 }
 
 @media print{body>*:not(.modal){display:none!important}.modal{position:static;opacity:1}.ra{display:none}.ann-bd,.ann-topbar{display:none!important}}
-@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal-on-scroll{opacity:1!important;transform:none!important}.jm-marquee-track{animation:none!important}.jm-seal-ring{animation:none!important}.jm-pulse-ring{display:none!important}}
 </style></head><body>
+<div class="jm-scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<div class="jm-grain" aria-hidden="true"></div>
 <div class="ann-topbar" id="annTopbar">
   <div class="ann-topbar-inner">
     <span class="ann-topbar-pill" data-t="annBadge">NEW</span>
@@ -363,12 +415,13 @@ body{background:#fff}
 <main class="main" id="top">
 <div class="hd"><div class="bar"><img src="data:image/jpeg;base64,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" onerror="this.onerror=null;this.src='assets/logo.jpg'" alt="Jar&amp;Maz Homemade logo"><div><b>Jar&amp;Maz<span class="m-hide"> Homemade</span></b><small class="m-hide" data-t="tag">Frozen roti canai, made by hand</small><span class="m-brand-sub">HOMEMADE</span></div></div><div class="hd-actions"><a class="m-soc-btn" href="https://www.facebook.com/FrozenRotiCanaiByPaksu" target="_blank" rel="noopener" title="Frozen Roti Canai by Paksu Jar" aria-label="Frozen Roti Canai by Paksu Jar">f</a><a class="m-soc-btn" href="https://wa.me/60192788617" target="_blank" rel="noopener" title="WhatsApp us" aria-label="WhatsApp us">✆</a><div class="lg" role="group" aria-label="Language"><button data-lang="en" class="on">EN</button><button data-lang="ms">BM</button></div></div></div>
 <div class="top"><a class="tc" href="https://www.facebook.com/FrozenRotiCanaiByPaksu" target="_blank" rel="noopener"><span class="ti">f</span><span><b data-t="fbT">Follow our official Facebook page</b><small data-t="fbS">Frozen Roti Canai by Paksu Jar</small></span></a><button class="tc" data-go="chat"><span class="ti">💬</span><span><b data-t="chT">Chat with Roti Helper</b><small data-t="chS">Ask about the menu, delivery or cooking.</small></span></button></div>
-<section class="banner"><div class="bt"><h1 data-t="hero">Garing di luar, gebu di dalam.</h1><p data-t="heroP">Disediakan oleh Dapur Paksu Jar &amp; Maksu Maz dan dibekukan segar untuk freezer anda. Siap untuk dimakan hanya dalam beberapa minit!</p><a class="btn" href="#menu" data-t="order">Order now</a></div><img id="hero" alt="Flaky roti canai on a plate"></section>
+<section class="banner"><div class="jm-seal" aria-hidden="true"><svg class="jm-seal-ring" viewBox="0 0 100 100"><path id="sealCircle" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none"/><text font-size="8.8" font-weight="700" fill="#ffffff" letter-spacing="1.8"><textPath href="#sealCircle" startOffset="0%">★ JAR&amp;MAZ HOMEMADE ★ DIJAMIN GARING &amp; GEBU</textPath></text></svg><div class="jm-seal-center">🌾</div></div><div class="bt"><span class="bt-pill">✦ Dapur Paksu Jar &amp; Maksu Maz</span><h1 data-t="hero">Garing di luar, gebu di dalam.</h1><p data-t="heroP">Disediakan oleh Dapur Paksu Jar &amp; Maksu Maz dan dibekukan segar untuk freezer anda. Siap untuk dimakan hanya dalam beberapa minit!</p><a class="btn" href="#menu" data-t="order">Order now</a></div><img id="hero" alt="Flaky roti canai on a plate"></section>
 <div id="menu"></div>
+<div class="jm-marquee-wrap" aria-hidden="true"><div class="jm-marquee-track"><span class="jm-marquee-item">100% Homemade <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Tanpa Pengawet <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Garing Di Luar, Gebu Di Dalam <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Resepi Asli Kampung <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Beku Segar Terus Ke Freezer <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Halal &amp; Bersih <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">100% Homemade <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Tanpa Pengawet <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Garing Di Luar, Gebu Di Dalam <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Resepi Asli Kampung <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Beku Segar Terus Ke Freezer <span class="jm-marquee-dot">✦</span></span><span class="jm-marquee-item">Halal &amp; Bersih <span class="jm-marquee-dot">✦</span></span></div></div>
 <div class="tabs" role="tablist"><button class="on" data-tab="all" data-t="tAll">All</button><button data-tab="roti" data-t="tRoti">Roti canai</button><button data-tab="bundle" data-t="tBun">Bundles</button><button data-tab="cookies" data-t="tCookies">Cookies</button><button data-tab="fav" data-t="tFav">♥ Favourites</button></div>
 <div class="grid" id="grid"></div>
-<section class="steps"><div><b data-t="s1">Keep it frozen</b><span data-t="s1d">Store in freezer until ready. No thawing needed.</span></div><div><b data-t="s2">Panfry or Airfry 3+ Mins</b><span data-t="s2d">Garing di luar, gebu di dalam. No oil needed.</span></div><div><b data-t="s3">Serve with gravy of your choice</b><span data-t="s3d">Delicious with gravy of your choice, sambal or by itself.</span></div></section>
-<section class="fb" style="margin-bottom:24px"><div><b style="display:block;font-size:16px;margin-bottom:4px" data-t="fbCardT">Help our family grow with your honest feedback</b><small style="display:block;opacity:.85;font-size:13px;max-width:540px" data-t="fbCardS">Tried our frozen roti canai? Tell us what you loved and where we can improve. Your honest feedback and critical criticism help our family serve you better.</small></div><a href="feedback.html" class="btn" style="background:#fff;color:var(--or2);white-space:nowrap" data-t="fbCardBtn">Share Feedback →</a></section>
+<section class="steps"><div class="reveal-on-scroll"><b data-t="s1">Keep it frozen</b><span data-t="s1d">Store in freezer until ready. No thawing needed.</span></div><div class="reveal-on-scroll"><b data-t="s2">Panfry or Airfry 3+ Mins</b><span data-t="s2d">Garing di luar, gebu di dalam. No oil needed.</span></div><div class="reveal-on-scroll"><b data-t="s3">Serve with gravy of your choice</b><span data-t="s3d">Delicious with gravy of your choice, sambal or by itself.</span></div></section>
+<section class="fb reveal-on-scroll" style="margin-bottom:24px"><div><b style="display:block;font-size:16px;margin-bottom:4px" data-t="fbCardT">Help our family grow with your honest feedback</b><small style="display:block;opacity:.85;font-size:13px;max-width:540px" data-t="fbCardS">Tried our frozen roti canai? Tell us what you loved and where we can improve. Your honest feedback and critical criticism help our family serve you better.</small></div><a href="feedback.html" class="btn" style="background:#fff;color:var(--or2);white-space:nowrap" data-t="fbCardBtn">Share Feedback →</a></section>
 </main>
 <aside class="panel" id="panel" aria-label="My order">
 <div class="ph2"><div style="display:flex;align-items:center;gap:8px"><button class="p-back hide" id="backStep1" aria-label="Back to order items">←</button><h2 id="panelTitle" data-t="my">My order</h2></div><button class="x" id="closeP" aria-label="Close order">×</button></div>
@@ -383,7 +436,7 @@ body{background:#fff}
 
 <!-- ORDER CONTENT -->
 <div class="p-content hide" id="pContent" style="display:flex;flex-direction:column;gap:14px">
-  <div class="seg" role="group" aria-label="Pickup or delivery"><button class="on" data-mode="Self pickup" data-t="mPick">Self pickup</button><button data-mode="Delivery" data-t="mDel">Delivery</button></div>
+  <div class="seg" role="group" aria-label="Pickup or delivery"><button class="on" data-mode="Self pickup"><span data-t="mPick">Self pickup</span> <span class="est-badge" style="font-size:10px;padding:1px 6px;margin-left:4px" data-t="mPickBadge">FREE</span></button><button data-mode="Delivery" data-t="mDel">Delivery</button></div>
   <div class="p-step" id="pStep1" style="display:flex;flex-direction:column;gap:14px">
     <div id="lines" style="display:grid;gap:10px"></div>
     <div class="sum"><div><span data-t="sub">Subtotal</span><span id="sub">RM0.00</span></div><div><span data-t="del">Delivery</span> <span id="dfee"></span></div><div class="t"><span id="totL" data-t="total">Total</span><span id="tot">RM0.00</span></div></div>
@@ -394,7 +447,13 @@ body{background:#fff}
     <label><span data-t="lPhone">Phone / WhatsApp</span><input name="phone" required inputmode="tel" placeholder="01X-XXXXXXX"></label>
     <label id="aw" class="hide"><span data-t="lAddr">Delivery address</span>
     <textarea id="addr" name="address" rows="2" data-ph="pAddr" placeholder="House number, street, area"></textarea></label>
-    <div id="est" class="est hide" aria-live="polite"><div class="est-h"><b data-t="eT">Estimated delivery cost</b><span class="est-v" id="estV">—</span></div><small id="estS"></small><div class="est-r"><button type="button" class="est-b" id="estGo" data-t="eGo">Calculate</button><button type="button" class="est-b hide" id="estFx" aria-expanded="false" aria-controls="estF"></button></div><div id="estF" class="est-f hide"></div><div id="estM" class="hide"><small id="estMH"></small><div id="estMap" class="est-map"></div><div class="est-r"><button type="button" class="est-b" id="estOk"></button><a id="estLink" target="_blank" rel="noopener"></a></div></div></div>
+    <div id="selfPickNotice" class="pickup-tip" style="border-left-color:var(--ok);background:#f6faf4;margin-top:2px">
+      <div class="pickup-tip-txt">
+        <b style="color:var(--ok)">🚗 <span data-t="selfPickTitle">Ambil Sendiri / Tempah Grab Sendiri (RM0.00)</span></b>
+        <span id="selfPickDesc" data-t="selfPickDesc">Lokasi: Putra Heights (47650). Demi keselamatan &amp; privasi keluarga, alamat penuh rumah akan diberikan oleh Maksu Maz di WhatsApp selepas pembayaran penuh pesanan disahkan.</span>
+      </div>
+    </div>
+    <div id="est" class="est hide" aria-live="polite"><div class="est-h"><b data-t="eT">Estimated delivery cost</b><span class="est-v" id="estV">—</span></div><small id="estS"></small><div id="delComp" class="del-comp-wrap hide"></div><div class="est-r"><button type="button" class="est-b" id="estGo" data-t="eGo">Calculate</button><button type="button" class="est-b hide" id="estFx" aria-expanded="false" aria-controls="estF"></button></div><div id="estF" class="est-f hide"></div><div id="estM" class="hide"><small id="estMH"></small><div id="estMap" class="est-map"></div><div class="est-r"><button type="button" class="est-b" id="estOk"></button><a id="estLink" target="_blank" rel="noopener"></a></div></div><div class="pickup-tip" id="pickupTip"><div class="pickup-tip-txt">💡 <b data-t="tipPickupTitle">Want to save on delivery?</b> <span id="tipPickupDesc" data-t="tipPickupDesc">Choose <b>Self pickup</b> in Putra Heights (47650) to remove delivery costs completely (RM0.00)!</span></div><button type="button" class="pickup-tip-btn" data-mode="Self pickup"><span data-t="tipSwitch">Switch to Free Self-Pickup</span> →</button></div></div>
     <label><span data-t="lNotes">Notes (optional)</span><textarea name="notes" rows="2" data-ph="pNotes" placeholder="Preferred time or special request"></textarea></label>
     <button class="btn fill wide" id="go" disabled data-t="go">Check out</button><p class="fine" data-t="fine"></p></form>
   </div>
@@ -407,7 +466,7 @@ body{background:#fff}
   <div class="sob-left"><span class="sob-icon">🛒</span><span class="sob-info"><b id="sobItems">0 items</b> · <span id="sobTotal">RM0.00</span></span></div>
   <span class="sob-cta"><span data-t="viewOrder">View order</span> →</span>
 </div>
-<button class="m-chat-fab" id="mChatFab" data-go="chat" title="Ask Roti Helper" aria-label="Ask Roti Helper">💬</button>
+<button class="m-chat-fab" id="mChatFab" data-go="chat" title="Ask Roti Helper" aria-label="Ask Roti Helper"><span class="jm-pulse-ring" aria-hidden="true"></span>💬</button>
 
 <!-- Product Detail Modal -->
 <div class="prod-modal" id="prodModal" role="dialog" aria-modal="true" aria-label="Product details">
@@ -505,7 +564,8 @@ try{cart=JSON.parse(localStorage.getItem('rotiCartV3')||'{}')}catch(e){}
 cart=Object.fromEntries(Object.entries(cart).filter(([id,q])=>by(id)&&q>0));
 $('hero').src=HERO_IMG;document.querySelector('.bar img').src=document.querySelector('.logo').src;
 function grid(a){const g=$('grid');g.classList.remove('anim');if(a)void g.offsetWidth;if(a)g.classList.add('anim');const l=P.filter(p=>(tab==='all'||(tab==='fav'?favs.has(p.id):p.cat===tab)));
-$('grid').innerHTML=l.length?l.map((p,i)=>`<article class="card" style="--i:${i}"><div class="ph" data-view="${p.id}">${p.img?`<img src="${p.img}" alt="${p.name}">`:'<span class="ph-e">🥩</span>'}<span class="tag">${tr('g_'+p.id)}</span><button class="heart${favs.has(p.id)?' on':''}" data-fav="${p.id}" aria-label="Favourite ${p.name}">♥</button></div><h3 data-view="${p.id}">${p.name}</h3><p data-view="${p.id}">${tr('d_'+p.id)}</p><div class="row"><b>${money(p.price)}</b><button class="plus" data-add="${p.id}" aria-label="Add ${p.name}">+</button></div></article>`).join(''):'<p class="none">'+tr('none')+'</p>'}
+$('grid').innerHTML=l.length?l.map((p,i)=>`<article class="card reveal-on-scroll" style="--i:${i}"><div class="ph" data-view="${p.id}">${p.img?`<img src="${p.img}" alt="${p.name}">`:'<span class="ph-e">🥩</span>'}<span class="tag">${tr('g_'+p.id)}</span><button class="heart${favs.has(p.id)?' on':''}" data-fav="${p.id}" aria-label="Favourite ${p.name}">♥</button></div><h3 data-view="${p.id}">${p.name}</h3><p data-view="${p.id}">${tr('d_'+p.id)}</p><div class="row"><b>${money(p.price)}</b><button class="plus" data-add="${p.id}" aria-label="Add ${p.name}">+</button></div></article>`).join(''):'<p class="none">'+tr('none')+'</p>';
+if(typeof initScrollReveal==='function')initScrollReveal();}
 function draw(){const es=Object.entries(cart),n=es.reduce((s,[,q])=>s+q,0),t=es.reduce((s,[id,q])=>s+by(id).price*q,0);
 $('count').textContent=n;$('sub').textContent=money(t);$('tot').textContent=money(t);if($('btnStep1Tot'))$('btnStep1Tot').textContent=money(t);$('go').disabled=!n;
 if(dlv&&dlv.isNKV&&mode==='Delivery'&&typeof calcNinjaVan==='function'){dlv=calcNinjaVan(getCartWeight(),dlv.addr,dlv);}
@@ -538,20 +598,87 @@ if(d.add){cart[d.add]=(cart[d.add]||0)+1;flash=d.add;draw();bump();toast(by(d.ad
 if(d.fav){favs.has(d.fav)?favs.delete(d.fav):favs.add(d.fav);grid();const hb=document.querySelector('[data-fav="'+d.fav+'"]');if(hb&&favs.has(d.fav))hb.classList.add('pop')}
 if(d.q){cart[d.q]=(cart[d.q]||0)+Number(d.d);if(cart[d.q]<=0)delete cart[d.q];draw()}
 if(d.tab){tab=d.tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b===t));grid(1)}
-if(d.mode){mode=d.mode;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('on',b===t));$('aw').classList.toggle('hide',mode!=='Delivery');$('est').classList.toggle('hide',mode!=='Delivery');$('addr').required=mode==='Delivery';draw()}
+if(d.mode){mode=d.mode;document.querySelectorAll('.seg [data-mode]').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));$('aw').classList.toggle('hide',mode!=='Delivery');$('est').classList.toggle('hide',mode!=='Delivery');if($('selfPickNotice'))$('selfPickNotice').classList.toggle('hide',mode==='Delivery');$('addr').required=mode==='Delivery';draw()}
 if(d.go==='top'||d.go==='menu')$(d.go).scrollIntoView({behavior:'smooth'});
 if(d.lang)setLang(d.lang);if(d.go==='cart')openP();if(d.go==='chat')toggleChat();});
 $('closeP').onclick=closeP;$('bd').onclick=()=>{closeP();closeR();closeProduct()};
 $('form').onsubmit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),items=Object.entries(cart).map(([id,q])=>({...by(id),q}));if(!items.length)return;
 last={...f,mode,items,total:items.reduce((s,i)=>s+i.price*i.q,0),no:'RC-'+Date.now().toString().slice(-6),dlv:mode==='Delivery'?dlv:null};
+const isGrab=last.dlv&&last.dlv.selectedCarrier==='grab';
+const isSelfGrab=last.dlv&&last.dlv.selectedCarrier==='self_grab';
 $('rn').textContent=last.no;$('rcu').innerHTML=`<p><b>${esc(f.name)}</b><br><small>${esc(f.phone)} • ${tr(mode==='Delivery'?'mDel':'mPick')}${mode==='Delivery'&&f.address?'<br>'+esc(f.address):''}${f.notes?'<br>'+tr('note')+': '+esc(f.notes):''}</small></p>`;
-$('rl').innerHTML=items.map(i=>`<div><span>${i.name} × ${i.q}</span><span>${money(i.price*i.q)}</span></div>`).join('');$('rtot').textContent=money(last.dlv?last.total+last.dlv.total:last.total);$('rtotL').textContent=tr(last.dlv?'eTotal':'total');if(last.dlv){const dn=last.dlv.isFree?tr('eRcptFree'):(last.dlv.isNKV?(last.dlv.isSeparate?tr('eRcptNkvSep')+' ('+last.dlv.cold.weight.toFixed(2)+' kg + '+last.dlv.std.weight.toFixed(2)+' kg)':tr(last.dlv.rcptKey||'eRcptNkv')+' ('+last.dlv.weight.toFixed(2)+' kg)'):tr('eRcpt')+(last.dlv.km?' ('+last.dlv.km.toFixed(1)+' km)':''));const dv=last.dlv.isFree?tr('eFree'):'≈ '+money(last.dlv.total);$('rl').innerHTML+='<div><span>'+dn+'</span><span>'+dv+'</span></div>';}
-$('rnote').innerHTML='<b>'+tr('rnH')+'</b> '+tr('rnB')+(mode==='Delivery'?(last.dlv&&last.dlv.isFree?' '+tr('rnD_free'):(last.dlv&&last.dlv.isNKV?' '+tr(last.dlv.isSeparate?'rnD_nkvSep':(last.dlv.isColdChain?'rnD_nkv':'rnD_nkvStd')):' '+tr('rnD'))):'');
+$('rl').innerHTML=items.map(i=>`<div><span>${i.name} × ${i.q}</span><span>${money(i.price*i.q)}</span></div>`).join('');
+if(isGrab){
+  $('rtot').textContent=money(last.total)+' '+(lang==='ms'?'+ Resit Grab':'+ Grab Fare');
+  $('rtotL').textContent=lang==='ms'?'Jumlah (Makanan)':'Total (Food items)';
+}else if(isSelfGrab){
+  $('rtot').textContent=money(last.total);
+  $('rtotL').textContent=lang==='ms'?'Jumlah (Makanan)':'Total (Food items)';
+}else{
+  $('rtot').textContent=money(last.dlv?last.total+last.dlv.total:last.total);
+  $('rtotL').textContent=tr(last.dlv?'eTotal':'total');
+}
+if(last.dlv){
+  let dn='';let dv='';
+  if(isGrab){
+    dn=tr('eRcptGrab');
+    dv=tr('optB_priceText');
+  }else if(isSelfGrab){
+    dn=tr('eRcptSelfGrab');
+    dv='RM0.00 ('+(lang==='ms'?'Tempah Sendiri':'Self-Book')+')';
+  }else if(last.dlv.isFree){
+    dn=tr('eRcptFree');
+    dv=tr('eFree');
+  }else if(last.dlv.isNKV){
+    dn=last.dlv.isSeparate?tr('eRcptNkvSep')+' ('+last.dlv.cold.weight.toFixed(2)+' kg + '+last.dlv.std.weight.toFixed(2)+' kg)':tr(last.dlv.rcptKey||'eRcptNkv')+' ('+last.dlv.weight.toFixed(2)+' kg)';
+    dv='≈ '+money(last.dlv.total);
+  }else{
+    dn=tr('eRcptPaksu')+(last.dlv.km?' ('+last.dlv.km.toFixed(1)+' km)':'');
+    dv=money(last.dlv.total);
+  }
+  $('rl').innerHTML+='<div><span>'+dn+'</span><span style="'+(isGrab?'font-weight:700;color:var(--or2)':(isSelfGrab?'font-weight:700;color:var(--ok)':''))+'">'+dv+'</span></div>';
+}
+let rnoteText='';
+if(isGrab){
+  rnoteText=lang==='ms'?'Maksu Maz akan hubungi anda di WhatsApp bersama tangkap layar (screenshot) tempahan Grab sebenar untuk sahkan tambang sebelum penghantaran.':'Maksu Maz will contact you on WhatsApp with an official Grab booking screenshot to confirm live fare before dispatch.';
+}else if(isSelfGrab||mode==='Self pickup'){
+  rnoteText=lang==='ms'?'Sila hantar pesanan ke WhatsApp. Demi keselamatan & privasi keluarga, Maksu Maz akan WhatsApp butiran bayaran, dan alamat penuh rumah akan diberikan sebaik sahaja pembayaran penuh pesanan disahkan.':'Please send order to WhatsApp. For family privacy & security, Maksu Maz will WhatsApp payment details, and our full house address will be provided once full order payment is confirmed.';
+}else{
+  rnoteText=tr('rnB')+(mode==='Delivery'?(last.dlv&&last.dlv.isFree?' '+tr('rnD_free'):(last.dlv&&last.dlv.isNKV?' '+tr(last.dlv.isSeparate?'rnD_nkvSep':(last.dlv.isColdChain?'rnD_nkv':'rnD_nkvStd')):' '+tr('rnD'))):'');
+}
+$('rnote').innerHTML='<b>'+tr('rnH')+'</b> '+rnoteText;
 closeP();$('modal').classList.add('show');$('bd').classList.add('show')};
 function closeR(){$('modal').classList.remove('show');$('bd').classList.remove('show')}$('closeR').onclick=closeR;$('print').onclick=()=>window.print();
 const WA='60192788617';
 $('wa').onclick=()=>{if(!last)return;const ls=last.items.map(i=>`• ${i.name} x${i.q} — ${money(i.price*i.q)}`).join('\n');
-const tx=`${tr('waH')} (${last.no}):\n${ls}\n\n${last.dlv?tr('eTotal')+': '+money(last.total+last.dlv.total)+' ('+tr('sub')+' '+money(last.total)+' + '+tr('del')+' '+(last.dlv.isFree?tr('eFree'):money(last.dlv.total))+')':tr('total')+': '+money(last.total)}\n${tr('wName')}: ${last.name}\n${tr('wPhone')}: ${last.phone}\n${tr('wFul')}: ${tr(last.mode==='Delivery'?'mDel':'mPick')}${last.address?'\n'+tr('wAddr')+': '+last.address+(last.dlv?'\n'+tr('eRcpt')+': '+(last.dlv.isFree?tr('eFree'):'≈ '+money(last.dlv.total))+' ('+(last.dlv.isFree?'Putra Heights Promo':(last.dlv.isNKV?(last.dlv.isSeparate?'2 Parcels: Ninja Van Cold Chain '+money(last.dlv.cold.total)+' ['+last.dlv.cold.weight.toFixed(2)+' kg] + Ninja Van Standard '+money(last.dlv.std.total)+' ['+last.dlv.std.weight.toFixed(2)+' kg]':(last.dlv.isColdChain?'Ninja Van Cold Chain: ':'Ninja Van Standard (Drop-off): ')+last.dlv.weight.toFixed(2)+' kg / '+last.dlv.chargeableKg+' kg tier'):(last.dlv.km?last.dlv.km.toFixed(1)+' km':'')))+')'+(last.dlv.lat?'\n'+tr('eMapL')+': https://www.google.com/maps?q='+last.dlv.lat+','+last.dlv.lng+(last.dlv.ok?' ✓':''):''):''):''}${last.notes?'\n'+tr('wNotes')+': '+last.notes:''}\n\n${tr('waF')}`;
+const isGrab=last.dlv&&last.dlv.selectedCarrier==='grab';
+const isSelfGrab=last.dlv&&last.dlv.selectedCarrier==='self_grab';
+let dlvSummary='';
+if(last.dlv){
+  if(isGrab){
+    dlvSummary='GrabExpress ('+(last.dlv.km?last.dlv.km.toFixed(1)+' km':'')+') - Bayar ikut resit Grab sebenar (Maksu Maz WhatsApp screenshot)';
+  }else if(isSelfGrab){
+    dlvSummary='Pilihan C: Tempah Grab/Runner Sendiri (RM0.00 dari Jar&Maz) - Alamat rumah diberikan selepas bayaran penuh dibuat';
+  }else if(last.dlv.isFree){
+    dlvSummary='Putra Heights Promo (FREE)';
+  }else if(last.dlv.isNKV){
+    dlvSummary=last.dlv.isSeparate?'2 Parcels: Ninja Van Cold Chain '+money(last.dlv.cold.total)+' ['+last.dlv.cold.weight.toFixed(2)+' kg] + Ninja Van Standard '+money(last.dlv.std.total)+' ['+last.dlv.std.weight.toFixed(2)+' kg]':(last.dlv.isColdChain?'Ninja Van Cold Chain: ':'Ninja Van Standard (Drop-off): ')+last.dlv.weight.toFixed(2)+' kg / '+last.dlv.chargeableKg+' kg tier';
+  }else{
+    dlvSummary='Dapur Paksu Jar (Kadar Tetap '+money(last.dlv.total)+') ('+(last.dlv.km?last.dlv.km.toFixed(1)+' km':'')+')';
+  }
+}
+const totalLine=isGrab?(tr('sub')+': '+money(last.total)+'\n'+tr('del')+': '+tr('optB_priceText')+' (Maksu Maz hantar screenshot Grab app)'):(isSelfGrab?(tr('sub')+': '+money(last.total)+'\n'+tr('del')+': RM0.00 ('+tr('optC_priceText')+')\n'+tr('total')+': '+money(last.total)):(last.dlv?tr('eTotal')+': '+money(last.total+last.dlv.total)+' ('+tr('sub')+' '+money(last.total)+' + '+tr('del')+' '+(last.dlv.isFree?tr('eFree'):money(last.dlv.total))+')':tr('total')+': '+money(last.total)));
+let fulText='';
+if(last.mode==='Delivery'){
+  if(isSelfGrab){
+    fulText=lang==='ms'?'Penghantaran (Pilihan C: Tempah Grab/Runner Sendiri ke rumah penjual - Mohon alamat rumah selepas bayaran penuh)':'Delivery (Option C: Book Own Grab/Runner to seller - Request house address after full payment)';
+  }else{
+    fulText=tr('mDel');
+  }
+}else{
+  fulText=lang==='ms'?'Ambil Sendiri / Tempah Grab Sendiri (Self-Pickup - Mohon alamat rumah selepas bayaran penuh)':'Self-Pickup / Book Own Runner (Request house address after full payment)';
+}
+const tx=`${tr('waH')} (${last.no}):\n${ls}\n\n${totalLine}\n${tr('wName')}: ${last.name}\n${tr('wPhone')}: ${last.phone}\n${tr('wFul')}: ${fulText}${last.address?'\n'+tr('wAddr')+': '+last.address+(last.dlv?'\n'+tr('eRcpt')+': '+(isGrab?tr('optB_priceText'):(isSelfGrab?'RM0.00 ('+tr('optC_priceText')+')':(last.dlv.isFree?tr('eFree'):'≈ '+money(last.dlv.total))))+' ('+dlvSummary+')'+(last.dlv.lat?'\n'+tr('eMapL')+': https://www.google.com/maps?q='+last.dlv.lat+','+last.dlv.lng+(last.dlv.ok?' ✓':''):''):''):''}${last.notes?'\n'+tr('wNotes')+': '+last.notes:''}\n\n${tr('waF')}`;
 window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(tx),'_blank','noopener')};
 const API=window.ROTI_CHAT_API_URL||'https://roti-canai-project.onrender.com/chat';fetch('https://roti-canai-project.onrender.com/').catch(()=>{});
 function say(t,w){const d=document.createElement('div');d.className='b'+(w==='u'?' u':'');d.textContent=t;$('cm').appendChild(d);$('cm').scrollTop=1e6;return d}
@@ -595,8 +722,8 @@ function toggleChat(){
 $('rChat').onclick=toggleChat;$('cx').onclick=toggleChat;
 $('cf').onsubmit=e=>{e.preventDefault();askAI($('ci').value.trim())};
 document.querySelectorAll('.cq-btn').forEach(b=>{b.onclick=()=>{const k=b.dataset.ask;if(Q_TEXTS[k])askAI(Q_TEXTS[k][lang]||Q_TEXTS[k].en)}});
-const L={en:{heroBadge:"✨ Dapur Paksu Jar & Maksu Maz",dpBadge:"🛵 FREE DELIVERY",phFreePromo:"to your doorstep if your address is in Putra Heights",eFree:"FREE (RM0.00)",ePhBadge:"Putra Heights (FREE)",ePhPromo:"🎉 Free delivery to your doorstep if your address is in Putra Heights!",ePhNote:"Special promotion: Delivery to your doorstep in Putra Heights is 100% FREE!",eRcptFree:"Delivery (Putra Heights - FREE)",rnD_free:"Free delivery to your doorstep for Putra Heights! Maksu Maz will contact you shortly to confirm timing.",hero:'Garing di luar, gebu di dalam.',heroP:"Made by Dapur Paksu Jar & Maksu Maz and frozen fresh for your freezer. Ready to eat in minutes!",order:'Order now',tAll:'All',tRoti:'Roti canai',tBun:'Bundles',tCookies:'Cookies',tFav:'♥ Favourites',s1:'Keep it frozen',s1d:"Store in freezer until ready. No thawing needed.",s2:'Ready to eat in minutes',s2d:'Panfry or airfry without oil. Crispy on the outside, fluffy on the inside.',s3:'Serve with gravy of your choice',s3d:'Delicious with gravy of your choice, sambal or by itself.',fbT:'Follow our official Facebook page',fbS:'Frozen Roti Canai by Paksu Jar',chT:'Chat with Roti Helper AI',chTitle:'Roti Helper AI',qCook:'🔥 How to cook / heat?',qBeef:'🥩 About Beef Roti',qDel:'🚚 Delivery & pickup',qMenu:'💰 Prices & bundle',chS:'Ask about the menu, delivery or cooking.',tag:'Frozen roti canai, made by hand',my:'My order',mPick:'Self pickup',mDel:'Delivery',sub:'Subtotal',del:'Delivery',total:'Total',feeP:'None (Self pickup: Putra Heights 47650)',feeD:'Putra Heights (FREE) · Klang Valley (by Paksu Jar) · Outstation (Ninja Van)',zKV:'🛵 Klang Valley (KV)',zNKV:'❄️ Outside KV (Ninja Van)',eNinja:'Ninja Van Cold Chain (Frozen Delivery)',eNinjaStd:'Ninja Van Standard (Drop-off)',eNinjaSep:"Ninja Van Separate Delivery (2 Parcels)",eNinjaColdParcel:"Parcel 1: Frozen Products (Cold Chain)",eNinjaStdParcel:"Parcel 2: Dry Cookies (Standard Drop-off)",eCold:"Cold",eDry:"Dry",eParcelSub:"Parcel total",eTwoParcels:"2 Parcels",eNkvDest:'Destination: Outside Klang Valley (NKV)',eWeight:'Order weight',eTier:'Rate tier',eBaseRate:'Walk-in base rate (excl. SST)',eSst:'SST (6%)',eNinjaNote:'Estimated frozen delivery by Ninja Van. Maksu Maz will confirm final rate & schedule with Ninja Van after order submission.',eNinjaStdNote:'Ninja Van West Malaysia Drop-off basic rate for cookies (ambient). Maksu Maz will drop off your package at Ninja Van for direct delivery to your doorstep.',eNinjaSepNote:'Separate deliveries: Frozen items are dispatched in an insulated cold box via Ninja Van Cold Chain, while dry cookies are dropped off via Ninja Van Standard Delivery. You will receive 2 tracking numbers.',eNinjaConfirm:'Confirmed with Ninja Van',eHintNkv:'Weight-based cold chain estimate for outside Klang Valley.',eRcptNkv:'Delivery (Ninja Van Cold Chain)',eRcptNkvStd:'Delivery (Ninja Van Standard)',eRcptNkvSep:'Delivery (2 Parcels: Cold Chain + Standard Drop-off)',rnD_nkv:'Outside Klang Valley orders use Ninja Van Cold Chain frozen delivery. Maksu Maz will confirm final delivery details with Ninja Van.',rnD_nkvStd:'Outside Klang Valley cookie orders use Ninja Van Standard Delivery (Drop-off). Maksu Maz will drop off your package at Ninja Van and share your tracking number.',rnD_nkvSep:'Mixed orders outside Klang Valley are delivered in 2 separate shipments: frozen items via Ninja Van Cold Chain and dry cookies via Ninja Van Standard Drop-off. Maksu Maz will share tracking numbers for both parcels.',eT:'Estimated delivery cost',eGo:'Calculate',eHint:'Enter your address, then tap Calculate.',eBusy:'Finding your address…',eErr:'Address not found. Add your area or postcode, or Maksu Maz will confirm the fee.',eMoto:'Motorcycle',eUpTo:'up to',eShow:'Show formula',eHide:'Hide formula',eFx:'Base fare + (Rate per km × Distance)',eBase:'Base fare',eRate:'Rate per km',eDist:'Distance',eCh:'Distance charge',eTot:'Estimate',eNote:'Estimate only. Maksu Maz confirms the final fee, which can change with traffic and demand.',eEst:'estimate',eRcpt:'Delivery (est.)',eMapH:'Drag the pin to your exact gate or door. The estimate updates.',eOk:'Confirm location',eOkd:'✓ Location confirmed',eMap:'Open in Google Maps',eMapL:'Map pin',eTotal:'Estimated total',lName:'Name',lPhone:'Phone / WhatsApp',lAddr:'Delivery address',lNotes:'Notes (optional)',pName:'Your name',pAddr:'House number, street, area',pNotes:'Preferred time or special request',go:'Check out',fine:'After checkout, Maksu Maz contacts you on WhatsApp to confirm. We only prepare your order once you agree.',nHome:'Home',nMenu:'Menu',nOrder:'Order',nChat:'Chat',rcpt:'ORDER RECEIPT',print:'Print',wa:'Send to WhatsApp',close:'Close',note:'Note',rnH:'Order not confirmed yet.',rnB:'Tap Send to WhatsApp so Maksu Maz receives your order. Maksu Maz will contact you shortly on WhatsApp to confirm, and we only start preparing once you agree.',rnD:'The delivery fee will be confirmed then too.',each:'each',added:'Added to your order',empty:'Your order is empty. Add something from the menu.',emptyTitle:'Your order is empty',emptySub:'Choose your favourite roti from our menu to get started.',browseMenu:'Browse menu',viewOrder:'View order',items:'items',item:'item',stepDetails:'Continue to Details',stepBack:'Back to items',custDetails:'Customer Details',addToOrder:'Add to order',pmFreezer:'Freezer-ready',pmFry:'Ready in minutes',pmHandmade:'Handmade daily',none:'Nothing here yet. Try another tab.',g_roti:'Best seller',g_beef:'Family favourite',g_bundle:'Save RM1',g_cookies:'New',d_roti:'5 pieces per pack. Flaky, buttery and freezer-ready.',d_beef:'2 pieces per pack. Loaded with seasoned aromatic chinese minced beef. Delicious by itself or with gravy.',d_bundle:'6 Beef packs + 2 Plain packs (RM100 value). Complete family stock-up for only RM99!',d_cookies:"Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. Dah rasa satu, mesti nak lagi!",pmCookies1:"Premium ingredients",pmCookies2:"Freshly baked to order",waH:'Hi Jar&Maz Homemade! Here is my order',wName:'Name',wPhone:'Phone',wFul:'Fulfilment',wAddr:'Address',wNotes:'Notes',waF:'Please confirm my order. Thank you!',greet:'Hello! I’m the Roti Helper AI. Ask me about our menu, prices, delivery or how to cook your roti.',typing:'Typing...',typingSlow:'Waking up helper (may take ~15s on first load)...',chPh:'Ask about our roti...',chNo:'Sorry, I could not answer that. Please message us on WhatsApp.',chErr:'Our helper is unavailable right now. Please message us on WhatsApp at +6019-278 8617.',fbCardT:"Help our family grow with your honest feedback",fbCardS:"Tried our frozen roti canai? Tell us what you loved and where we can improve. Your honest feedback and critical criticism help our family serve you better.",fbCardBtn:"Share Feedback →",rcptFb:"💌 Have feedback? Help our family improve →",annBadge:"NEW",annCardTitle:"Official Main Website",annCardLive:"LIVE ●",annCardSub:"https://jarmazhomemade.com/",annFeat1:"Fresh Roti",annFeat2:"Direct Order",annFeat3:"Auto Delivery",annCardBtn:"jarmazhomemade.com",annTitle:"We Have Moved to Our New Website!",annDesc:"Our official website is now permanently active at <b>jarmazhomemade.com</b>. Enjoy seamless online ordering, automated delivery fee calculations, and our latest deals!",annBtn:"Go to jarmazhomemade.com →",annStay:"Stay on this page (Archive site)",annBarText:"We have moved to our official main website: <b>jarmazhomemade.com</b>",annBarBtn:"Visit New Site →",annBadgeMain:"OFFICIAL",annBarTextMain:"✨ We have moved! This is our official main website: <b>jarmazhomemade.com</b>",annBarBtnMain:"Order Now ↓"},
-ms:{heroBadge:'✨ Dapur Paksu Jar & Maksu Maz',dpBadge:'🛵 PENGHANTARAN PERCUMA',phFreePromo:'terus ke pintu rumah jika alamat anda di Putra Heights',eFree:'PERCUMA (RM0.00)',ePhBadge:'Putra Heights (PERCUMA)',ePhPromo:'🎉 Penghantaran percuma terus ke pintu rumah jika alamat anda di Putra Heights!',ePhNote:'Promosi istimewa: Penghantaran terus ke pintu rumah di Putra Heights adalah 100% PERCUMA!',eRcptFree:'Penghantaran (Putra Heights - PERCUMA)',rnD_free:'Penghantaran percuma terus ke pintu rumah untuk Putra Heights! Maksu Maz akan menghubungi anda untuk pengesahan masa.',hero:'Garing di luar, gebu di dalam.',heroP:'Disediakan oleh Dapur Paksu Jar & Maksu Maz dan dibekukan segar untuk freezer anda. Siap untuk dimakan hanya dalam beberapa minit!',order:'Tempah sekarang',tAll:'Semua',tRoti:'Roti canai',tBun:'Bundle',tCookies:'Biskut',tFav:'♥ Kegemaran',s1:'Simpan beku',s1d:'Simpan pek dalam freezer sehingga anda teringin.',s2:'Siap untuk dimakan hanya dalam beberapa minit',s2d:'Panfry atau airfry tanpa minyak. Garing di luar, gebu di dalam.',s3:'Hidang dengan kuah pilihan anda',s3d:'Enak dicicah kuah kegemaran anda atau dimakan begitu sahaja.',fbT:'Ikuti laman Facebook rasmi kami',fbS:'Frozen Roti Canai by Paksu Jar',chT:'Sembang dengan Roti Helper AI',chTitle:'Roti Helper AI',qCook:'🔥 Cara panaskan roti',qBeef:'🥩 Info Roti Daging',qDel:'🚚 Penghantaran & pickup',qMenu:'💰 Harga & bundle',chS:'Tanya tentang menu, penghantaran atau cara memasak.',tag:'Roti canai frozen, dibuat dengan tangan',my:'Pesanan saya',mPick:'Self pick up',mDel:'Penghantaran',sub:'Jumlah kecil',del:'Penghantaran',total:'Jumlah',feeP:'Tiada (Self pick up: Putra Heights 47650)',feeD:'Putra Heights (PERCUMA) · Lembah Klang (oleh Paksu Jar) · Luar Kawasan (Ninja Van)',zKV:'🛵 Lembah Klang (KV)',zNKV:'❄️ Luar Lembah Klang (Ninja Van)',eNinja:'Ninja Van Cold Chain (Penghantaran Beku)',eNinjaStd:'Ninja Van Biasa (Drop-off)',eNinjaSep:'Penghantaran Berasingan Ninja Van (2 Bungkusan)',eNinjaColdParcel:'Bungkusan 1: Produk Beku (Cold Chain)',eNinjaStdParcel:'Bungkusan 2: Biskut Kering (Drop-off Biasa)',eCold:'Beku',eDry:'Kering',eParcelSub:'Jumlah bungkusan',eTwoParcels:'2 Bungkusan',eNkvDest:'Destinasi: Luar Lembah Klang (NKV)',eWeight:'Jumlah berat',eTier:'Kategori berat',eBaseRate:'Kadar walk-in asas (tanpa SST)',eSst:'SST (6%)',eNinjaNote:'Anggaran kos penghantaran beku Ninja Van. Maksu Maz akan membuat pengesahan akhir dengan Ninja Van selepas tempahan dihantar.',eNinjaStdNote:'Kadar asas bungkusan Ninja Van West Malaysia (Drop-off) untuk biskut. Maksu Maz akan drop off bungkusan di Ninja Van untuk penghantaran terus.',eNinjaSepNote:'Penghantaran berasingan: Produk beku dihantar dalam kotak berinsulasi melalui Ninja Van Cold Chain, manakala biskut kering di-drop off melalui Ninja Van Biasa. Anda akan menerima 2 no. tracking.',eNinjaConfirm:'Akan disahkan dengan Ninja Van',eHintNkv:'Anggaran kadar sejuk beku berasaskan berat untuk luar Lembah Klang.',eRcptNkv:'Penghantaran (Ninja Van Cold Chain)',eRcptNkvStd:'Penghantaran (Ninja Van Biasa)',eRcptNkvSep:'Penghantaran (2 Bungkusan: Cold Chain + Drop-off Biasa)',rnD_nkv:'Pesanan luar Lembah Klang menggunakan servis penghantaran beku Ninja Van. Maksu Maz akan membuat pengesahan akhir kos dan jadual dengan Ninja Van.',rnD_nkvStd:'Pesanan biskut luar Lembah Klang menggunakan servis Ninja Van biasa (Drop-off). Maksu Maz akan drop off bungkusan anda di Ninja Van dan berikan no. tracking.',rnD_nkvSep:'Pesanan campuran luar Lembah Klang dihantar berasingan: produk beku melalui Ninja Van Cold Chain dan biskut kering melalui Ninja Van Biasa (Drop-off). Maksu Maz akan berikan 2 no. tracking.',eT:'Anggaran kos penghantaran',eGo:'Kira',eHint:'Masukkan alamat anda, kemudian tekan Kira.',eBusy:'Mencari alamat anda…',eErr:'Alamat tidak dijumpai. Tambah kawasan atau poskod, atau Maksu Maz akan sahkan caj.',eMoto:'Motosikal',eUpTo:'sehingga',eShow:'Tunjuk formula',eHide:'Sembunyi formula',eFx:'Caj asas + (Kadar sekilometer × Jarak)',eBase:'Caj asas',eRate:'Kadar sekilometer',eDist:'Jarak',eCh:'Caj jarak',eTot:'Anggaran',eNote:'Anggaran sahaja. Maksu Maz akan sahkan caj akhir, yang boleh berubah mengikut trafik dan permintaan.',eEst:'anggaran',eRcpt:'Penghantaran (ang.)',eMapH:'Seret pin ke lokasi tepat pagar atau pintu anda. Anggaran akan dikemas kini.',eOk:'Sahkan lokasi',eOkd:'✓ Lokasi disahkan',eMap:'Buka di Google Maps',eMapL:'Pin peta',eTotal:'Anggaran jumlah',lName:'Nama',lPhone:'Telefon / WhatsApp',lAddr:'Alamat penghantaran',lNotes:'Nota (tidak wajib)',pName:'Nama anda',pAddr:'No. rumah, jalan, kawasan',pNotes:'Masa pilihan atau permintaan khas',go:'Checkout',fine:'Selepas checkout, Maksu Maz akan hubungi anda di WhatsApp untuk pengesahan. Pesanan hanya disediakan selepas anda bersetuju.',nHome:'Utama',nMenu:'Menu',nOrder:'Pesanan',nChat:'Sembang',rcpt:'RESIT PESANAN',print:'Cetak',wa:'Hantar ke WhatsApp',close:'Tutup',note:'Nota',rnH:'Pesanan belum disahkan.',rnB:'Tekan Hantar ke WhatsApp supaya Maksu Maz menerima pesanan anda. Maksu Maz akan menghubungi anda tidak lama lagi di WhatsApp untuk pengesahan, dan kami hanya mula menyediakan selepas anda bersetuju.',rnD:'Caj penghantaran akan dimaklumkan ketika itu juga.',each:'setiap satu',added:'Ditambah ke pesanan',empty:'Pesanan anda kosong. Tambah sesuatu dari menu.',emptyTitle:'Pesanan anda kosong',emptySub:'Pilih roti canai kegemaran dari menu kami untuk mula memesan.',browseMenu:'Lihat menu',viewOrder:'Lihat pesanan',items:'item',item:'item',stepDetails:'Teruskan ke Maklumat',stepBack:'Kembali ke pesanan',custDetails:'Maklumat Pelanggan',addToOrder:'Tambah ke pesanan',pmFreezer:'Sedia untuk freezer',pmFry:'Siap dalam beberapa minit',pmHandmade:'Dibuat setiap hari',none:'Tiada lagi di sini. Cuba tab lain.',g_roti:'Paling laris',g_beef:'Kegemaran keluarga',g_bundle:'Jimat RM1',g_cookies:'Baru',d_roti:'5 keping setiap pek. Berlapis, rangup dan sedia untuk freezer.',d_beef:'2 keping setiap pek. Inti daging berempah yang berperisa. Enak dimakan begitu sahaja atau bersama kuah.',d_bundle:'6 pek Beef + 2 pek Biasa (nilai RM100). Stok lengkap keluarga pada harga RM99 sahaja!',d_cookies:"Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. Dah rasa satu, mesti nak lagi!",pmCookies1:"Bahan premium",pmCookies2:"Freshly baked untuk tempahan",waH:'Hai Jar&Maz Homemade! Ini pesanan saya',wName:'Nama',wPhone:'Telefon',wFul:'Cara terima',wAddr:'Alamat',wNotes:'Nota',waF:'Sila sahkan pesanan saya. Terima kasih!',greet:'Hai! Saya Roti Helper AI. Tanya saya tentang menu, harga, penghantaran atau cara memasak roti anda.',typing:'Menaip...',typingSlow:'Sedang memulakan pembantu (~15 saat untuk mesej pertama)...',chPh:'Tanya tentang roti kami...',chNo:'Maaf, saya tidak dapat menjawab soalan itu. Sila mesej kami di WhatsApp.',chErr:'Pembantu kami tidak tersedia sekarang. Sila mesej kami di WhatsApp di +6019-278 8617.',fbCardT:"Bantu keluarga kami berkembang dengan maklum balas jujur anda",fbCardS:"Sudah mencuba roti canai frozen kami? Beritahu kami apa yang anda suka dan apa yang boleh diperbaiki. Maklum balas jujur dan kritikan anda amat membantu kami.",fbCardBtn:"Beri Maklum Balas →",rcptFb:"💌 Ada maklum balas? Bantu kami tambah baik →",annBadge:"PENTING",annCardTitle:"Laman Web Rasmi Utama",annCardLive:"AKTIF ●",annCardSub:"https://jarmazhomemade.com/",annFeat1:"Roti Segar",annFeat2:"Tempah Mudah",annFeat3:"Kira Hantar",annCardBtn:"jarmazhomemade.com",annTitle:"Kami Dah Pindah ke Website Baru!",annDesc:"Laman web rasmi Jar&Maz kini beroperasi sepenuhnya di <b>jarmazhomemade.com</b>. Nikmati tempahan online lebih lancar, kiraan kos penghantaran automatik, dan promosi terkini!",annBtn:"Pergi ke jarmazhomemade.com →",annStay:"Kekal di laman ini (Laman arkib)",annBarText:"Kami telah berpindah ke laman web rasmi utama: <b>jarmazhomemade.com</b>",annBarBtn:"Buka Laman Baru →",annBadgeMain:"RASMI",annBarTextMain:"✨ Kami telah berpindah! Ini adalah laman web rasmi utama kami: <b>jarmazhomemade.com</b>",annBarBtnMain:"Pesan Sekarang ↓"},};
+const L={en:{heroBadge:"✨ Dapur Paksu Jar & Maksu Maz",dpBadge:"🛵 FREE DELIVERY",phFreePromo:"to your doorstep if your address is in Putra Heights",eFree:"FREE (RM0.00)",ePhBadge:"Putra Heights (FREE)",ePhPromo:"🎉 Free delivery to your doorstep if your address is in Putra Heights!",ePhNote:"Special promotion: Delivery to your doorstep in Putra Heights is 100% FREE!",eRcptFree:"Delivery (Putra Heights - FREE)",rnD_free:"Free delivery to your doorstep for Putra Heights! Maksu Maz will contact you shortly to confirm timing.",hero:'Garing di luar, gebu di dalam.',heroP:"Made by Dapur Paksu Jar & Maksu Maz and frozen fresh for your freezer. Ready to eat in minutes!",order:'Order now',tAll:'All',tRoti:'Roti canai',tBun:'Bundles',tCookies:'Cookies',tFav:'♥ Favourites',s1:'Keep it frozen',s1d:"Store in freezer until ready. No thawing needed.",s2:'Ready to eat in minutes',s2d:'Panfry or airfry without oil. Crispy on the outside, fluffy on the inside.',s3:'Serve with gravy of your choice',s3d:'Delicious with gravy of your choice, sambal or by itself.',fbT:'Follow our official Facebook page',fbS:'Frozen Roti Canai by Paksu Jar',chT:'Chat with Roti Helper AI',chTitle:'Roti Helper AI',qCook:'🔥 How to cook / heat?',qBeef:'🥩 About Beef Roti',qDel:'🚚 Delivery & pickup',qMenu:'💰 Prices & bundle',chS:'Ask about the menu, delivery or cooking.',tag:'Frozen roti canai, made by hand',my:'My order',mPick:'Self pickup',mPickBadge:'FREE',tipPickupTitle:'Want to save on delivery?',tipPickupDesc:'Choose Self pickup in Putra Heights (47650) to remove delivery costs completely (RM0.00)!',tipSwitch:'Switch to Free Self-Pickup',mDel:'Delivery',sub:'Subtotal',del:'Delivery',total:'Total',feeP:'None (Self pickup: Putra Heights 47650 - RM0)',feeD:'Putra Heights (FREE) · Klang Valley (by Paksu Jar) · Outstation (Ninja Van)',zKV:'🛵 Klang Valley (KV)',zNKV:'❄️ Outside KV (Ninja Van)',eNinja:'Ninja Van Cold Chain (Frozen Delivery)',eNinjaStd:'Ninja Van Standard (Drop-off)',eNinjaSep:"Ninja Van Separate Delivery (2 Parcels)",eNinjaColdParcel:"Parcel 1: Frozen Products (Cold Chain)",eNinjaStdParcel:"Parcel 2: Dry Cookies (Standard Drop-off)",eCold:"Cold",eDry:"Dry",eParcelSub:"Parcel total",eTwoParcels:"2 Parcels",eNkvDest:'Destination: Outside Klang Valley (NKV)',eWeight:'Order weight',eTier:'Rate tier',eBaseRate:'Walk-in base rate (excl. SST)',eSst:'SST (6%)',eNinjaNote:'Estimated frozen delivery by Ninja Van. Maksu Maz will confirm final rate & schedule with Ninja Van after order submission.',eNinjaStdNote:'Ninja Van West Malaysia Drop-off basic rate for cookies (ambient). Maksu Maz will drop off your package at Ninja Van for direct delivery to your doorstep.',eNinjaSepNote:'Separate deliveries: Frozen items are dispatched in an insulated cold box via Ninja Van Cold Chain, while dry cookies are dropped off via Ninja Van Standard Delivery. You will receive 2 tracking numbers.',eNinjaConfirm:'Confirmed with Ninja Van',eHintNkv:'Weight-based cold chain estimate for outside Klang Valley.',eRcptNkv:'Delivery (Ninja Van Cold Chain)',eRcptNkvStd:'Delivery (Ninja Van Standard)',eRcptNkvSep:'Delivery (2 Parcels: Cold Chain + Standard Drop-off)',rnD_nkv:'Outside Klang Valley orders use Ninja Van Cold Chain frozen delivery. Maksu Maz will confirm final delivery details with Ninja Van.',rnD_nkvStd:'Outside Klang Valley cookie orders use Ninja Van Standard Delivery (Drop-off). Maksu Maz will drop off your package at Ninja Van and share your tracking number.',rnD_nkvSep:'Mixed orders outside Klang Valley are delivered in 2 separate shipments: frozen items via Ninja Van Cold Chain and dry cookies via Ninja Van Standard Drop-off. Maksu Maz will share tracking numbers for both parcels.',eT:'Estimated delivery cost',eGo:'Calculate',eHint:'Enter your address, then tap Calculate.',eBusy:'Finding your address…',eErr:'Address not found. Add your area or postcode, or Maksu Maz will confirm the fee.',eMoto:'Motorcycle',eUpTo:'up to',eShow:'Show formula',eHide:'Hide formula',eFx:'Base fare + (Rate per km × Distance)',eBase:'Base fare',eRate:'Rate per km',eDist:'Distance',eCh:'Distance charge',eTot:'Estimate',eNote:'Estimate only. Maksu Maz confirms the final fee, which can change with traffic and demand.',eEst:'estimate',eRcpt:'Delivery (est.)',eMapH:'Drag the pin to your exact gate or door. The estimate updates.',eOk:'Confirm location',eOkd:'✓ Location confirmed',eMap:'Open in Google Maps',eMapL:'Map pin',eTotal:'Estimated total',lName:'Name',lPhone:'Phone / WhatsApp',lAddr:'Delivery address',lNotes:'Notes (optional)',pName:'Your name',pAddr:'House number, street, area',pNotes:'Preferred time or special request',go:'Check out',fine:'After checkout, Maksu Maz contacts you on WhatsApp to confirm. We only prepare your order once you agree.',nHome:'Home',nMenu:'Menu',nOrder:'Order',nChat:'Chat',rcpt:'ORDER RECEIPT',print:'Print',wa:'Send to WhatsApp',close:'Close',note:'Note',rnH:'Order not confirmed yet.',rnB:'Tap Send to WhatsApp so Maksu Maz receives your order. Maksu Maz will contact you to confirm timing, and if GrabExpress is selected, she will WhatsApp you an official Grab app screenshot to confirm the live fare before dispatch.',rnD:'The delivery fee will be confirmed then too.',each:'each',added:'Added to your order',empty:'Your order is empty. Add something from the menu.',emptyTitle:'Your order is empty',emptySub:'Choose your favourite roti from our menu to get started.',browseMenu:'Browse menu',viewOrder:'View order',items:'items',item:'item',stepDetails:'Continue to Details',stepBack:'Back to items',custDetails:'Customer Details',addToOrder:'Add to order',pmFreezer:'Freezer-ready',pmFry:'Ready in minutes',pmHandmade:'Handmade daily',none:'Nothing here yet. Try another tab.',g_roti:'Best seller',g_beef:'Family favourite',g_bundle:'Save RM1',g_cookies:'New',d_roti:'5 pieces per pack. Flaky, buttery and freezer-ready.',d_beef:'2 pieces per pack. Loaded with seasoned aromatic chinese minced beef. Delicious by itself or with gravy.',d_bundle:'6 Beef packs + 2 Plain packs (RM100 value). Complete family stock-up for only RM99!',d_cookies:"Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. Dah rasa satu, mesti nak lagi!",pmCookies1:"Premium ingredients",pmCookies2:"Freshly baked to order",waH:'Hi Jar&Maz Homemade! Here is my order',wName:'Name',wPhone:'Phone',wFul:'Fulfilment',wAddr:'Address',wNotes:'Notes',waF:'Please confirm my order. Thank you!',greet:'Hello! I’m the Roti Helper AI. Ask me about our menu, prices, delivery or how to cook your roti.',typing:'Typing...',typingSlow:'Waking up helper (may take ~15s on first load)...',chPh:'Ask about our roti...',chNo:'Sorry, I could not answer that. Please message us on WhatsApp.',chErr:'Our helper is unavailable right now. Please message us on WhatsApp at +6019-278 8617.',fbCardT:"Help our family grow with your honest feedback",fbCardS:"Tried our frozen roti canai? Tell us what you loved and where we can improve. Your honest feedback and critical criticism help our family serve you better.",fbCardBtn:"Share Feedback →",rcptFb:"💌 Have feedback? Help our family improve →",annBadge:"NEW",annCardTitle:"Official Main Website",annCardLive:"LIVE ●",annCardSub:"https://jarmazhomemade.com/",annFeat1:"Fresh Roti",annFeat2:"Direct Order",annFeat3:"Auto Delivery",annCardBtn:"jarmazhomemade.com",annTitle:"We Have Moved to Our New Website!",annDesc:"Our official website is now permanently active at <b>jarmazhomemade.com</b>. Enjoy seamless online ordering, automated delivery fee calculations, and our latest deals!",annBtn:"Go to jarmazhomemade.com →",annStay:"Stay on this page (Archive site)",annBarText:"We have moved to our official main website: <b>jarmazhomemade.com</b>",annBarBtn:"Visit New Site →",annBadgeMain:"OFFICIAL",annBarTextMain:"✨ We have moved! This is our official main website: <b>jarmazhomemade.com</b>",annBarBtnMain:"Order Now ↓",optA_title:"Option A: Dapur Paksu Jar",optA_desc:"Personal delivery by Paksu Jar in cooler box. Zero surge pricing (flat rate).",optB_title:"Option B: GrabExpress",optB_desc:"No estimated fare shown to avoid discrepancies. Fare is based 100% on the live Grab app upon dispatch. Maksu Maz will WhatsApp the official Grab booking screenshot for direct, transparent payment.",optB_closed:"🌙 GrabExpress cut-off is 6:00 PM. Please choose Dapur Paksu Jar.",optB_priceText:"Live Grab App Rate",badgeLiveRate:"📱 Live Grab Rate",badgeScreenshot:"🧾 WhatsApp Screenshot",grabSaver:"4-Hour (Saver)",grabInst:"Instant",badgeCheapest:"💰 Cheapest",badgeDirect:"❄️ Cooler Box Care",badgeNoSurge:"✨ Zero Surge (Flat)",badgePeakSurge:"⚡ Peak Surge",badgeGrabClosed:"🌙 Closed >6PM",badgeFast:"⚡ On-Demand",eRcptGrab:"Delivery (GrabExpress: Live App Fare)",eRcptPaksu:"Delivery (Dapur Paksu Jar)",optC_title:"Option C: Book Own Grab / Runner",optC_desc:"Book your own Grab/Lalamove runner to pick up from our house (you can use your own promo vouchers!). For family privacy, Maksu Maz will WhatsApp our full house address once full order payment is confirmed.",optC_priceText:"RM0.00 (Pay to Rider)",badgeZeroFee:"💰 RM0.00 From Us",badgeOwnVoucher:"🏷️ Use Own Vouchers",badgeAddressAfterPay:"🔒 Address After Payment",eRcptSelfGrab:"Delivery (Option C: Book Own Grab/Runner)",selfPickTitle:"Self-Pickup / Book Own Runner (RM0.00)",selfPickDesc:"Location: Putra Heights (47650). For family privacy & security, our full house address will be provided by Maksu Maz via WhatsApp after full order payment is confirmed."},
+ms:{heroBadge:'✨ Dapur Paksu Jar & Maksu Maz',dpBadge:'🛵 PENGHANTARAN PERCUMA',phFreePromo:'terus ke pintu rumah jika alamat anda di Putra Heights',eFree:'PERCUMA (RM0.00)',ePhBadge:'Putra Heights (PERCUMA)',ePhPromo:'🎉 Penghantaran percuma terus ke pintu rumah jika alamat anda di Putra Heights!',ePhNote:'Promosi istimewa: Penghantaran terus ke pintu rumah di Putra Heights adalah 100% PERCUMA!',eRcptFree:'Penghantaran (Putra Heights - PERCUMA)',rnD_free:'Penghantaran percuma terus ke pintu rumah untuk Putra Heights! Maksu Maz akan menghubungi anda untuk pengesahan masa.',hero:'Garing di luar, gebu di dalam.',heroP:'Disediakan oleh Dapur Paksu Jar & Maksu Maz dan dibekukan segar untuk freezer anda. Siap untuk dimakan hanya dalam beberapa minit!',order:'Tempah sekarang',tAll:'Semua',tRoti:'Roti canai',tBun:'Bundle',tCookies:'Biskut',tFav:'♥ Kegemaran',s1:'Simpan beku',s1d:'Simpan pek dalam freezer sehingga anda teringin.',s2:'Siap untuk dimakan hanya dalam beberapa minit',s2d:'Panfry atau airfry tanpa minyak. Garing di luar, gebu di dalam.',s3:'Hidang dengan kuah pilihan anda',s3d:'Enak dicicah kuah kegemaran anda atau dimakan begitu sahaja.',fbT:'Ikuti laman Facebook rasmi kami',fbS:'Frozen Roti Canai by Paksu Jar',chT:'Sembang dengan Roti Helper AI',chTitle:'Roti Helper AI',qCook:'🔥 Cara panaskan roti',qBeef:'🥩 Info Roti Daging',qDel:'🚚 Penghantaran & pickup',qMenu:'💰 Harga & bundle',chS:'Tanya tentang menu, penghantaran atau cara memasak.',tag:'Roti canai frozen, dibuat dengan tangan',my:'Pesanan saya',mPick:'Self pick up',mPickBadge:'PERCUMA',tipPickupTitle:'Ingin jimat kos penghantaran?',tipPickupDesc:'Pilih Ambil Sendiri (Self pickup) di Putra Heights (47650) untuk tiada sebarang caj penghantaran (RM0.00)!',tipSwitch:'Tukar ke Self-Pickup Percuma',mDel:'Penghantaran',sub:'Jumlah kecil',del:'Penghantaran',total:'Jumlah',feeP:'Tiada caj (Self pick up: Putra Heights 47650 - RM0)',feeD:'Putra Heights (PERCUMA) · Lembah Klang (oleh Paksu Jar) · Luar Kawasan (Ninja Van)',zKV:'🛵 Lembah Klang (KV)',zNKV:'❄️ Luar Lembah Klang (Ninja Van)',eNinja:'Ninja Van Cold Chain (Penghantaran Beku)',eNinjaStd:'Ninja Van Biasa (Drop-off)',eNinjaSep:'Penghantaran Berasingan Ninja Van (2 Bungkusan)',eNinjaColdParcel:'Bungkusan 1: Produk Beku (Cold Chain)',eNinjaStdParcel:'Bungkusan 2: Biskut Kering (Drop-off Biasa)',eCold:'Beku',eDry:'Kering',eParcelSub:'Jumlah bungkusan',eTwoParcels:'2 Bungkusan',eNkvDest:'Destinasi: Luar Lembah Klang (NKV)',eWeight:'Jumlah berat',eTier:'Kategori berat',eBaseRate:'Kadar walk-in asas (tanpa SST)',eSst:'SST (6%)',eNinjaNote:'Anggaran kos penghantaran beku Ninja Van. Maksu Maz akan membuat pengesahan akhir dengan Ninja Van selepas tempahan dihantar.',eNinjaStdNote:'Kadar asas bungkusan Ninja Van West Malaysia (Drop-off) untuk biskut. Maksu Maz akan drop off bungkusan di Ninja Van untuk penghantaran terus.',eNinjaSepNote:'Penghantaran berasingan: Produk beku dihantar dalam kotak berinsulasi melalui Ninja Van Cold Chain, manakala biskut kering di-drop off melalui Ninja Van Biasa. Anda akan menerima 2 no. tracking.',eNinjaConfirm:'Akan disahkan dengan Ninja Van',eHintNkv:'Anggaran kadar sejuk beku berasaskan berat untuk luar Lembah Klang.',eRcptNkv:'Penghantaran (Ninja Van Cold Chain)',eRcptNkvStd:'Penghantaran (Ninja Van Biasa)',eRcptNkvSep:'Penghantaran (2 Bungkusan: Cold Chain + Drop-off Biasa)',rnD_nkv:'Pesanan luar Lembah Klang menggunakan servis penghantaran beku Ninja Van. Maksu Maz akan membuat pengesahan akhir kos dan jadual dengan Ninja Van.',rnD_nkvStd:'Pesanan biskut luar Lembah Klang menggunakan servis Ninja Van biasa (Drop-off). Maksu Maz akan drop off bungkusan anda di Ninja Van dan berikan no. tracking.',rnD_nkvSep:'Pesanan campuran luar Lembah Klang dihantar berasingan: produk beku melalui Ninja Van Cold Chain dan biskut kering melalui Ninja Van Biasa (Drop-off). Maksu Maz akan berikan 2 no. tracking.',eT:'Anggaran kos penghantaran',eGo:'Kira',eHint:'Masukkan alamat anda, kemudian tekan Kira.',eBusy:'Mencari alamat anda…',eErr:'Alamat tidak dijumpai. Tambah kawasan atau poskod, atau Maksu Maz akan sahkan caj.',eMoto:'Motosikal',eUpTo:'sehingga',eShow:'Tunjuk formula',eHide:'Sembunyi formula',eFx:'Caj asas + (Kadar sekilometer × Jarak)',eBase:'Caj asas',eRate:'Kadar sekilometer',eDist:'Jarak',eCh:'Caj jarak',eTot:'Anggaran',eNote:'Anggaran sahaja. Maksu Maz akan sahkan caj akhir, yang boleh berubah mengikut trafik dan permintaan.',eEst:'anggaran',eRcpt:'Penghantaran (ang.)',eMapH:'Seret pin ke lokasi tepat pagar atau pintu anda. Anggaran akan dikemas kini.',eOk:'Sahkan lokasi',eOkd:'✓ Lokasi disahkan',eMap:'Buka di Google Maps',eMapL:'Pin peta',eTotal:'Anggaran jumlah',lName:'Nama',lPhone:'Telefon / WhatsApp',lAddr:'Alamat penghantaran',lNotes:'Nota (tidak wajib)',pName:'Nama anda',pAddr:'No. rumah, jalan, kawasan',pNotes:'Masa pilihan atau permintaan khas',go:'Checkout',fine:'Selepas checkout, Maksu Maz akan hubungi anda di WhatsApp untuk pengesahan. Pesanan hanya disediakan selepas anda bersetuju.',nHome:'Utama',nMenu:'Menu',nOrder:'Pesanan',nChat:'Sembang',rcpt:'RESIT PESANAN',print:'Cetak',wa:'Hantar ke WhatsApp',close:'Tutup',note:'Nota',rnH:'Pesanan belum disahkan.',rnB:'Tekan Hantar ke WhatsApp supaya Maksu Maz menerima pesanan anda. Maksu Maz akan hubungi anda untuk pengesahan masa, dan jika GrabExpress dipilih, Maksu Maz akan hantar tangkap layar (screenshot) aplikasi Grab sebenar sebelum penghantaran.',rnD:'Caj penghantaran akan dimaklumkan ketika itu juga.',each:'setiap satu',added:'Ditambah ke pesanan',empty:'Pesanan anda kosong. Tambah sesuatu dari menu.',emptyTitle:'Pesanan anda kosong',emptySub:'Pilih roti canai kegemaran dari menu kami untuk mula memesan.',browseMenu:'Lihat menu',viewOrder:'Lihat pesanan',items:'item',item:'item',stepDetails:'Teruskan ke Maklumat',stepBack:'Kembali ke pesanan',custDetails:'Maklumat Pelanggan',addToOrder:'Tambah ke pesanan',pmFreezer:'Sedia untuk freezer',pmFry:'Siap dalam beberapa minit',pmHandmade:'Dibuat setiap hari',none:'Tiada lagi di sini. Cuba tab lain.',g_roti:'Paling laris',g_beef:'Kegemaran keluarga',g_bundle:'Jimat RM1',g_cookies:'Baru',d_roti:'5 keping setiap pek. Berlapis, rangup dan sedia untuk freezer.',d_beef:'2 keping setiap pek. Inti daging berempah yang berperisa. Enak dimakan begitu sahaja atau bersama kuah.',d_bundle:'6 pek Beef + 2 pek Biasa (nilai RM100). Stok lengkap keluarga pada harga RM99 sahaja!',d_cookies:"Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. Dah rasa satu, mesti nak lagi!",pmCookies1:"Bahan premium",pmCookies2:"Freshly baked untuk tempahan",waH:'Hai Jar&Maz Homemade! Ini pesanan saya',wName:'Nama',wPhone:'Telefon',wFul:'Cara terima',wAddr:'Alamat',wNotes:'Nota',waF:'Sila sahkan pesanan saya. Terima kasih!',greet:'Hai! Saya Roti Helper AI. Tanya saya tentang menu, harga, penghantaran atau cara memasak roti anda.',typing:'Menaip...',typingSlow:'Sedang memulakan pembantu (~15 saat untuk mesej pertama)...',chPh:'Tanya tentang roti kami...',chNo:'Maaf, saya tidak dapat menjawab soalan itu. Sila mesej kami di WhatsApp.',chErr:'Pembantu kami tidak tersedia sekarang. Sila mesej kami di WhatsApp di +6019-278 8617.',fbCardT:"Bantu keluarga kami berkembang dengan maklum balas jujur anda",fbCardS:"Sudah mencuba roti canai frozen kami? Beritahu kami apa yang anda suka dan apa yang boleh diperbaiki. Maklum balas jujur dan kritikan anda amat membantu kami.",fbCardBtn:"Beri Maklum Balas →",rcptFb:"💌 Ada maklum balas? Bantu kami tambah baik →",annBadge:"PENTING",annCardTitle:"Laman Web Rasmi Utama",annCardLive:"AKTIF ●",annCardSub:"https://jarmazhomemade.com/",annFeat1:"Roti Segar",annFeat2:"Tempah Mudah",annFeat3:"Kira Hantar",annCardBtn:"jarmazhomemade.com",annTitle:"Kami Dah Pindah ke Website Baru!",annDesc:"Laman web rasmi Jar&Maz kini beroperasi sepenuhnya di <b>jarmazhomemade.com</b>. Nikmati tempahan online lebih lancar, kiraan kos penghantaran automatik, dan promosi terkini!",annBtn:"Pergi ke jarmazhomemade.com →",annStay:"Kekal di laman ini (Laman arkib)",annBarText:"Kami telah berpindah ke laman web rasmi utama: <b>jarmazhomemade.com</b>",annBarBtn:"Buka Laman Baru →",annBadgeMain:"RASMI",annBarTextMain:"✨ Kami telah berpindah! Ini adalah laman web rasmi utama kami: <b>jarmazhomemade.com</b>",annBarBtnMain:"Pesan Sekarang ↓",optA_title:'Pilihan A: Dapur Paksu Jar',optA_desc:'Dihantar sendiri oleh Paksu Jar dalam cooler box. Kadar tetap tanpa sebarang caj lonjakan puncak.',optB_title:'Pilihan B: GrabExpress',optB_desc:'Tiada anggaran harga dipaparkan bagi mengelakkan kekeliruan. Tambang adalah 100% mengikut aplikasi Grab waktu pesanan dihantar. Maksu Maz akan WhatsApp tangkap layar (screenshot) rasmi Grab untuk bayaran tepat tanpa markup.',optB_closed:'🌙 Servis GrabExpress ditutup selepas 6:00 PM. Sila pilih Dapur Paksu Jar.',optB_priceText:'Ikut Resit Grab App',badgeLiveRate:'📱 Ikut Resit Grab',badgeScreenshot:'🧾 Screenshot WhatsApp',grabSaver:'4-Jam (Saver)',grabInst:'Instant (Segera)',badgeCheapest:'💰 Paling Jimat',badgeDirect:'❄️ Direct Cooler Box',badgeNoSurge:'✨ Tiada Caj Puncak',badgePeakSurge:'⚡ Anggaran Puncak',badgeGrabClosed:'🌙 Tutup >6PM',badgeFast:'⚡ On-Demand',eRcptGrab:'Penghantaran (GrabExpress: Ikut Resit Grab)',eRcptPaksu:'Penghantaran (Dapur Paksu Jar)',optC_title:'Pilihan C: Tempah Grab / Runner Sendiri',optC_desc:'Anda tempah Grab/Lalamove sendiri ke rumah kami (boleh guna voucher/GrabUnlimited sendiri!). Demi keselamatan & privasi keluarga, Maksu Maz akan WhatsApp alamat penuh rumah sebaik sahaja pembayaran penuh pesanan disahkan.',optC_priceText:'RM0.00 (Bayar ke Rider)',badgeZeroFee:'💰 RM0.00 Caj Dari Kami',badgeOwnVoucher:'🏷️ Guna Voucher Sendiri',badgeAddressAfterPay:'🔒 Alamat Selepas Bayaran',eRcptSelfGrab:'Penghantaran (Pilihan C: Tempah Grab Sendiri)',selfPickTitle:'Ambil Sendiri / Tempah Grab Sendiri (RM0.00)',selfPickDesc:'Lokasi: Putra Heights (47650). Demi keselamatan & privasi keluarga, alamat penuh rumah akan diberikan oleh Maksu Maz di WhatsApp selepas pembayaran penuh pesanan disahkan.'},};
 let lang='en';const tr=k=>L[lang][k]??L.en[k]??k;
 function setLang(l){lang=l;try{localStorage.setItem('rotiLang',l)}catch(e){}document.documentElement.lang=l;
 document.querySelectorAll('[data-t]').forEach(e=>e.innerHTML=tr(e.dataset.t));
@@ -612,7 +739,7 @@ d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate
    2. Klang Valley (KV): Local distance-based estimation via Nominatim geocoding + OSRM routing.
    3. Outside Klang Valley (NKV): Ninja Van Cold Chain frozen delivery walk-in rate card by total cart weight + 6% SST.
 */
-var SHOP={lat:2.9985,lng:101.5755},RATE={base:5,perKm:0.50,buf:0.2},dlv=null,estOpen=false,estBusy=false,estErr='',estCache={};
+var SHOP={lat:2.99821,lng:101.56503},RATE={base:5,perKm:0.50,buf:0.2},dlv=null,estOpen=false,estBusy=false,estErr='',estCache={};
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 function isPutraHeights(addr){
   if(!addr)return false;
@@ -635,22 +762,32 @@ function isOutstationAddress(addr){
   }
   return false;
 }
-function calcFreeDelivery(a,p,km){
-  km=km!=null?Math.round(km*10)/10:1.5;
+function calcGrabFares(km){
   return {
-    addr:a,
-    isFree:true,
-    isNKV:false,
-    km:km,
-    lat:p&&p.lat?p.lat:null,
-    lng:p&&p.lng?p.lng:null,
-    ok:true,
-    base:0,
-    perKm:0,
-    dist:0,
-    total:0,
-    high:0,
-    ts:Date.now()
+    isClosed: false
+  };
+}
+function calcFreeDelivery(a,p,km){
+  km = km != null ? Math.round(km * 10) / 10 : 1.5;
+  const grab = calcGrabFares(km);
+  const selCarrier = (dlv && dlv.selectedCarrier) ? dlv.selectedCarrier : 'our';
+  return {
+    addr: a,
+    isFree: true,
+    isNKV: false,
+    km: km,
+    lat: p && p.lat ? p.lat : null,
+    lng: p && p.lng ? p.lng : null,
+    ok: true,
+    base: 0,
+    perKm: 0,
+    dist: 0,
+    ourTotal: 0,
+    grabInfo: grab,
+    selectedCarrier: selCarrier,
+    total: 0,
+    high: 0,
+    ts: Date.now()
   };
 }
 function hasFrozenItems(){
@@ -748,7 +885,42 @@ function calcNinjaVan(w,a,p){
 
 async function geo(q){const p=q.split(',').map(s=>s.trim()).filter(Boolean);for(let i=0;i<Math.min(3,p.length);i++){const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=my&q='+encodeURIComponent(p.slice(i).join(', ')));const j=await r.json();if(j[0])return{lat:+j[0].lat,lng:+j[0].lon};await sleep(1100)}throw new Error('nf')}
 async function road(a){const r=await fetch('https://router.project-osrm.org/route/v1/driving/'+SHOP.lng+','+SHOP.lat+';'+a.lng+','+a.lat+'?overview=false');const j=await r.json();if(!j.routes||!j.routes[0])throw new Error('nr');return j.routes[0].distance/1000}
-function calcEst(km,a,p,ok){km=Math.round(km*10)/10;const d=RATE.perKm*km,t=RATE.base+d;return{addr:a,isFree:false,isNKV:false,km:km,lat:p.lat,lng:p.lng,ok:!!ok,base:RATE.base,perKm:RATE.perKm,dist:d,total:Math.round(t*100)/100,high:Math.round(t*(1+RATE.buf)*100)/100,ts:Date.now()}}
+function calcEst(km,a,p,ok){
+  km=Math.round(km*10)/10;
+  const d=Math.round(RATE.perKm*km*100)/100, t=Math.round((RATE.base+d)*100)/100;
+  const grab=calcGrabFares(km);
+  const selCarrier=(dlv&&dlv.selectedCarrier)?dlv.selectedCarrier:'our';
+  const total=selCarrier==='our'?t:0;
+  return {
+    addr:a,
+    isFree:false,
+    isNKV:false,
+    km:km,
+    lat:p.lat,
+    lng:p.lng,
+    ok:!!ok,
+    base:RATE.base,
+    perKm:RATE.perKm,
+    dist:d,
+    ourTotal:t,
+    grabInfo:grab,
+    selectedCarrier:selCarrier,
+    total:total,
+    high:Math.round(t*(1+RATE.buf)*100)/100,
+    ts:Date.now()
+  };
+}
+function setCarrier(c){
+  if(!dlv)return;
+  dlv.selectedCarrier=c;
+  if(c==='our'){
+    dlv.total=dlv.isFree?0:dlv.ourTotal;
+  }else{
+    dlv.total=0;
+  }
+  renderEst();
+  draw();
+}
 
 async function estimate(){
   const a=$('addr').value.trim();
@@ -817,31 +989,123 @@ async function estimate(){
 }
 function renderEst(){
   const v=$('estV');if(!v)return;
-  const f=$('estF'),b=$('estFx');
+  const f=$('estF'),b=$('estFx'),comp=$('delComp');
   if(estBusy){
     v.textContent='…';
     $('estS').textContent=tr('eBusy');
+    if(comp)comp.classList.add('hide');
   }else if(estErr){
     v.textContent='—';
     $('estS').textContent=tr(estErr);
+    if(comp)comp.classList.add('hide');
   }else if(dlv){
-    if(dlv.isFree){
-      v.innerHTML='<span style="color:#8f4322;background:#fbf0e8;padding:2px 8px;border-radius:6px;font-weight:800;border:1px solid #ebd3c2">🛵 '+tr('eFree')+'</span>';
-      $('estS').textContent=tr('ePhPromo');
-    }else if(dlv.isNKV){
+    if(dlv.isNKV){
+      if(comp)comp.classList.add('hide');
       v.textContent='≈ '+money(dlv.total);
       if(dlv.isSeparate){
         $('estS').textContent=tr('eNinjaSep')+' · '+tr('eCold')+': '+dlv.cold.weight.toFixed(2)+' kg ('+money(dlv.cold.total)+') + '+tr('eDry')+': '+dlv.std.weight.toFixed(2)+' kg ('+money(dlv.std.total)+')';
       }else{
         $('estS').textContent=tr(dlv.carrierKey||'eNinja')+' · '+tr('eWeight')+': '+dlv.weight.toFixed(2)+' kg ('+tr('eTier')+': ≤ '+dlv.chargeableKg+' kg)';
       }
+      if($('pickupTip'))$('pickupTip').classList.remove('hide');
+      if($('tipPickupDesc'))$('tipPickupDesc').textContent=(lang==='ms'?'Jimat ':'Save ')+money(dlv.total)+(lang==='ms'?'! Ambil pesanan sendiri di Putra Heights (47650) secara PERCUMA (RM0.00).':'! Pick up your order yourself in Putra Heights (47650) for FREE (RM0.00).');
     }else{
-      v.textContent='≈ '+money(dlv.total);
-      $('estS').textContent=dlv.km.toFixed(1)+' km · '+tr('eMoto')+' · '+tr('eUpTo')+' '+money(dlv.high);
+      const isFree=dlv.isFree;
+      const ourFare=dlv.ourTotal;
+      const sel=dlv.selectedCarrier||'our';
+      dlv.selectedCarrier=sel;
+      dlv.total=sel==='our'?(isFree?0:ourFare):0;
+
+      if(comp){
+        comp.classList.remove('hide');
+        const grabCardHtml=`
+          <div class="del-card ${sel==='grab'?'active':''}" onclick="setCarrier('grab')">
+            <div class="del-card-top">
+              <div class="del-card-label">
+                <input type="radio" name="carrier_rad" ${sel==='grab'?'checked':''} onclick="event.stopPropagation();setCarrier('grab')">
+                <span class="del-card-name">⚡ ${tr('optB_title')}</span>
+              </div>
+              <div class="del-card-price" style="font-size:13px;font-weight:700;color:var(--or2)">${tr('optB_priceText')}</div>
+            </div>
+            <div class="del-card-meta">
+              <span class="del-badge del-badge-fast">${tr('badgeLiveRate')}</span>
+              <span class="del-badge del-badge-surge">${tr('badgeScreenshot')}</span>
+              <span class="del-card-calc">${lang==='ms'?'Harga semasa Grab app':'Live Grab app rate'}</span>
+            </div>
+            <div class="del-card-desc">${tr('optB_desc')}</div>
+          </div>
+        `;
+
+        const selfGrabCardHtml=`
+          <div class="del-card ${sel==='self_grab'?'active':''}" onclick="setCarrier('self_grab')">
+            <div class="del-card-top">
+              <div class="del-card-label">
+                <input type="radio" name="carrier_rad" ${sel==='self_grab'?'checked':''} onclick="event.stopPropagation();setCarrier('self_grab')">
+                <span class="del-card-name">📦 ${tr('optC_title')}</span>
+              </div>
+              <div class="del-card-price" style="font-size:13px;font-weight:700;color:var(--ok)">${tr('optC_priceText')}</div>
+            </div>
+            <div class="del-card-meta">
+              <span class="del-badge del-badge-best">${tr('badgeZeroFee')}</span>
+              <span class="del-badge del-badge-cool">${tr('badgeOwnVoucher')}</span>
+              <span class="del-badge del-badge-nosurge">${tr('badgeAddressAfterPay')}</span>
+            </div>
+            <div class="del-card-desc">${tr('optC_desc')}</div>
+          </div>
+        `;
+
+        comp.innerHTML=`
+          <div class="del-card ${sel==='our'?'active':''}" onclick="setCarrier('our')">
+            <div class="del-card-top">
+              <div class="del-card-label">
+                <input type="radio" name="carrier_rad" ${sel==='our'?'checked':''} onclick="event.stopPropagation();setCarrier('our')">
+                <span class="del-card-name">🛵 ${tr('optA_title')}</span>
+              </div>
+              <div class="del-card-price">${isFree?tr('eFree'):money(ourFare)}</div>
+            </div>
+            <div class="del-card-meta">
+              <span class="del-badge ${isFree?'del-badge-best':'del-badge-cool'}">${isFree?tr('ePhBadge'):tr('badgeDirect')}</span>
+              <span class="del-badge del-badge-nosurge">${tr('badgeNoSurge')}</span>
+              <span class="del-card-calc">${isFree?'Promo 47650':('Kadar Tetap: RM5 + '+dlv.km.toFixed(0)+'km×'+RATE.perKm.toFixed(2))}</span>
+            </div>
+            <div class="del-card-desc">${tr('optA_desc')}</div>
+          </div>
+
+          ${grabCardHtml}
+
+          ${selfGrabCardHtml}
+        `;
+      }
+
+      if(sel==='grab'){
+        v.innerHTML='<span style="font-size:14px;color:var(--or2);font-weight:700">📱 '+tr('optB_priceText')+'</span>';
+        $('estS').textContent=(lang==='ms'?'GrabExpress · '+dlv.km.toFixed(1)+' km · Resit rasmi dihantar via WhatsApp':'GrabExpress · '+dlv.km.toFixed(1)+' km · Live receipt confirmed via WhatsApp');
+      }else if(sel==='self_grab'){
+        v.innerHTML='<span style="font-size:14px;color:var(--ok);font-weight:700">📦 '+tr('optC_priceText')+'</span>';
+        $('estS').textContent=(lang==='ms'?'Tempah Sendiri · '+dlv.km.toFixed(1)+' km · RM0.00 dari kami · Alamat rumah diberikan selepas bayaran penuh disahkan':'Book Own Grab/Runner · '+dlv.km.toFixed(1)+' km · RM0.00 from us · House address provided after full payment confirmed');
+      }else if(isFree){
+        v.innerHTML='<span style="color:#8f4322;background:#fbf0e8;padding:2px 8px;border-radius:6px;font-weight:800;border:1px solid #ebd3c2">🛵 '+tr('eFree')+'</span>';
+        $('estS').textContent=tr('ePhPromo');
+      }else{
+        v.textContent='≈ '+money(dlv.total);
+        $('estS').textContent=dlv.km.toFixed(1)+' km · Dapur Paksu Jar · '+tr('badgeNoSurge');
+      }
+
+      if($('pickupTip')){
+        if(isFree){
+          $('pickupTip').classList.add('hide');
+        }else{
+          $('pickupTip').classList.remove('hide');
+          if($('tipPickupDesc'))$('tipPickupDesc').textContent=(lang==='ms'?'Jimat ':'Save ')+money(dlv.total)+(lang==='ms'?'! Ambil pesanan sendiri di Putra Heights (47650) secara PERCUMA (RM0.00).':'! Pick up your order yourself in Putra Heights (47650) for FREE (RM0.00).');
+        }
+      }
     }
   }else{
     v.textContent='—';
     $('estS').textContent=tr('eHint');
+    if(comp)comp.classList.add('hide');
+    if($('pickupTip'))$('pickupTip').classList.remove('hide');
+    if($('tipPickupDesc'))$('tipPickupDesc').innerHTML=tr('tipPickupDesc');
   }
   $('estGo').disabled=estBusy;
   $('estM').classList.toggle('hide',!dlv||!dlv.lat);
@@ -856,7 +1120,11 @@ function renderEst(){
   b.setAttribute('aria-expanded',String(estOpen));
   b.textContent=tr(estOpen?'eHide':'eShow');
   if(dlv){
-    if(dlv.isFree){
+    if(dlv.selectedCarrier==='grab'){
+      f.innerHTML='<div class="fx"><span>GrabExpress</span></div><div><span>'+tr('eDist')+'</span><span>'+dlv.km.toFixed(1)+' km</span></div><div><span>'+(lang==='ms'?'Kadar Tambang':'Fare Rate')+'</span><span>'+(lang==='ms'?'Ikut aplikasi Grab (Live)':'As per live Grab app')+'</span></div><div><span>'+(lang==='ms'?'Pengesahan':'Verification')+'</span><span>'+(lang==='ms'?'Screenshot aplikasi Grab via WhatsApp':'Grab app screenshot via WhatsApp')+'</span></div><div class="fx"><span>'+(lang==='ms'?'Jumlah':'Total')+'</span><span>'+(lang==='ms'?'Bayar ikut resit Grab sebenar':'Paid as per live Grab app')+'</span></div><small>'+(lang==='ms'?'Bagi mengelakkan kekeliruan atau harga tidak tepat, tiada anggaran harga dipaparkan di sini. Maksu Maz akan WhatsApp tangkap layar (screenshot) tempahan Grab sebenar untuk pengesahan harga tepat.':'To prevent price discrepancies or false expectations, no estimated fare is displayed here. Maksu Maz will WhatsApp an official GrabExpress booking screenshot to confirm the exact live price.')+'</small>';
+    }else if(dlv.selectedCarrier==='self_grab'){
+      f.innerHTML='<div class="fx"><span>'+tr('optC_title')+'</span><span>RM0.00</span></div><div><span>'+tr('eDist')+'</span><span>'+dlv.km.toFixed(1)+' km</span></div><div><span>'+(lang==='ms'?'Caj Penghantaran Kami':'Seller Delivery Fee')+'</span><span>RM0.00 ('+(lang==='ms'?'Percuma':'Free')+')</span></div><div><span>'+(lang==='ms'?'Kos Runner / Grab':'Runner / Grab Cost')+'</span><span>'+(lang==='ms'?'Dibayar sendiri oleh anda di aplikasi anda':'Paid directly by you in your app')+'</span></div><div><span>'+(lang==='ms'?'Privasi & Keselamatan':'Privacy & Security')+'</span><span>'+(lang==='ms'?'Alamat rumah diberikan selepas bayaran penuh disahkan':'House address given after full payment confirmed')+'</span></div><div class="fx"><span>'+tr('eTot')+'</span><span>RM0.00</span></div><small>'+(lang==='ms'?'Anda uruskan tempahan & pembayaran runner/Grab sendiri mengikut keselesaan anda (boleh guna GrabUnlimited/voucher sendiri). Lokasi di Putra Heights (47650). Demi keselamatan dan privasi keluarga, alamat penuh rumah akan diberikan oleh Maksu Maz di WhatsApp selepas pembayaran penuh pesanan disahkan.':'You manage and pay your runner/Grab booking directly at your convenience (you can use your own GrabUnlimited/vouchers). Location in Putra Heights (47650). For family privacy and safety, full house address will be provided by Maksu Maz via WhatsApp after full payment is confirmed.')+'</small>';
+    }else if(dlv.isFree){
       f.innerHTML='<div class="fx"><span>'+tr('eRcptFree')+'</span><span>'+tr('eFree')+'</span></div><div><span>'+tr('eDist')+'</span><span>'+dlv.km.toFixed(1)+' km</span></div><div><span>'+tr('eBase')+'</span><span>RM0.00 ('+tr('ePhBadge')+')</span></div><div><span>'+tr('eCh')+'</span><span>RM0.00 (Waived)</span></div><div class="fx"><span>'+tr('eTot')+'</span><span>'+tr('eFree')+'</span></div><small>'+tr('ePhNote')+'</small>';
     }else if(dlv.isNKV){
       if(dlv.isSeparate){
@@ -884,14 +1152,28 @@ function renderEst(){
   {
     const st=Object.entries(cart).reduce((s,[id,q])=>s+by(id).price*q,0);
     const wd=dlv&&mode==='Delivery';
-    $('tot').textContent=money(wd?st+dlv.total:st);
-    $('totL').textContent=tr(wd?'eTotal':'total');
+    const isGrab=wd&&dlv.selectedCarrier==='grab';
+    const isSelfGrab=wd&&dlv.selectedCarrier==='self_grab';
+    if(isGrab){
+      $('tot').textContent=money(st)+' '+(lang==='ms'?'+ Resit Grab':'+ Grab Fare');
+      $('totL').textContent=lang==='ms'?'Jumlah (Makanan)':'Total (Food items)';
+    }else if(isSelfGrab){
+      $('tot').textContent=money(st)+' '+(lang==='ms'?'+ Runner Sendiri':'+ Own Runner');
+      $('totL').textContent=lang==='ms'?'Jumlah (Makanan)':'Total (Food items)';
+    }else{
+      $('tot').textContent=money(wd?st+dlv.total:st);
+      $('totL').textContent=tr(wd?'eTotal':'total');
+    }
   }
   if(dlv&&mode==='Delivery'){
-    if(dlv.isFree){
+    if(dlv.selectedCarrier==='grab'){
+      $('dfee').innerHTML='<b style="color:var(--or2);font-size:14px">📱 '+tr('optB_priceText')+'</b><br>'+(lang==='ms'?'Bayar ikut resit Grab sebenar (Maksu Maz WhatsApp screenshot)':'Paid as per live Grab app receipt (WhatsApp screenshot)');
+    }else if(dlv.selectedCarrier==='self_grab'){
+      $('dfee').innerHTML='<b style="color:var(--ok);font-size:14px">📦 '+tr('optC_priceText')+'</b><br>'+(lang==='ms'?'RM0.00 dari kami · Alamat rumah diberikan selepas bayaran penuh disahkan':'RM0.00 from us · House address provided after full payment confirmed');
+    }else if(dlv.isFree){
       $('dfee').innerHTML='<b style="color:#8f4322;font-size:14px">🛵 '+tr('eFree')+'</b><br>Putra Heights';
     }else{
-      $('dfee').innerHTML='<b style="color:var(--or2);font-size:14px">≈ '+money(dlv.total)+'</b> ('+(dlv.isNKV?(dlv.isSeparate?tr('eTwoParcels'):(dlv.isColdChain?'Ninja Van Cold':'Ninja Van Parcel')):tr('eEst'))+')<br>'+tr('feeD');
+      $('dfee').innerHTML='<b style="color:var(--or2);font-size:14px">≈ '+money(dlv.total)+'</b> ('+(dlv.isNKV?(dlv.isSeparate?tr('eTwoParcels'):(dlv.isColdChain?'Ninja Van Cold':'Ninja Van Parcel')):'Paksu Jar')+')<br>'+tr('feeD');
     }
   }else{
     $('dfee').textContent=tr(mode==='Delivery'?'feeD':'feeP');
@@ -938,7 +1220,45 @@ async function movePin(ll){
 }
 $('estOk').onclick=function(){if(dlv){dlv.ok=true;renderEst()}};
 $('estGo').onclick=estimate;$('addr').addEventListener('change',estimate);$('addr').addEventListener('input',()=>{if(dlv){dlv=null;renderEst()}});$('estFx').onclick=()=>{estOpen=!estOpen;renderEst()};
-let saved='en';try{saved=localStorage.getItem('rotiLang')||'en'}catch(e){}setLang(saved==='ms'?'ms':'en');grid(1);
+// --- HAZIM KHALIM SCROLL & MOTION ENGINE ---
+function updateScrollProgress(){
+  const isDesktop=window.innerWidth>=1000;
+  const m=document.querySelector('.main');
+  const doc=document.scrollingElement||document.documentElement||document.body;
+  const el=(isDesktop&&m&&m.scrollHeight>m.clientHeight)?m:doc;
+  const max=el.scrollHeight-el.clientHeight;
+  const p=max>0?(el.scrollTop/max):0;
+  const bar=document.getElementById('scrollProgress');
+  if(bar){bar.style.transform='scaleX('+Math.min(Math.max(p,0),1)+')';}
+}
+
+let _revealObserver=null;
+function initScrollReveal(){
+  const isDesktop=window.innerWidth>=1000;
+  const m=document.querySelector('.main');
+  const scrollRoot=(isDesktop&&m)?m:null;
+  if(_revealObserver){try{_revealObserver.disconnect();}catch(e){}}
+  if('IntersectionObserver' in window){
+    _revealObserver=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-revealed');
+          _revealObserver.unobserve(entry.target);
+        }
+      });
+    },{root:scrollRoot,threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+    document.querySelectorAll('.reveal-on-scroll:not(.is-revealed)').forEach(el=>{_revealObserver.observe(el);});
+  }else{
+    document.querySelectorAll('.reveal-on-scroll').forEach(el=>el.classList.add('is-revealed'));
+  }
+}
+
+window.addEventListener('scroll',updateScrollProgress,{passive:true});
+const _mainBox=document.querySelector('.main');
+if(_mainBox){_mainBox.addEventListener('scroll',updateScrollProgress,{passive:true});}
+window.addEventListener('resize',()=>{updateScrollProgress();initScrollReveal();});
+
+let saved='en';try{saved=localStorage.getItem('rotiLang')||'en'}catch(e){}setLang(saved==='ms'?'ms':'en');grid(1);initScrollReveal();updateScrollProgress();
 function initAnnouncement(){
   const bd=$('annBd');
   const topBar=$('annTopbar');
