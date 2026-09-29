@@ -183,8 +183,14 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    // Try primary model (gemini-2.5-flash), with fallback to gemini-1.5-flash
-    const candidateModels = ["gemini-2.5-flash", "gemini-1.5-flash"];
+    // Try active Gemini models: 3.6-flash (primary, as in backend), 3.8-flash, 3.7-flash, 3.5-flash, 2.5-pro
+    const candidateModels = [
+      "gemini-3.6-flash",
+      "gemini-3.8-flash",
+      "gemini-3.7-flash",
+      "gemini-3.5-flash",
+      "gemini-2.5-pro",
+    ];
     let replyText = "";
 
     for (const model of candidateModels) {
@@ -225,7 +231,14 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (!replyText) {
-      replyText = "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!";
+      // Return 502 so client can seamlessly use local instant answers
+      return new Response(
+        JSON.stringify({
+          error: "All Gemini model generation attempts failed.",
+          reply: "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"
+        }),
+        { status: 502, headers: CORS_HEADERS }
+      );
     }
 
     return new Response(JSON.stringify({ reply: replyText }), {
@@ -236,9 +249,10 @@ export async function onRequestPost({ request, env }) {
     console.error("Chat function error:", err);
     return new Response(
       JSON.stringify({
+        error: "Internal server error",
         reply: "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"
       }),
-      { status: 200, headers: CORS_HEADERS }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }

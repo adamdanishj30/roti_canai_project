@@ -919,6 +919,10 @@ async function askAI(t){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();
     l.remove();
+    if(j.reply&&j.reply.includes('gangguan teknikal')){
+      const ans=getLocalAnswer(t);
+      if(ans){say(ans);return;}
+    }
     say(j.reply||tr('chNo'));
   }catch(x){
     clearTimeout(slowTimer);clearTimeout(abortTimer);
