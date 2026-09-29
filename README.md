@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/32790549/README.md)
 # 🥟 Jar & Maz Homemade (Dapur Paksu Jar & Maksu Maz)
 
 Official web storefront, order management dashboard, and AI customer service assistant for **Jar & Maz Homemade** — a family-run artisanal frozen roti canai and bakery kitchen based in Putra Heights (47650), Subang Jaya, Malaysia.

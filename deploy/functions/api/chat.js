@@ -157,7 +157,7 @@ function getQuickAnswer(msg) {
   const q = (msg || "").toLowerCase().trim();
   const isMs = /masak|panas|goreng|kuali|daging|harga|berapa|hantar|pos|ambil|biskut|kuah|kari|tebar|kreatif|resepi/i.test(q);
 
-  if (/^(hi|hello|hai|test|hey|salam|assalam|pagi|petang|malam)/i.test(q)) {
+  if (/^(hi|hello|hai|test|hey|salam|assalam|pagi|petang|malam)(\s|$|[!?.,])/i.test(q)) {
     return isMs
       ? "Hai! Selamat datang ke Jar & Maz Homemade 😊 Saya Roti Helper AI. Ada apa-apa soalan mengenai menu, harga, cara memasak atau penghantaran roti kami yang boleh saya bantu?"
       : "Hello! Welcome to Jar & Maz Homemade 😊 I am your Roti Helper AI. Feel free to ask me about our menu, pricing, cooking guide, or delivery options. How can I help you today?";
@@ -175,7 +175,7 @@ function getQuickAnswer(msg) {
       : "📋 Jar & Maz Homemade Menu & Pricing:\n1. Frozen Plain Roti Canai (5 pcs) — RM8.00\n2. Frozen Beef Roti Canai (2 pcs) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Plain) — RM99.00 (Save RM1!)\n4. Golden Churn Chocolate Chip Cookies (~350g) — RM38.00\n\n100% FREE delivery within Putra Heights (47650)!";
   }
 
-  if (/deliver|hantar|pos|pickup|ambil|grab|lalamove|putra heights|caj|ongkir|shipping/i.test(q)) {
+  if (/\b(deliver|delivery|hantar|pos|pickup|ambil|grab|lalamove|shipping|ongkir)\b|putra heights/i.test(q)) {
     return isMs
       ? "🚚 Pilihan Penghantaran:\n1. Putra Heights (47650): 100% PERCUMA terus ke pintu rumah oleh Paksu Jar.\n2. Lembah Klang & Shah Alam: Penghantaran terus oleh Paksu Jar dalam cooler box (kadar tetap ikut jarak: RM5 asas + RM0.60/km).\n3. GrabExpress / Runner Sendiri: Pilihan tersedia mengikut kadar rasmi.\n4. Luar Lembah Klang: Ninja Van Cold Chain frozen delivery."
       : "🚚 Delivery Options:\n1. Putra Heights (47650): 100% FREE doorstep delivery by Paksu Jar.\n2. Klang Valley & Shah Alam: Personal cooler box delivery by Paksu Jar (affordable distance rate: RM5 base + RM0.60/km).\n3. GrabExpress / Self Runner: Live app rates or use own vouchers.\n4. Outstation: Ninja Van Cold Chain dedicated frozen delivery.";
@@ -239,7 +239,7 @@ export async function onRequestPost({ request, env }) {
           ],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 400,
+            maxOutputTokens: 300,
             thinkingConfig: {
               thinkingBudget: 0,
             },
