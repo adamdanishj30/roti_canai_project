@@ -153,6 +153,37 @@ export async function onRequestOptions() {
   return new Response(null, { headers: CORS_HEADERS });
 }
 
+function getQuickAnswer(msg) {
+  const q = (msg || "").toLowerCase().trim();
+  const isMs = /masak|panas|goreng|kuali|daging|harga|berapa|hantar|pos|ambil|biskut|kuah|kari|tebar|kreatif|resepi/i.test(q);
+
+  if (/^(hi|hello|hai|test|hey|salam|assalam|pagi|petang|malam)/i.test(q)) {
+    return isMs
+      ? "Hai! Selamat datang ke Jar & Maz Homemade 😊 Saya Roti Helper AI. Ada apa-apa soalan mengenai menu, harga, cara memasak atau penghantaran roti kami yang boleh saya bantu?"
+      : "Hello! Welcome to Jar & Maz Homemade 😊 I am your Roti Helper AI. Feel free to ask me about our menu, pricing, cooking guide, or delivery options. How can I help you today?";
+  }
+
+  if (/cook|heat|fry|airfry|air fryer|kuali|pan|oven|masak|panas|goreng|suhu|garing|lembut|bakar|steamer|kukus|reheat|thaw|nyahbeku|fridge|freezer/i.test(q)) {
+    return isMs
+      ? "🟢 JIKA DAH NYAHBEKU (THAWED):\n• Air Fryer: 170°C selama 3–5 minit (tanpa lapik atas jaring).\n• Kuali: Panaskan tanpa minyak 2–3 minit (balik-balikkan). Roti biasa angkat dan terus tepok mamak style.\n\n🔵 JIKA TERUS DARI FREEZER (BEKU KERAS):\n• Beef Roti (Air Fryer): 165°C selama 5–10 minit supaya inti panas sekata.\n• Roti Biasa: Stim 2–4 minit (paling gebu!), atau Air Fryer 165°C–170°C 5 minit terus tepok mamak style."
+      : "🟢 IF THAWED / CHILLED:\n• Air Fryer: 170°C for 3–5 minutes (on wire rack without lining).\n• Skillet: Pan-fry without oil 2–3 minutes (flip both sides). For plain roti, clap 'tepok mamak style' while hot!\n\n🔵 STRAIGHT FROM FREEZER:\n• Beef Roti (Air Fryer): 165°C for 5–10 minutes to heat the spiced beef filling through.\n• Plain Roti: Steam 2–4 minutes (fluffiest!), or Air Fryer 165°C–170°C for 5 minutes then clap mamak-style.";
+  }
+
+  if (/menu|harga|price|pricing|cost|senarai|berapa/i.test(q)) {
+    return isMs
+      ? "📋 Senarai Harga Jar & Maz Homemade:\n1. Frozen Roti Canai Biasa (5 kpg) — RM8.00\n2. Frozen Beef Roti Canai (2 kpg) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Biasa) — RM99.00 (Jimat RM1!)\n4. Biskut Coklat Cip Golden Churn (~350g) — RM38.00\n\nPenghantaran PERCUMA untuk seluruh kawasan Putra Heights (47650)!"
+      : "📋 Jar & Maz Homemade Menu & Pricing:\n1. Frozen Plain Roti Canai (5 pcs) — RM8.00\n2. Frozen Beef Roti Canai (2 pcs) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Plain) — RM99.00 (Save RM1!)\n4. Golden Churn Chocolate Chip Cookies (~350g) — RM38.00\n\n100% FREE delivery within Putra Heights (47650)!";
+  }
+
+  if (/deliver|hantar|pos|pickup|ambil|grab|lalamove|putra heights|caj|ongkir|shipping/i.test(q)) {
+    return isMs
+      ? "🚚 Pilihan Penghantaran:\n1. Putra Heights (47650): 100% PERCUMA terus ke pintu rumah oleh Paksu Jar.\n2. Lembah Klang & Shah Alam: Penghantaran terus oleh Paksu Jar dalam cooler box (kadar tetap ikut jarak: RM5 asas + RM0.60/km).\n3. GrabExpress / Runner Sendiri: Pilihan tersedia mengikut kadar rasmi.\n4. Luar Lembah Klang: Ninja Van Cold Chain frozen delivery."
+      : "🚚 Delivery Options:\n1. Putra Heights (47650): 100% FREE doorstep delivery by Paksu Jar.\n2. Klang Valley & Shah Alam: Personal cooler box delivery by Paksu Jar (affordable distance rate: RM5 base + RM0.60/km).\n3. GrabExpress / Self Runner: Live app rates or use own vouchers.\n4. Outstation: Ninja Van Cold Chain dedicated frozen delivery.";
+  }
+
+  return null;
+}
+
 export async function onRequestPost({ request, env }) {
   try {
     const apiKey = env.GEMINI_API_KEY;
@@ -183,7 +214,7 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    // Try active Gemini models: 3.6-flash (primary, as in backend), 3.8-flash, 3.7-flash, 3.5-flash, 2.5-pro
+    // Try active Gemini models with fast 4.5s timeout per attempt
     const candidateModels = [
       "gemini-3.6-flash",
       "gemini-3.8-flash",
@@ -208,21 +239,44 @@ export async function onRequestPost({ request, env }) {
           ],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 1024,
+            maxOutputTokens: 400,
+            thinkingConfig: {
+              thinkingBudget: 0,
+            },
           },
         };
 
-        const res = await fetch(geminiUrl, {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
+
+        let res = await fetch(geminiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(geminiPayload),
-        });
+          signal: controller.signal,
+        }).catch(() => null);
 
-        if (res.ok) {
+        clearTimeout(timeoutId);
+
+        // If thinkingConfig returns 400 (unsupported on this model), retry once without it
+        if (res && res.status === 400) {
+          delete geminiPayload.generationConfig.thinkingConfig;
+          const retryController = new AbortController();
+          const retryTimeoutId = setTimeout(() => retryController.abort(), 4500);
+          res = await fetch(geminiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(geminiPayload),
+            signal: retryController.signal,
+          }).catch(() => null);
+          clearTimeout(retryTimeoutId);
+        }
+
+        if (res && res.ok) {
           const data = await res.json();
           replyText = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
           if (replyText) break;
-        } else {
+        } else if (res) {
           console.warn(`Gemini attempt with ${model} returned status ${res.status}`);
         }
       } catch (err) {
@@ -231,14 +285,13 @@ export async function onRequestPost({ request, env }) {
     }
 
     if (!replyText) {
-      // Return 502 so client can seamlessly use local instant answers
-      return new Response(
-        JSON.stringify({
-          error: "All Gemini model generation attempts failed.",
-          reply: "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"
-        }),
-        { status: 502, headers: CORS_HEADERS }
-      );
+      // Use instant quick answer fallback if available
+      const quickAns = getQuickAnswer(userMessage);
+      if (quickAns) {
+        replyText = quickAns;
+      } else {
+        replyText = "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!";
+      }
     }
 
     return new Response(JSON.stringify({ reply: replyText }), {
@@ -247,12 +300,12 @@ export async function onRequestPost({ request, env }) {
     });
   } catch (err) {
     console.error("Chat function error:", err);
+    const quickAns = getQuickAnswer((body && body.message) || "");
     return new Response(
       JSON.stringify({
-        error: "Internal server error",
-        reply: "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"
+        reply: quickAns || "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"
       }),
-      { status: 500, headers: CORS_HEADERS }
+      { status: 200, headers: CORS_HEADERS }
     );
   }
 }
