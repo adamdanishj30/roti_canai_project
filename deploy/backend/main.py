@@ -391,6 +391,18 @@ def health_check():
     return {"status": "ok", "service": "frozen-roti-chatbot", "model": MODEL_NAME}
 
 
+@app.get("/orders")
+def orders_page(request: Request):
+    """
+    Serves the kitchen portal ONLY via your custom domain (orders.jarmazhomemade.com).
+    Direct access via onrender.com is permanently blocked with 404 Not Found.
+    """
+    host = request.headers.get("host", "").lower()
+    if "onrender.com" in host:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
+    return FileResponse(Path(__file__).parent / "orders.html")
+
+
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest, http_request: Request):
     """
