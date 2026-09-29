@@ -5,14 +5,16 @@ FastAPI + Google Gemini (google-genai SDK)
 
 import os
 import time
+import secrets
 import logging
 import threading
 from collections import defaultdict, deque
 from pathlib import Path
 
-from fastapi import FastAPI, HTTPException, Request, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel, Field
 from dotenv import load_dotenv
 
@@ -235,6 +237,88 @@ def check_rate_limit(http_request: Request) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Family Portal Security & Access Control
+# Credentials set via Render environment variables: FAMILY_USERNAME, FAMILY_PASSWORD
+# ---------------------------------------------------------------------------
+
+FAMILY_USERNAME = os.environ.get("FAMILY_USERNAME", "family")
+FAMILY_PASSWORD = os.environ.get("FAMILY_PASSWORD")
+ORDERS_PER_IP_PER_MINUTE = int(os.environ.get("ORDERS_PER_IP_PER_MINUTE", "25"))
+_orders_ip_hits = defaultdict(deque)
+
+basic_security = HTTPBasic(auto_error=False)
+
+
+def check_orders_rate_limit(http_request: Request) -> None:
+    """Raises HTTP 429 if an IP floods /orders (anti-scanning / anti-brute-force)."""
+    now = time.time()
+    ip = _client_ip(http_request)
+
+    with _rate_lock:
+        hits = _orders_ip_hits[ip]
+        while hits and now - hits[0] > 60:
+            hits.popleft()
+
+        if len(hits) >= ORDERS_PER_IP_PER_MINUTE:
+            logger.warning("Orders rate limit exceeded for IP %s", ip)
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail="Too many portal access attempts. Please wait a minute before retrying.",
+            )
+
+        hits.append(now)
+
+        if len(_orders_ip_hits) > 2000:
+            for k in [k for k, v in _orders_ip_hits.items() if not v or now - v[-1] > 60]:
+                del _orders_ip_hits[k]
+
+
+def verify_family_access(
+    http_request: Request,
+    credentials: HTTPBasicCredentials | None = Depends(basic_security),
+) -> str:
+    """
+    Enforces HTTP Basic Authentication at the server level for /orders.
+    Blocks unauthorized internet users, bots, and crawlers from downloading orders.html.
+    """
+    check_orders_rate_limit(http_request)
+
+    if not FAMILY_PASSWORD:
+        logger.error(
+            "FAMILY_PASSWORD environment variable is not configured! "
+            "Blocking /orders to prevent unauthenticated access to family business data."
+        )
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Portal setup pending: Set the FAMILY_PASSWORD environment variable on Render to enable access.",
+        )
+
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required to access Jar & Maz Homemade Family Portal.",
+            headers={"WWW-Authenticate": 'Basic realm="Jar & Maz Homemade Family Portal"'},
+        )
+
+    user_ok = secrets.compare_digest(credentials.username.strip(), FAMILY_USERNAME.strip())
+    pass_ok = secrets.compare_digest(credentials.password, FAMILY_PASSWORD)
+
+    if not (user_ok and pass_ok):
+        logger.warning(
+            "Unauthorized family portal login attempt with username '%s' from IP %s",
+            credentials.username,
+            _client_ip(http_request),
+        )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password.",
+            headers={"WWW-Authenticate": 'Basic realm="Jar & Maz Homemade Family Portal"'},
+        )
+
+    return credentials.username
+
+
+# ---------------------------------------------------------------------------
 # FastAPI app
 # ---------------------------------------------------------------------------
 
@@ -243,6 +327,29 @@ app = FastAPI(
     description="Customer service chatbot backend powered by Gemini",
     version="1.0.0",
 )
+
+# ---------------------------------------------------------------------------
+# HTTP Security Hardening Headers (Defense-in-depth)
+# ---------------------------------------------------------------------------
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Server"] = "protected-service"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=(), payment=()"
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; "
+        "img-src 'self' data: https:; "
+        "frame-ancestors 'none';"
+    )
+    return response
 
 # Public chatbot API: allow all origins, methods, and headers for reliable browser access
 ALLOWED_ORIGINS = [
@@ -282,13 +389,6 @@ class ChatResponse(BaseModel):
 def health_check():
     """Simple health check / uptime endpoint."""
     return {"status": "ok", "service": "frozen-roti-chatbot", "model": MODEL_NAME}
-
-
-@app.get("/orders")
-def orders_page():
-    """Serves the internal family order-tracking app (mom/sis order entry
-    and dad's kitchen view). Protected by Firebase Authentication inside orders.html."""
-    return FileResponse(Path(__file__).parent / "orders.html")
 
 
 @app.post("/chat", response_model=ChatResponse)

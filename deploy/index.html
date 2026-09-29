@@ -843,10 +843,8 @@ if(last.mode==='Delivery'){
 }
 const tx=`${tr('waH')} (${last.no}):\n${ls}\n\n${totalLine}\n${tr('wName')}: ${last.name}\n${tr('wPhone')}: ${last.phone}\n${tr('wFul')}: ${fulText}${last.address?'\n'+tr('wAddr')+': '+last.address+(last.dlv?'\n'+tr('eRcpt')+': '+(isGrab?tr('optB_priceText'):(isSelfGrab?tr('optC_priceText'):(last.dlv.isFree?tr('eFree'):'≈ '+money(last.dlv.total))))+' ('+dlvSummary+')'+(last.dlv.lat?'\n'+tr('eMapL')+': https://www.google.com/maps?q='+last.dlv.lat+','+last.dlv.lng+(last.dlv.ok?' ✓':''):''):''):''}${last.notes?'\n'+tr('wNotes')+': '+last.notes:''}\n\n${tr('waF')}`;
 window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(tx),'_blank','noopener')};
-const API=window.ROTI_CHAT_API_URL||'https://roti-canai-project.onrender.com/chat';
-function pingBackend(){fetch('https://roti-canai-project.onrender.com/').catch(()=>{})}
-pingBackend();
-window.addEventListener('DOMContentLoaded',pingBackend);
+const API=window.ROTI_CHAT_API_URL||'/api/chat';
+function pingBackend(){/* Cloudflare serverless 0ms cold start */}
 function say(t,w){const d=document.createElement('div');d.className='b'+(w==='u'?' u':'');d.textContent=t;$('cm').appendChild(d);$('cm').scrollTop=1e6;return d}
 const Q_TEXTS={cook:{en:'How do I cook or heat the frozen roti canai?',ms:'Bagaimana cara memasak atau panaskan roti canai frozen?'},beef:{en:'Tell me about the Frozen Beef Roti Canai and its filling.',ms:'Boleh terangkan tentang Frozen Beef Roti Canai dan intinya?'},del:{en:'How does delivery and self-pickup work?',ms:'Bagaimana cara penghantaran dan self pick up?'},menu:{en:'What are your menu prices and bundle deals?',ms:'Berapa harga menu dan tawaran bundle?'}};
 function getLocalAnswer(text){
