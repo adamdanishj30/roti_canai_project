@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Only authenticated users with family email addresses are granted access.
+    function isFamilyMember() {
+      return request.auth != null 
+        && request.auth.token.email != null
+        && (
+          request.auth.token.email in [
+            'family@roticanai.com'
+            // Add any other family member emails below:
+            // 'paksujar@roticanai.com',
+            // 'maksumaz@roticanai.com'
+          ] 
+          || request.auth.token.email.matches('.*@roticanai[.]com$')
+        );
+    }
+
+    // 1. Orders Collection: Contains customer names, phone numbers, and addresses.
+    // Strictly restricted to authenticated family members.
+    match /orders/{orderId} {
+      allow read, write: if isFamilyMember();
+    }
+
+    // 2. Inventory Logs Collection: Contains stock recounts and production records.
+    match /inventory_logs/{logId} {
+      allow read, write: if isFamilyMember();
+    }
+
+    // 3. Fallback: Block all other documents by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

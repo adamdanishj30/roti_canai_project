@@ -215,13 +215,15 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    // Try active Gemini models with fast 4.5s timeout per attempt
+    // Try active Gemini models (prioritizing stable Google AI Studio free tier models)
     const candidateModels = [
-      "gemini-3.6-flash",
+      "gemini-2.0-flash",
+      "gemini-1.5-flash",
+      "gemini-2.0-flash-lite",
+      "gemini-2.5-flash",
       "gemini-3.8-flash",
-      "gemini-3.7-flash",
-      "gemini-3.5-flash",
-      "gemini-2.5-pro",
+      "gemini-3.6-flash",
+      "gemini-1.5-pro",
     ];
     let replyText = "";
 
@@ -241,16 +243,13 @@ export async function onRequestPost({ request, env }) {
           generationConfig: {
             temperature: 0.4,
             maxOutputTokens: 300,
-            thinkingConfig: {
-              thinkingBudget: 0,
-            },
           },
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4500);
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-        let res = await fetch(geminiUrl, {
+        const res = await fetch(geminiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(geminiPayload),
@@ -258,20 +257,6 @@ export async function onRequestPost({ request, env }) {
         }).catch(() => null);
 
         clearTimeout(timeoutId);
-
-        // If thinkingConfig returns 400 (unsupported on this model), retry once without it
-        if (res && res.status === 400) {
-          delete geminiPayload.generationConfig.thinkingConfig;
-          const retryController = new AbortController();
-          const retryTimeoutId = setTimeout(() => retryController.abort(), 4500);
-          res = await fetch(geminiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(geminiPayload),
-            signal: retryController.signal,
-          }).catch(() => null);
-          clearTimeout(retryTimeoutId);
-        }
 
         if (res && res.ok) {
           const data = await res.json();

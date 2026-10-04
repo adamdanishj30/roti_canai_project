@@ -923,10 +923,10 @@ textarea{resize:vertical;min-height:50px}
 </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-auth.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-auth.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 
 firebase.initializeApp({apiKey:"AIzaSyAi3neeFwR96ORrWxeRzuWnA7yYFtNl6mU",authDomain:"roti-canai-project.firebaseapp.com",projectId:"roti-canai-project",storageBucket:"roti-canai-project.firebasestorage.app",messagingSenderId:"416380583136",appId:"1:416380583136:web:fdf2c2a8f6e7049273a485"});
@@ -3448,6 +3448,33 @@ if (window.matchMedia) {
   });
 }
 
+/* ── Inactivity Auto-Lock (30 Minutes) ── */
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
+let inactivityTimer = null;
+
+function resetInactivityTimer() {
+  if (inactivityTimer) clearTimeout(inactivityTimer);
+  if (auth && auth.currentUser) {
+    inactivityTimer = setTimeout(async () => {
+      console.warn("Session auto-locked after 30 minutes of inactivity.");
+      try {
+        await auth.signOut();
+        const errEl = document.getElementById("authError");
+        if (errEl) {
+          errEl.textContent = "Session auto-locked after 30 minutes of inactivity. Please sign in again.";
+          errEl.style.display = "block";
+        }
+      } catch (e) {
+        console.error("Auto sign-out error:", e);
+      }
+    }, INACTIVITY_TIMEOUT_MS);
+  }
+}
+
+["mousedown", "keydown", "touchstart", "scroll"].forEach(evt => {
+  window.addEventListener(evt, resetInactivityTimer, { passive: true });
+});
+
 /* ── Auth State Management ── */
 auth.onAuthStateChanged(user => {
   const overlay = document.getElementById("authOverlay");
@@ -3458,10 +3485,12 @@ auth.onAuthStateChanged(user => {
   if (user) {
     overlay.style.display = "none";
     mainApp.style.display = "";
+    resetInactivityTimer();
     updateNotifBtnState();
     startOrdersListener();
     startInventoryListener();
   } else {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
     stopOrdersListener();
     stopInventoryListener();
     mainApp.style.display = "none";

@@ -912,7 +912,11 @@ if(d.mode){mode=d.mode;document.querySelectorAll('.seg [data-mode]').forEach(b=>
 if(d.go==='top'||d.go==='menu')$(d.go).scrollIntoView({behavior:'smooth'});
 if(d.lang)setLang(d.lang);if(d.go==='cart')openP();if(d.go==='chat')toggleChat();});
 $('closeP').onclick=closeP;$('bd').onclick=()=>{closeP();closeR();closeProduct()};
-$('form').onsubmit=e=>{e.preventDefault();const f=Object.fromEntries(new FormData(e.target)),items=Object.entries(cart).map(([id,q])=>({...by(id),q}));if(!items.length)return;
+$('form').onsubmit=async e=>{e.preventDefault();
+if(mode==='Delivery'&&!dlv&&$('addr')&&$('addr').value.trim().length>=5){
+  if(typeof triggerAddrEstimate==='function'){await triggerAddrEstimate(true);}else if(typeof estimate==='function'){await estimate();}
+}
+const f=Object.fromEntries(new FormData(e.target)),items=Object.entries(cart).map(([id,q])=>({...by(id),q}));if(!items.length)return;
 last={...f,mode,items,total:items.reduce((s,i)=>s+i.price*i.q,0),no:'RC-'+Date.now().toString().slice(-6),dlv:mode==='Delivery'?dlv:null};
 const isGrab=last.dlv&&last.dlv.selectedCarrier==='grab';
 const isSelfGrab=last.dlv&&last.dlv.selectedCarrier==='self_grab';
@@ -1301,7 +1305,61 @@ function calcNinjaVan(w,a,p){
   };
 }
 
-async function geo(q){const p=q.split(',').map(s=>s.trim()).filter(Boolean);for(let i=0;i<Math.min(3,p.length);i++){const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=my&q='+encodeURIComponent(p.slice(i).join(', ')));const j=await r.json();if(j[0])return{lat:+j[0].lat,lng:+j[0].lon};await sleep(1100)}throw new Error('nf')}
+function getAddressCandidates(raw){
+  if(!raw)return [];
+  let s=raw.replace(/\([^)]*\)/g,' ').replace(/\[[^\]]*\]/g,' ');
+  const rawLines=s.split(/[\r\n]+/).map(l=>l.trim()).filter(Boolean);
+  const cleanLines=rawLines.filter(line=>{
+    return !/^(masuk|guard|pagar|sebelah|belakang|depan|dekat|opposite|next to|near|behind|beside|tingkat|block|blok|landmark|call rider|hubungi)\b/i.test(line);
+  });
+  const parts=cleanLines.join(', ').split(/[\r\n,]+/).map(p=>p.trim()).filter(Boolean);
+  if(!parts.length)return [raw.trim()];
+
+  const candidates=[];
+  const postcodeMatch=raw.match(/\b\d{5}\b/);
+  const postcode=postcodeMatch?postcodeMatch[0]:'';
+  const cityMatch=parts.find(p=>/\b(subang jaya|shah alam|petaling jaya|pj|puchong|klang|kuala lumpur|kl|putra heights|cyberjaya|putrajaya|cheras|kajang|bangi|seri kembangan|damansara|ampang|selayang|rawang)\b/i.test(p));
+  const city=cityMatch||'';
+
+  const streetPart=parts.find(p=>/\b(jalan|jln|lorong|persiaran|lebuh|usj|ss\s*\d|seksyen|presint)\b/i.test(p))||parts[0];
+
+  if(streetPart){
+    if(city&&streetPart!==city)candidates.push(streetPart+', '+city);
+    candidates.push(streetPart);
+    const streetNoUnit=streetPart.replace(/^(no\.?\s*\d+[a-z]?|\d+[a-z]?)\s*,?\s*/i,'').trim();
+    if(streetNoUnit&&streetNoUnit!==streetPart){
+      if(city)candidates.push(streetNoUnit+', '+city);
+      candidates.push(streetNoUnit);
+    }
+  }
+
+  candidates.push(parts.join(', '));
+
+  if(postcode&&city){
+    candidates.push(postcode+' '+city);
+  }else if(postcode){
+    candidates.push(postcode+', Malaysia');
+  }
+
+  parts.forEach(p=>{
+    if(p.length>=4&&!candidates.includes(p))candidates.push(p);
+  });
+
+  return [...new Set(candidates.filter(c=>c&&c.length>=3))];
+}
+
+async function geo(q){
+  const candidates=getAddressCandidates(q);
+  for(let i=0;i<Math.min(4,candidates.length);i++){
+    try{
+      const r=await fetch('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=my&q='+encodeURIComponent(candidates[i]));
+      const j=await r.json();
+      if(j&&j[0])return{lat:+j[0].lat,lng:+j[0].lon,matched:candidates[i]};
+    }catch(err){}
+    if(i<candidates.length-1)await sleep(600);
+  }
+  throw new Error('nf');
+}
 async function road(a){const r=await fetch('https://router.project-osrm.org/route/v1/driving/'+SHOP.lng+','+SHOP.lat+';'+a.lng+','+a.lat+'?overview=false');const j=await r.json();if(!j.routes||!j.routes[0])throw new Error('nr');return j.routes[0].distance/1000}
 function calcEst(km,a,p,ok){
   km=Math.round(km*10)/10;
@@ -1340,9 +1398,14 @@ function setCarrier(c){
   draw();
 }
 
+let estPending=false;
 async function estimate(){
   const a=$('addr').value.trim();
-  if(a.length<5||estBusy)return;
+  if(a.length<5)return;
+  if(estBusy){
+    estPending=true;
+    return;
+  }
   if(isPutraHeights(a)){
     estBusy=false;estErr='';
     const prevCoord=(dlv&&dlv.lat)?{lat:dlv.lat,lng:dlv.lng}:(estCache[a.toLowerCase()]||null);
@@ -1402,8 +1465,14 @@ async function estimate(){
     }
   }catch(e){
     dlv=null;estErr='eErr';
+  }finally{
+    estBusy=false;
+    renderEst();
+    if(estPending){
+      estPending=false;
+      estimate();
+    }
   }
-  estBusy=false;renderEst();
 }
 function renderEst(){
   const v=$('estV');if(!v)return;
@@ -1636,8 +1705,32 @@ async function movePin(ll){
   }catch(e){}
   estBusy=false;renderEst();
 }
+let addrTimer=null;
+function triggerAddrEstimate(immediate){
+  clearTimeout(addrTimer);
+  const a=$('addr')?$('addr').value.trim():'';
+  if(a.length<5){
+    if(dlv){dlv=null;renderEst();}
+    return Promise.resolve();
+  }
+  if(!dlv&&!estBusy){
+    const v=$('estV');if(v)v.textContent='…';
+    const s=$('estS');if(s)s.textContent=tr('eBusy');
+  }
+  return new Promise(resolve=>{
+    addrTimer=setTimeout(async()=>{
+      await estimate();
+      resolve();
+    },immediate?30:400);
+  });
+}
 $('estOk').onclick=function(){if(dlv){dlv.ok=true;renderEst()}};
-$('estGo').onclick=estimate;$('addr').addEventListener('change',estimate);$('addr').addEventListener('input',()=>{if(dlv){dlv=null;renderEst()}});$('estFx').onclick=()=>{estOpen=!estOpen;renderEst()};
+$('estGo').onclick=()=>triggerAddrEstimate(true);
+$('addr').addEventListener('input',()=>triggerAddrEstimate(false));
+$('addr').addEventListener('paste',()=>setTimeout(()=>triggerAddrEstimate(true),30));
+$('addr').addEventListener('change',()=>triggerAddrEstimate(true));
+$('addr').addEventListener('keydown',e=>{if(e.key==='Enter')setTimeout(()=>triggerAddrEstimate(true),30)});
+$('estFx').onclick=()=>{estOpen=!estOpen;renderEst()};
 let saved='en';try{saved=localStorage.getItem('rotiLang')||'en'}catch(e){}setLang(saved==='ms'?'ms':'en');grid(1);
 function initAnnouncement(){
   const bd=$('annBd');
