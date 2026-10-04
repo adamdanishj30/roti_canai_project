@@ -584,17 +584,11 @@ textarea{resize:vertical;min-height:50px}
     <label>Phone / WhatsApp</label><input type="tel" id="editPhone" placeholder="+601X-XXXXXXX">
     <label>Order Source / Saluran</label>
     <div class="radio-group" id="editSourceGroup"><label class="checked"><input type="radio" name="editSource" value="website" checked> 🌐 Website</label><label><input type="radio" name="editSource" value="direct"> 📞 WhatsApp / Direct</label></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 4px;">
-      <label style="margin:0;">Items</label>
-      <button type="button" class="quick-preset-tag" id="quickEditAniBtn" title="Set discount RM0.50 (-50¢/pack) for all items">⚡ Discount RM0.50</button>
-    </div>
+    <label>Items</label>
     <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="edit" data-item="signature" id="edit-price-pill-signature" title="Tap to change price"><span class="ppb-text">RM8.00</span> <span class="ppb-icon">✏️ Edit</span></button></div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-signature">0</span><button type="button" data-item="signature" data-delta="1" class="edit-stepper">+</button></div></div>
     <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="edit" data-item="beef" id="edit-price-pill-beef" title="Tap to change price"><span class="ppb-text">RM14.00</span> <span class="ppb-icon">✏️ Edit</span></button></div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-beef">0</span><button type="button" data-item="beef" data-delta="1" class="edit-stepper">+</button></div></div>
     <div class="item-row" style="background:color-mix(in srgb,var(--gold) 8%,var(--surface));padding:8px 10px;border-radius:10px;margin:3px 0;"><div><div class="item-name" style="color:var(--gold-deep);font-weight:700;">✨ Family Freezer Bundle</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="edit" data-item="bundle" id="edit-price-pill-bundle" title="Tap to change price"><span class="ppb-text">RM99.00</span> <span class="ppb-icon">✏️ Edit</span></button> <span class="item-subdesc" style="font-size:11.5px;color:var(--text-mute);">- 6 Beef + 2 Plain</span></div></div><div class="stepper"><button type="button" data-item="bundle" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-bundle">0</span><button type="button" data-item="bundle" data-delta="1" class="edit-stepper">+</button></div></div>
     <div class="item-row"><div><div class="item-name">Almond Walnut Chocolate Chip Cookies</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="edit" data-item="cookies" id="edit-price-pill-cookies" title="Tap to change price"><span class="ppb-text">RM38.00</span> <span class="ppb-icon">✏️ Edit</span></button></div></div><div class="stepper"><button type="button" data-item="cookies" data-delta="-1" class="edit-stepper">-</button><span id="edit-qty-cookies">0</span><button type="button" data-item="cookies" data-delta="1" class="edit-stepper">+</button></div></div>
-    <label for="editDiscount">Discount (RM) (optional)</label>
-    <input type="number" id="editDiscount" min="0" step="0.50" inputmode="decimal" placeholder="0.00">
-    <input type="text" id="editDiscountNote" placeholder="Discount note (e.g. Aunty Amah special rate)" style="margin-top:6px;font-size:13px;">
     <label>Fulfilment</label>
     <div class="radio-group" id="editFulfilGroup"><label class="checked"><input type="radio" name="editFulfil" value="pickup" checked> Self pickup</label><label><input type="radio" name="editFulfil" value="delivery"> Delivery</label></div>
     <div id="editAddressField" style="display:none"><label>Delivery address</label><input type="text" id="editAddress" placeholder="Jalan Putra Bahagia..."></div>
@@ -668,37 +662,37 @@ textarea{resize:vertical;min-height:50px}
   <div class="price-sheet-box">
     <div class="price-sheet-head">
       <div>
-        <div class="sheet-title" id="priceSheetTitle">Edit Harga Produk</div>
-        <div class="sheet-subtitle" id="priceSheetSubtitle">Pilih diskaun segera atau masukkan harga khas seunit</div>
+        <div class="sheet-title" id="priceSheetTitle">Edit Product Price</div>
+        <div class="sheet-subtitle" id="priceSheetSubtitle">Select a quick discount or enter a custom unit price</div>
       </div>
-      <button type="button" class="price-sheet-close-btn" id="priceSheetClose" title="Tutup">✕</button>
+      <button type="button" class="price-sheet-close-btn" id="priceSheetClose" title="Close">✕</button>
     </div>
 
     <div class="price-product-card">
       <div class="ppc-name" id="priceSheetProdName">Signature Plain Roti Canai</div>
       <div class="ppc-meta">
-        <span>Harga Asal: <strong id="priceSheetDefaultPrice">RM8.00</strong></span>
-        <span id="priceSheetCurrentTag" class="price-badge-tag">Harga Biasa</span>
+        <span>Original Price: <strong id="priceSheetDefaultPrice">RM8.00</strong></span>
+        <span id="priceSheetCurrentTag" class="price-badge-tag">Standard Price</span>
       </div>
     </div>
 
-    <label style="margin-top:16px;">⚡ Diskaun Segera (1 Tap)</label>
+    <label style="margin-top:16px;">⚡ Quick Discount (1 Tap)</label>
     <div class="price-preset-grid">
       <button type="button" class="price-preset-btn" data-preset="ani" id="presetAniBtn">
         <span class="ppb-title">⚡ Discount RM0.50</span>
         <span class="ppb-sub">-50¢ / pack</span>
       </button>
       <button type="button" class="price-preset-btn" data-preset="amah" id="presetAmahBtn">
-        <span class="ppb-title">⚡ Aunty Amah / Borong</span>
-        <span class="ppb-sub">-RM1.00 / pek</span>
+        <span class="ppb-title">⚡ Bulk / Wholesale</span>
+        <span class="ppb-sub">-RM1.00 / pack</span>
       </button>
       <button type="button" class="price-preset-btn" data-preset="reset" id="presetResetBtn">
-        <span class="ppb-title">↺ Harga Asal</span>
+        <span class="ppb-title">↺ Original Price</span>
         <span class="ppb-sub">Reset default</span>
       </button>
     </div>
 
-    <label for="priceSheetCustomInput" style="margin-top:16px;">Atau Masukkan Harga Seunit (RM)</label>
+    <label for="priceSheetCustomInput" style="margin-top:16px;">Or Enter Unit Price (RM)</label>
     <div class="price-input-wrap">
       <span class="piw-prefix">RM</span>
       <input type="number" id="priceSheetCustomInput" min="0" step="0.10" inputmode="decimal" placeholder="8.00">
@@ -707,12 +701,12 @@ textarea{resize:vertical;min-height:50px}
 
     <label class="price-apply-all-label">
       <input type="checkbox" id="priceSheetApplyAll">
-      <span>Gunakan diskaun per pek ini untuk <strong>semua produk</strong> dalam pesanan ini</span>
+      <span>Apply this per-pack discount to <strong>all products</strong> in this order</span>
     </label>
 
     <div class="sheet-btns" style="margin-top:20px;">
-      <button type="button" class="sheet-cancel" id="priceSheetCancel">Batal</button>
-      <button type="button" class="sheet-confirm ok" id="priceSheetApply">Tetapkan Harga</button>
+      <button type="button" class="sheet-cancel" id="priceSheetCancel">Cancel</button>
+      <button type="button" class="sheet-confirm ok" id="priceSheetApply">Apply Price</button>
     </div>
   </div>
 </div>
@@ -808,10 +802,7 @@ textarea{resize:vertical;min-height:50px}
           <div class="name-suggest" id="nameSuggest"></div>
         </div>
         <label for="custPhone">Phone / WhatsApp</label><input type="tel" id="custPhone" placeholder="+601X-XXXXXXX" required>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 4px;">
-          <label style="margin:0;">Items</label>
-          <button type="button" class="quick-preset-tag" id="quickEntryAniBtn" title="Set discount RM0.50 (-50¢/pack) for all items">⚡ Discount RM0.50</button>
-        </div>
+        <label>Items</label>
         <div class="item-row"><div><div class="item-name">Signature</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="entry" data-item="signature" id="entry-price-pill-signature" title="Tap to change price"><span class="ppb-text">RM8.00</span> <span class="ppb-icon">✏️ Edit</span></button> <span class="item-subdesc" style="font-size:12px;color:var(--text-mute);">- 5 pieces</span></div></div><div class="stepper"><button type="button" data-item="signature" data-delta="-1">-</button><span id="qty-signature">0</span><button type="button" data-item="signature" data-delta="1">+</button></div></div>
         <div class="item-row"><div><div class="item-name">Beef</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="entry" data-item="beef" id="entry-price-pill-beef" title="Tap to change price"><span class="ppb-text">RM14.00</span> <span class="ppb-icon">✏️ Edit</span></button> <span class="item-subdesc" style="font-size:12px;color:var(--text-mute);">- 2 pieces</span></div></div><div class="stepper"><button type="button" data-item="beef" data-delta="-1">-</button><span id="qty-beef">0</span><button type="button" data-item="beef" data-delta="1">+</button></div></div>
         <div class="item-row" style="background:color-mix(in srgb,var(--gold) 8%,var(--surface));padding:10px 12px;border-radius:11px;margin:5px 0;">
@@ -826,19 +817,6 @@ textarea{resize:vertical;min-height:50px}
           </div>
         </div>
         <div class="item-row"><div><div class="item-name">Almond Walnut Chocolate Chip Cookies</div><div class="item-price-row"><button type="button" class="price-pill-btn" data-form="entry" data-item="cookies" id="entry-price-pill-cookies" title="Tap to change price"><span class="ppb-text">RM38.00</span> <span class="ppb-icon">✏️ Edit</span></button> <span class="item-subdesc" style="font-size:12px;color:var(--text-mute);">- 1 bekas</span></div></div><div class="stepper"><button type="button" data-item="cookies" data-delta="-1">-</button><span id="qty-cookies">0</span><button type="button" data-item="cookies" data-delta="1">+</button></div></div>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 5px;">
-          <label for="orderDiscount" style="margin:0">Discount (RM) (optional)</label>
-          <span style="font-size:11.5px;color:var(--text-mute);">e.g. RM1 bundle / special rate</span>
-        </div>
-        <input type="number" id="orderDiscount" min="0" step="0.50" inputmode="decimal" placeholder="0.00">
-        <div class="discount-quick-chips">
-          <button type="button" class="disc-chip" data-disc="1">-RM1 (Bundle)</button>
-          <button type="button" class="disc-chip" data-disc="5">-RM5</button>
-          <button type="button" class="disc-chip" data-disc="10">-RM10</button>
-          <button type="button" class="disc-chip" id="clearDiscBtn" style="display:none;color:var(--accent);">Clear</button>
-        </div>
-        <input type="text" id="discountNote" placeholder="Discount note (e.g. Aunty Amah RM7/pek special rate)" style="margin-top:6px;font-size:13px;">
 
         <label>Fulfilment</label>
         <div class="radio-group" id="fulfilGroup"><label class="checked"><input type="radio" name="fulfil" value="pickup" checked> Self pickup</label><label><input type="radio" name="fulfil" value="delivery"> Delivery</label></div>
@@ -1521,8 +1499,8 @@ function updateKitchenSummary(orders) {
 /* ── Entry form ── */
 document.querySelectorAll("#orderForm .stepper button").forEach(btn=>{btn.addEventListener("click",()=>{qty[btn.dataset.item]=Math.max(0,qty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("qty-"+btn.dataset.item).textContent=qty[btn.dataset.item];updateTotal();});});
 function getDeliveryCost(){const value=Number(document.getElementById("deliveryCost").value);return Number.isFinite(value)&&value>0?value:0;}
-function getDiscount(){const el=document.getElementById("orderDiscount");const value=el?Number(el.value):0;return Number.isFinite(value)&&value>0?value:0;}
-function getEditDiscount(){const el=document.getElementById("editDiscount");const value=el?Number(el.value):0;return Number.isFinite(value)&&value>0?value:0;}
+function getDiscount(){return 0;}
+function getEditDiscount(){return 0;}
 
 /* ── Price Configuration & Presets ── */
 function updatePricePill(form, itemId){
@@ -1548,31 +1526,6 @@ function updatePricePill(form, itemId){
 
 function updateAllPricePills(form){
   Object.keys(PRICES).forEach(id => updatePricePill(form, id));
-  const prices = form === "entry" ? itemPrices : editItemPrices;
-  const isAniActive = (prices.signature === 7.50 && prices.beef === 13.50);
-  const aniBtn = document.getElementById(form === "entry" ? "quickEntryAniBtn" : "quickEditAniBtn");
-  if(aniBtn){
-    aniBtn.classList.toggle("active", isAniActive);
-    aniBtn.textContent = isAniActive ? "✨ Discount RM0.50 (Aktif)" : "⚡ Discount RM0.50";
-  }
-}
-
-function toggleAniPreset(form){
-  const prices = form === "entry" ? itemPrices : editItemPrices;
-  const isAniActive = (prices.signature === 7.50 && prices.beef === 13.50);
-  if(isAniActive){
-    prices.signature = PRICES.signature.price;
-    prices.beef = PRICES.beef.price;
-    prices.bundle = PRICES.bundle.price;
-    prices.cookies = PRICES.cookies.price;
-  } else {
-    prices.signature = Math.max(0, PRICES.signature.price - 0.50);
-    prices.beef = Math.max(0, PRICES.beef.price - 0.50);
-    prices.bundle = Math.max(0, PRICES.bundle.price - 0.50);
-    prices.cookies = Math.max(0, PRICES.cookies.price - 0.50);
-  }
-  updateAllPricePills(form);
-  if(form === "entry") updateTotal(); else updateEditTotal();
 }
 
 function openPriceSheet(form, itemId){
@@ -1582,7 +1535,7 @@ function openPriceSheet(form, itemId){
   const prices = form === "entry" ? itemPrices : editItemPrices;
   const curPrice = prices[itemId] !== undefined ? prices[itemId] : prod.price;
 
-  document.getElementById("priceSheetTitle").textContent = "Edit Harga: " + prod.name;
+  document.getElementById("priceSheetTitle").textContent = "Edit Price: " + prod.name;
   document.getElementById("priceSheetProdName").textContent = prod.name;
   document.getElementById("priceSheetDefaultPrice").textContent = "RM" + prod.price.toFixed(2);
   
@@ -1611,7 +1564,7 @@ function updatePriceSavingsInfo(){
   
   const val = Number(document.getElementById("priceSheetCustomInput").value);
   if(!Number.isFinite(val) || val < 0){
-    infoEl.textContent = "Sila masukkan nilai harga yang sah";
+    infoEl.textContent = "Please enter a valid price";
     infoEl.className = "price-savings-info";
     return;
   }
@@ -1619,17 +1572,17 @@ function updatePriceSavingsInfo(){
   if(diff < 0){
     const pct = ((Math.abs(diff) / prod.price) * 100).toFixed(1);
     const saveStr = Math.abs(diff) < 1 ? Math.round(Math.abs(diff) * 100) + "¢" : "RM" + Math.abs(diff).toFixed(2);
-    infoEl.textContent = `🏷️ Jimat ${saveStr} per pek (-${pct}%)`;
+    infoEl.textContent = `🏷️ Save ${saveStr} per pack (-${pct}%)`;
     infoEl.className = "price-savings-info positive";
-    if(tagEl){ tagEl.textContent = `Jimat ${saveStr}`; tagEl.className = "price-badge-tag customized"; }
+    if(tagEl){ tagEl.textContent = `Save ${saveStr}`; tagEl.className = "price-badge-tag customized"; }
   } else if(diff > 0){
-    infoEl.textContent = `+RM${diff.toFixed(2)} dari harga asal`;
+    infoEl.textContent = `+RM${diff.toFixed(2)} above original price`;
     infoEl.className = "price-savings-info negative";
     if(tagEl){ tagEl.textContent = `+RM${diff.toFixed(2)}`; tagEl.className = "price-badge-tag customized"; }
   } else {
-    infoEl.textContent = "Harga standard asal (tiada diskaun)";
+    infoEl.textContent = "Standard price (no discount)";
     infoEl.className = "price-savings-info";
-    if(tagEl){ tagEl.textContent = "Harga Biasa"; tagEl.className = "price-badge-tag"; }
+    if(tagEl){ tagEl.textContent = "Standard Price"; tagEl.className = "price-badge-tag"; }
   }
 }
 
@@ -1657,7 +1610,7 @@ function applyPriceSheet(){
   if(!prod) return;
   const val = Number(document.getElementById("priceSheetCustomInput").value);
   if(!Number.isFinite(val) || val < 0){
-    alert("Sila masukkan nilai harga yang sah.");
+    alert("Please enter a valid price.");
     return;
   }
   const roundVal = Math.round(val * 100) / 100;
@@ -1694,9 +1647,9 @@ function updateEditTotal(){
     const priceSavings = Math.max(0, defaultSubtotal - subtotal);
     if(disc > 0 || delivery > 0 || priceSavings > 0){
       let parts = ["Subtotal RM" + subtotal.toFixed(2)];
-      if(priceSavings > 0) parts.push("Jimat RM" + priceSavings.toFixed(2) + " (Harga Khas)");
-      if(disc > 0) parts.push("Diskaun -RM" + disc.toFixed(2));
-      if(delivery > 0) parts.push("Hantar +RM" + delivery.toFixed(2));
+      if(priceSavings > 0) parts.push("Save RM" + priceSavings.toFixed(2) + " (Special Rate)");
+      if(disc > 0) parts.push("Discount -RM" + disc.toFixed(2));
+      if(delivery > 0) parts.push("Delivery +RM" + delivery.toFixed(2));
       noteEl.textContent = parts.join(" • ");
       noteEl.style.display = "block";
     }else{
@@ -1720,9 +1673,9 @@ function updateTotal(){
     const priceSavings = Math.max(0, defaultSubtotal - subtotal);
     if(disc > 0 || delivery > 0 || priceSavings > 0){
       let parts = ["Subtotal RM" + subtotal.toFixed(2)];
-      if(priceSavings > 0) parts.push("Jimat RM" + priceSavings.toFixed(2) + " (Harga Khas)");
-      if(disc > 0) parts.push("Diskaun -RM" + disc.toFixed(2));
-      if(delivery > 0) parts.push("Hantar +RM" + delivery.toFixed(2));
+      if(priceSavings > 0) parts.push("Save RM" + priceSavings.toFixed(2) + " (Special Rate)");
+      if(disc > 0) parts.push("Discount -RM" + disc.toFixed(2));
+      if(delivery > 0) parts.push("Delivery +RM" + delivery.toFixed(2));
       noteEl.textContent = parts.join(" • ");
       noteEl.style.display = "block";
     }else{
@@ -1743,10 +1696,6 @@ function resetOrderForm(){
   document.querySelectorAll("#sourceGroup label").forEach((l,i) => l.classList.toggle("checked", i === 0));
   document.getElementById("orderDate").value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
   document.getElementById("pickupTime").value = "";
-  const discEl = document.getElementById("orderDiscount"); if(discEl) discEl.value = "";
-  const discNoteEl = document.getElementById("discountNote"); if(discNoteEl) discNoteEl.value = "";
-  document.querySelectorAll(".disc-chip").forEach(c => c.classList.remove("active"));
-  const clrD = document.getElementById("clearDiscBtn"); if(clrD) clrD.style.display = "none";
   const pasteWrap = document.getElementById("pasteOrderWrap"); if(pasteWrap) pasteWrap.style.display = "none";
   const tBtn = document.getElementById("togglePasteBtn"); if(tBtn) tBtn.textContent = "+ Paste Message";
   updateTotal(); clearError(); closeNameSuggest();
@@ -1756,37 +1705,6 @@ document.getElementById("deliveryCost").addEventListener("input",updateTotal);
 document.querySelectorAll('input[name="payment"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#paymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
 document.querySelectorAll('input[name="orderSource"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#sourceGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
 document.getElementById("clearBtn").addEventListener("click",resetOrderForm);
-
-/* ── Discount quick chips ── */
-document.querySelectorAll(".disc-chip[data-disc]").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    const d=Number(btn.dataset.disc);
-    const inp=document.getElementById("orderDiscount");
-    if(!inp)return;
-    inp.value=d;
-    document.querySelectorAll(".disc-chip").forEach(c=>c.classList.toggle("active",c===btn));
-    const clrD=document.getElementById("clearDiscBtn");if(clrD)clrD.style.display="inline-block";
-    updateTotal();
-  });
-});
-const clrDiscBtn=document.getElementById("clearDiscBtn");
-if(clrDiscBtn){
-  clrDiscBtn.addEventListener("click",()=>{
-    const inp=document.getElementById("orderDiscount");if(inp)inp.value="";
-    document.querySelectorAll(".disc-chip").forEach(c=>c.classList.remove("active"));
-    clrDiscBtn.style.display="none";
-    updateTotal();
-  });
-}
-const orderDiscInput=document.getElementById("orderDiscount");
-if(orderDiscInput){
-  orderDiscInput.addEventListener("input",()=>{
-    const clrD=document.getElementById("clearDiscBtn");
-    if(clrD)clrD.style.display=orderDiscInput.value?"inline-block":"none";
-    document.querySelectorAll(".disc-chip").forEach(c=>c.classList.remove("active"));
-    updateTotal();
-  });
-}
 
 /* ── Quick WhatsApp / Website Order Auto-Fill ── */
 const togglePasteBtn=document.getElementById("togglePasteBtn");
@@ -1951,7 +1869,6 @@ let editOrderId=null,editQty={signature:0,beef:0,bundle:0,cookies:0};
 document.querySelectorAll(".edit-stepper").forEach(btn=>{btn.addEventListener("click",()=>{editQty[btn.dataset.item]=Math.max(0,editQty[btn.dataset.item]+Number(btn.dataset.delta));document.getElementById("edit-qty-"+btn.dataset.item).textContent=editQty[btn.dataset.item];updateEditTotal();});});
 function getEditDeliveryCost(){const v=Number(document.getElementById("editDeliveryCost").value);return Number.isFinite(v)&&v>0?v:0;}
 document.querySelectorAll('input[name="editFulfil"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editFulfilGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));const isD=r.value==="delivery"&&r.checked;document.getElementById("editAddressField").style.display=isD?"block":"none";document.getElementById("editDeliveryCostField").style.display=isD?"block":"none";updateEditTotal();});});
-const edDiscEl=document.getElementById("editDiscount");if(edDiscEl)edDiscEl.addEventListener("input",updateEditTotal);
 const edDlvEl=document.getElementById("editDeliveryCost");if(edDlvEl)edDlvEl.addEventListener("input",updateEditTotal);
 document.querySelectorAll('input[name="editPayment"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editPaymentGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
 document.querySelectorAll('input[name="editSource"]').forEach(r=>{r.addEventListener("change",()=>{document.querySelectorAll("#editSourceGroup label").forEach(l=>l.classList.toggle("checked",l.querySelector("input").checked));});});
@@ -2092,11 +2009,6 @@ document.querySelectorAll(".price-pill-btn").forEach(btn=>{
   });
 });
 
-const qEntryAni=document.getElementById("quickEntryAniBtn");
-if(qEntryAni)qEntryAni.addEventListener("click",()=>toggleAniPreset("entry"));
-const qEditAni=document.getElementById("quickEditAniBtn");
-if(qEditAni)qEditAni.addEventListener("click",()=>toggleAniPreset("edit"));
-
 /* ── Entry list (removed from entry page) ── */
 function renderEntryList(orders){const list=document.getElementById("entryList");if(!list)return;}
 
@@ -2169,7 +2081,7 @@ function renderKanban(orders){
         const srcBadge = isWeb ? '<span class="badge badge-web" title="Website Order">🌐 Web</span>' : '<span class="badge badge-direct" title="WhatsApp / Direct Order">📞 Direct</span>';
         const disc = Number(o.discount) || 0;
         const hasCustomPrice = (o.items||[]).some(i => i.price !== undefined && PRICES[i.id] && Number(i.price) !== PRICES[i.id].price);
-        const customBadge = hasCustomPrice ? '<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;" title="Harga Khas / Diskaun Pek">🏷️ Khas</span>' : '';
+        const customBadge = hasCustomPrice ? '<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;" title="Special Rate / Custom Price">🏷️ Special</span>' : '';
         const discBadge = disc > 0 ? ('<span class="badge badge-discount" title="Discount -RM' + disc + (o.discountNote ? ' (' + esc(o.discountNote) + ')' : '') + '">🏷️ -RM' + disc + '</span>') : '';
         const itemsText = esc(o.items.map(i=>i.qty+"x "+i.name).join(", "));
         return '<div class="k-card'+(isSel?" selected":"")+'" data-id="'+o.id+'">'+
@@ -2678,7 +2590,7 @@ function renderDateGroupsList(scopedOrders) {
       const srcBadge = isWeb ? '<span class="badge badge-web" title="Website Order">🌐 Web</span>' : '<span class="badge badge-direct" title="Direct">📞 Direct</span>';
       const disc = Number(o.discount) || 0;
       const hasCustomPrice = (o.items||[]).some(i => i.price !== undefined && PRICES[i.id] && Number(i.price) !== PRICES[i.id].price);
-      const customBadge = hasCustomPrice ? '<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;" title="Harga Khas / Diskaun Pek">🏷️ Khas</span>' : '';
+      const customBadge = hasCustomPrice ? '<span class="badge" style="background:#fef3c7;color:#92400e;border:1px solid #fde68a;" title="Special Rate / Custom Price">🏷️ Special</span>' : '';
       const discBadge = disc > 0 ? `<span class="badge badge-discount" title="Discount -RM${disc}">🏷️ -RM${disc}</span>` : '';
       const itemsSummary = (o.items || []).map(i => `${i.qty}x ${i.name}`).join(", ");
       const timeStr = o.pickupTime ? fmtPickup(o.pickupTime) : fmtTime(o.createdAt);
