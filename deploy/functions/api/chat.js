@@ -9,7 +9,7 @@ Menu & Weights:
 - Frozen Roti Canai (Signature): RM8 per pack (5 pieces). Weight is approximately 530g per pack.
 - Frozen Beef Roti Canai: RM14 per pack (2 pieces). Inti daging cincang berempah yang berperisa / Seasoned aromatic minced beef. Weight is approximately 300g per pack.
 - Family Freezer Bundle: RM99 per bundle (RM100 normal value, saves RM1). Includes 6 Beef Roti Canai packs (2 pieces each @ RM14) and 2 Plain Roti Canai packs (5 pieces each @ RM8). Total bundle weight is approximately 2.86kg.
-- Chocolate Chip Cookies: RM38 per jar (~350g). Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with almonds and walnuts.
+- Chocolate Chip Cookies: RM38 per jar. Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. 33–36 pieces per jar. Net weight: ~200g–210g per jar (Gross weight with jar: 263g–275g, physical shipping rate uses 0.275kg). Jar dimensions: Diameter 9cm, Height 10.5cm.
 - Wedding & Event Doorgift Cookies: Mini Golden Churn chocolate chip cookies in charming mini jars for weddings, corporate events & aqiqah. Minimum order 100 small jars. Pricing depends on total quantity. Customers should DM Maksu Maz directly on WhatsApp (+60192788617) for quotations.
 
 Cooking & Heating Instructions (#FrozenRotiCanaibyPaksuJar):
@@ -170,10 +170,16 @@ function getQuickAnswer(msg) {
       : "🟢 IF THAWED / CHILLED:\n• Air Fryer: 170°C for 3–5 minutes (on wire rack without lining).\n• Skillet: Pan-fry without oil 2–3 minutes (flip both sides). For plain roti, clap 'tepok mamak style' while hot!\n\n🔵 STRAIGHT FROM FREEZER:\n• Beef Roti (Air Fryer): 165°C for 5–10 minutes to heat the spiced beef filling through.\n• Plain Roti: Steam 2–4 minutes (fluffiest!), or Air Fryer 165°C–170°C for 5 minutes then clap mamak-style.";
   }
 
+  if (/cookie|biskut|choc|chocolate|chip/i.test(q)) {
+    return isMs
+      ? "🍪 BISKUT COKLAT CIP MENTEGA EMAS (Jar & Maz):\n• Harga: RM38.00 sebalang\n• Kuantiti: 33 – 36 keping biskut setiap balang\n• Berat Bersih (Nett): ~200g – 210g satu bekas\n• Berat Kasar (Sekali bekas): 263g – 275g\n• Saiz Balang: Diameter 9cm, Tinggi 10.5cm\n• Diperbuat daripada Mentega Golden Churn asli & cip coklat Beryl's bersama badam & walnut rangup!"
+      : "🍪 GOLDEN CHURN CHOCOLATE CHIP COOKIES (Jar & Maz):\n• Price: RM38.00 per jar\n• Quantity: 33 – 36 pcs cookies in a jar\n• Net Weight: Nett ~200g – 210g per jar\n• Gross Weight (with jar): 263g – 275g\n• Jar Dimensions: Diameter 9cm, Height 10.5cm\n• Premium Ingredients: Pure Golden Churn Butter & Beryl's chocolate chips with crunchy almonds & walnuts!";
+  }
+
   if (/menu|harga|price|pricing|cost|senarai|berapa/i.test(q)) {
     return isMs
-      ? "📋 Senarai Harga Jar & Maz Homemade:\n1. Frozen Roti Canai Biasa (5 kpg) — RM8.00\n2. Frozen Beef Roti Canai (2 kpg) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Biasa) — RM99.00 (Jimat RM1!)\n4. Biskut Coklat Cip Golden Churn (~350g) — RM38.00\n\nPenghantaran PERCUMA untuk seluruh kawasan Putra Heights (47650)!"
-      : "📋 Jar & Maz Homemade Menu & Pricing:\n1. Frozen Plain Roti Canai (5 pcs) — RM8.00\n2. Frozen Beef Roti Canai (2 pcs) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Plain) — RM99.00 (Save RM1!)\n4. Golden Churn Chocolate Chip Cookies (~350g) — RM38.00\n\n100% FREE delivery within Putra Heights (47650)!";
+      ? "📋 Senarai Harga Jar & Maz Homemade:\n1. Frozen Roti Canai Biasa (5 kpg) — RM8.00\n2. Frozen Beef Roti Canai (2 kpg) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Biasa) — RM99.00 (Jimat RM1!)\n4. Biskut Coklat Cip Golden Churn (33–36 kpg, Nett ~200g–210g) — RM38.00\n\nPenghantaran PERCUMA untuk seluruh kawasan Putra Heights (47650)!"
+      : "📋 Jar & Maz Homemade Menu & Pricing:\n1. Frozen Plain Roti Canai (5 pcs) — RM8.00\n2. Frozen Beef Roti Canai (2 pcs) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Plain) — RM99.00 (Save RM1!)\n4. Golden Churn Chocolate Chip Cookies (33–36 pcs, Nett ~200g–210g) — RM38.00\n\n100% FREE delivery within Putra Heights (47650)!";
   }
 
   if (/\b(deliver|delivery|hantar|pos|pickup|ambil|grab|lalamove|shipping|ongkir)\b|putra heights/i.test(q)) {
@@ -215,13 +221,15 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    // Try active Gemini models with fast 4.5s timeout per attempt
+    // Try active Gemini models (prioritizing stable Google AI Studio free tier models)
     const candidateModels = [
-      "gemini-3.6-flash",
+      "gemini-2.0-flash",
+      "gemini-1.5-flash",
+      "gemini-2.0-flash-lite",
+      "gemini-2.5-flash",
       "gemini-3.8-flash",
-      "gemini-3.7-flash",
-      "gemini-3.5-flash",
-      "gemini-2.5-pro",
+      "gemini-3.6-flash",
+      "gemini-1.5-pro",
     ];
     let replyText = "";
 
@@ -241,16 +249,13 @@ export async function onRequestPost({ request, env }) {
           generationConfig: {
             temperature: 0.4,
             maxOutputTokens: 300,
-            thinkingConfig: {
-              thinkingBudget: 0,
-            },
           },
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4500);
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-        let res = await fetch(geminiUrl, {
+        const res = await fetch(geminiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(geminiPayload),
@@ -258,20 +263,6 @@ export async function onRequestPost({ request, env }) {
         }).catch(() => null);
 
         clearTimeout(timeoutId);
-
-        // If thinkingConfig returns 400 (unsupported on this model), retry once without it
-        if (res && res.status === 400) {
-          delete geminiPayload.generationConfig.thinkingConfig;
-          const retryController = new AbortController();
-          const retryTimeoutId = setTimeout(() => retryController.abort(), 4500);
-          res = await fetch(geminiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(geminiPayload),
-            signal: retryController.signal,
-          }).catch(() => null);
-          clearTimeout(retryTimeoutId);
-        }
 
         if (res && res.ok) {
           const data = await res.json();
