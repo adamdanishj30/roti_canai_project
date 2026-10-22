@@ -13,7 +13,7 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 2. **Serverless AI Assistant (`functions/api/chat.js`)**: An edge-deployed AI customer service assistant ("Roti Helper AI") powered by Google Gemini, equipped with business rules, cooking instructions, pricing, and delivery logic.
 3. **Kitchen & Orders Portal (`orders.html`)**: Real-time order tracker and fulfillment dashboard for the family kitchen, synchronized via Cloud Firestore (Firebase Auth login).
 4. **Customer Reviews & Testimonials (`feedback.html`)**: Story and customer feedback portal.
-5. **Alternative Python Backend (`deploy/backend/main.py`)**: A production-ready FastAPI backend with Google GenAI SDK, rate limiting, and HTTP Basic Authentication (designed for Render/VPS deployments).
+5. **Alternative Python Backend (`backend/main.py`)**: A production-ready FastAPI backend with Google GenAI SDK, rate limiting, and HTTP Basic Authentication (designed for Render/VPS deployments).
 
 ---
 
@@ -52,34 +52,28 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 
 ## 📁 Repository Structure
 
+> 🤖 **AI assistants / new contributors:** start with [`AGENTS.md`](AGENTS.md) (whole-project guide) and [`docs/index-html.md`](docs/index-html.md) (storefront internals).
+
 ```text
 roti_canai_project/
-├── index.html                  # Main customer-facing storefront and chat interface
-├── orders.html                 # Family kitchen orders and management portal
-├── feedback.html               # Customer review and brand story page
-├── favicon.ico / favicon.png   # Website branding favicons
-├── functions/                  # Cloudflare Pages Functions (Edge API)
-│   └── api/
-│       └── chat.js             # Serverless Gemini AI chatbot endpoint (POST /api/chat)
-├── assets/                     # Media and static assets
-│   ├── logo.jpg                # Jar & Maz brand logo
-│   ├── roti_plain.jpg          # Signature Plain Roti Canai image
-│   ├── hero.jpg                # Storefront hero image
-│   ├── roti_beef.jpg           # Beef Roti Canai image
-│   ├── cookies.jpg / .png      # Golden Churn Cookies imagery
-│   ├── doorgift.jpg            # Wedding doorgift samples
-│   ├── bundle_hero.jpg         # Family bundle promotional graphic
-│   └── qr_code.svg             # Quick-access QR code
-└── deploy/                     # Backend deployment configurations
-    ├── backend/
-    │   ├── main.py             # FastAPI backend (alternative to Cloudflare Functions)
-    │   ├── requirements.txt    # Python dependencies (fastapi, uvicorn, google-genai)
-    │   ├── Procfile            # Render / Railway startup command
-    │   └── orders.html         # Protected portal file for Python backend
-    └── functions/
-        └── api/
-            └── chat.js         # Deployment mirror for edge functions
+├── index.html              # Customer storefront, cart, delivery estimator, chat widget (EN/BM)
+├── orders.html             # Family kitchen & orders portal (Firebase Auth + Firestore)
+├── feedback.html           # Customer reviews & family story page
+├── robots.txt, sitemap.xml # SEO
+├── favicon.ico
+├── functions/api/chat.js   # Cloudflare Pages Function: POST /api/chat -> Gemini
+├── assets/                 # Images, favicons, enhance.js/.css (motion layer)
+├── backend/                # Alternative FastAPI backend (Render) + firestore.rules
+│   ├── main.py, requirements.txt, Procfile, render.yaml
+│   ├── orders.html         # Copy of the portal served by FastAPI (keep in sync with root)
+│   └── firestore.rules     # Firestore security rules (publish via Firebase console)
+├── docs/index-html.md      # Detailed guide to index.html
+├── archive/                # Unused files kept for reference (see archive/README.md)
+├── AGENTS.md               # Project guide for AI tools (CLAUDE.md imports it)
+└── README.md
 ```
+
+> ⚠️ Cloudflare Pages serves the repository root as-is, so every file here is public. Never commit `.env` or other secrets.
 
 ---
 
@@ -93,7 +87,7 @@ Set the following in your **Cloudflare Dashboard > Pages > Settings > Environmen
 | :--- | :--- | :--- |
 | `GEMINI_API_KEY` | Google AI Studio Gemini API Key | **Yes** (for AI chatbot) |
 
-### Alternative FastAPI Deployment (`deploy/backend`)
+### Alternative FastAPI Deployment (`backend/`)
 
 If hosting the backend on Render, Railway, or VPS:
 
@@ -136,7 +130,7 @@ npx wrangler pages dev . --binding GEMINI_API_KEY="your_api_key_here"
 If developing or testing the Python backend:
 
 ```bash
-cd deploy/backend
+cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt

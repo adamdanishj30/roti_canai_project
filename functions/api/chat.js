@@ -170,6 +170,12 @@ function getQuickAnswer(msg) {
       : "🟢 IF THAWED / CHILLED:\n• Air Fryer: 170°C for 3–5 minutes (on wire rack without lining).\n• Skillet: Pan-fry without oil 2–3 minutes (flip both sides). For plain roti, clap 'tepok mamak style' while hot!\n\n🔵 STRAIGHT FROM FREEZER:\n• Beef Roti (Air Fryer): 165°C for 5–10 minutes to heat the spiced beef filling through.\n• Plain Roti: Steam 2–4 minutes (fluffiest!), or Air Fryer 165°C–170°C for 5 minutes then clap mamak-style.";
   }
 
+  if (/cookie|biskut|choc|chocolate|chip/i.test(q)) {
+    return isMs
+      ? "🍪 BISKUT COKLAT CIP MENTEGA EMAS (Jar & Maz):\n• Harga: RM38.00 sebalang\n• Kuantiti: 33 – 36 keping biskut setiap balang\n• Berat Bersih (Nett): ~200g – 210g satu bekas\n• Berat Kasar (Sekali bekas): 263g – 275g\n• Saiz Balang: Diameter 9cm, Tinggi 10.5cm\n• Diperbuat daripada Mentega Golden Churn asli & cip coklat Beryl's bersama badam & walnut rangup!"
+      : "🍪 GOLDEN CHURN CHOCOLATE CHIP COOKIES (Jar & Maz):\n• Price: RM38.00 per jar\n• Quantity: 33 – 36 pcs cookies in a jar\n• Net Weight: Nett ~200g – 210g per jar\n• Gross Weight (with jar): 263g – 275g\n• Jar Dimensions: Diameter 9cm, Height 10.5cm\n• Premium Ingredients: Pure Golden Churn Butter & Beryl's chocolate chips with crunchy almonds & walnuts!";
+  }
+
   if (/menu|harga|price|pricing|cost|senarai|berapa/i.test(q)) {
     return isMs
       ? "📋 Senarai Harga Jar & Maz Homemade:\n1. Frozen Roti Canai Biasa (5 kpg) — RM8.00\n2. Frozen Beef Roti Canai (2 kpg) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Biasa) — RM99.00 (Jimat RM1!)\n4. Biskut Coklat Cip Golden Churn (33–36 kpg, Nett ~200g–210g) — RM38.00\n\nPenghantaran PERCUMA untuk seluruh kawasan Putra Heights (47650)!"
