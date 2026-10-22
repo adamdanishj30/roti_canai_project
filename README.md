@@ -11,7 +11,7 @@ Official web storefront, order management dashboard, and AI customer service ass
 This repository powers the complete digital operations of **Jar & Maz Homemade**:
 1. **Interactive Customer Storefront (`index.html`)**: Menu browsing, shopping cart, smart delivery fee estimator, interactive cooking guide, and bilingual Malay/English support.
 2. **Serverless AI Assistant (`functions/api/chat.js`)**: An edge-deployed AI customer service assistant ("Roti Helper AI") powered by Google Gemini, equipped with business rules, cooking instructions, pricing, and delivery logic.
-3. **Kitchen & Orders Portal (`orders.html`)**: Real-time order tracker and fulfillment dashboard for the family kitchen, synchronized via Firebase Realtime Database.
+3. **Kitchen & Orders Portal (`orders.html`)**: Real-time order tracker and fulfillment dashboard for the family kitchen, synchronized via Cloud Firestore (Firebase Auth login).
 4. **Customer Reviews & Testimonials (`feedback.html`)**: Story and customer feedback portal.
 5. **Alternative Python Backend (`deploy/backend/main.py`)**: A production-ready FastAPI backend with Google GenAI SDK, rate limiting, and HTTP Basic Authentication (designed for Render/VPS deployments).
 
@@ -38,9 +38,8 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 - **Model Redundancy**: Multi-tier cascade through active Google Gemini models:
   - `gemini-3.6-flash`
   - `gemini-3.8-flash`
-  - `gemini-3.7-flash`
-  - `gemini-3.5-flash`
-  - `gemini-2.5-pro`
+  - `gemini-2.5-flash`
+  - `gemini-2.0-flash`
 - **Instant Client-Side Fallback Engine**: If the Gemini API is temporarily offline, rate-limited, or unreachable, the frontend automatically intercepts queries and answers FAQs (pricing, cooking, delivery, recipes) locally without dead ends.
 
 ### 📋 3. Kitchen & Order Dashboard (`orders.html`)
@@ -64,18 +63,18 @@ roti_canai_project/
 │       └── chat.js             # Serverless Gemini AI chatbot endpoint (POST /api/chat)
 ├── assets/                     # Media and static assets
 │   ├── logo.jpg                # Jar & Maz brand logo
-│   ├── roti_canai.jpg          # Signature Plain Roti Canai image
+│   ├── roti_plain.jpg          # Signature Plain Roti Canai image
+│   ├── hero.jpg                # Storefront hero image
 │   ├── roti_beef.jpg           # Beef Roti Canai image
 │   ├── cookies.jpg / .png      # Golden Churn Cookies imagery
-│   ├── doorgift.jpg / .png     # Wedding doorgift samples
-│   ├── bundle_hero.png         # Family bundle promotional graphic
+│   ├── doorgift.jpg            # Wedding doorgift samples
+│   ├── bundle_hero.jpg         # Family bundle promotional graphic
 │   └── qr_code.svg             # Quick-access QR code
 └── deploy/                     # Backend deployment configurations
     ├── backend/
     │   ├── main.py             # FastAPI backend (alternative to Cloudflare Functions)
     │   ├── requirements.txt    # Python dependencies (fastapi, uvicorn, google-genai)
     │   ├── Procfile            # Render / Railway startup command
-    │   ├── .env.example        # Environment variable templates
     │   └── orders.html         # Protected portal file for Python backend
     └── functions/
         └── api/
@@ -98,10 +97,7 @@ Set the following in your **Cloudflare Dashboard > Pages > Settings > Environmen
 
 If hosting the backend on Render, Railway, or VPS:
 
-```bash
-# Copy template
-cp deploy/backend/.env.example deploy/backend/.env
-```
+Create a `.env` file in the backend folder (it is git-ignored) with the variables below.
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |

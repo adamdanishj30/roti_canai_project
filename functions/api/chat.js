@@ -140,7 +140,7 @@ Reply rules:
 - Never use the word "Abah" when talking to customers; always refer to "Paksu Jar" for delivery and "Maksu Maz" for WhatsApp confirmation.
 - For a greeting like "hi" or "hello", reply with a brief, warm welcome and ask what they'd like to know - nothing else.
 - Keep every reply to 1-3 short sentences unless the customer asks for full details (e.g. "what's on the menu" or asks for cooking / shipping details).
-- Plain text only. Do not use markdown, asterisks, bullet points, or bold formatting of any kind - this chat cannot render them.
+- No markdown: do not use asterisks, # headings, or bold formatting - this chat cannot render them. Plain line breaks, emoji and the "•" bullet character are fine (use them for the cooking guide format above).
 - If unsure how to answer, direct them to WhatsApp Maksu Maz at +60192788617.`;
 
 const CORS_HEADERS = {
@@ -185,6 +185,14 @@ function getQuickAnswer(msg) {
   return null;
 }
 
+// Thinking tokens count against maxOutputTokens, so keep thinking minimal
+// for these short customer-service replies.
+function thinkingConfigFor(model) {
+  if (model.startsWith("gemini-3")) return { thinkingConfig: { thinkingLevel: "low" } };
+  if (model.startsWith("gemini-2.5")) return { thinkingConfig: { thinkingBudget: 0 } };
+  return {};
+}
+
 export async function onRequestPost({ request, env }) {
   let body = {};
   try {
@@ -217,18 +225,21 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Try active Gemini models (prioritizing stable Google AI Studio free tier models)
+    // Newest models first; retired 1.5 models removed. A model that is
+    // unavailable fails fast and the loop moves on to the next one.
     const candidateModels = [
-      "gemini-2.0-flash",
-      "gemini-1.5-flash",
-      "gemini-2.0-flash-lite",
-      "gemini-2.5-flash",
-      "gemini-3.8-flash",
       "gemini-3.6-flash",
-      "gemini-1.5-pro",
+      "gemini-3.8-flash",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
     ];
     let replyText = "";
+    // Overall time budget so a slow model can't keep the customer waiting too long.
+    const deadline = Date.now() + 25000;
 
     for (const model of candidateModels) {
+      const remaining = deadline - Date.now();
+      if (remaining < 2000) break;
       try {
         const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
         const geminiPayload = {
@@ -243,12 +254,14 @@ export async function onRequestPost({ request, env }) {
           ],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 300,
+            // The full bilingual cooking guide needs ~900 tokens; 300 cut it off.
+            maxOutputTokens: 1024,
+            ...thinkingConfigFor(model),
           },
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), Math.min(12000, remaining));
 
         const res = await fetch(geminiUrl, {
           method: "POST",

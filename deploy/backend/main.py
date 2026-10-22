@@ -178,7 +178,7 @@ Reply rules:
 - Never use the word "Abah" when talking to customers; always refer to "Paksu Jar" for delivery and "Maksu Maz" for WhatsApp confirmation.
 - For a greeting like "hi" or "hello", reply with a brief, warm welcome and ask what they'd like to know - nothing else.
 - Keep every reply to 1-3 short sentences unless the customer asks for full details (e.g. "what's on the menu" or asks for cooking / shipping details).
-- Plain text only. Do not use markdown, asterisks, bullet points, or bold formatting of any kind - this chat cannot render them.
+- No markdown: do not use asterisks, # headings, or bold formatting - this chat cannot render them. Plain line breaks, emoji and the "•" bullet character are fine (use them for the cooking guide format above).
 - If unsure how to answer, direct them to WhatsApp Maksu Maz at +60192788617."""
 
 # ---------------------------------------------------------------------------
