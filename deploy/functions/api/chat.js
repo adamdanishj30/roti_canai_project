@@ -192,6 +192,7 @@ function getQuickAnswer(msg) {
 }
 
 export async function onRequestPost({ request, env }) {
+  let body = {};
   try {
     const apiKey = env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -204,8 +205,8 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    const body = await request.json().catch(() => ({}));
-    const userMessage = (body.message || "").trim();
+    body = (await request.json().catch(() => null)) || {};
+    const userMessage = String(body.message || "").trim();
 
     if (!userMessage) {
       return new Response(
@@ -235,7 +236,7 @@ export async function onRequestPost({ request, env }) {
 
     for (const model of candidateModels) {
       try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
         const geminiPayload = {
           system_instruction: {
             parts: [{ text: SYSTEM_INSTRUCTION }],
@@ -257,7 +258,7 @@ export async function onRequestPost({ request, env }) {
 
         const res = await fetch(geminiUrl, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
           body: JSON.stringify(geminiPayload),
           signal: controller.signal,
         }).catch(() => null);
@@ -292,7 +293,7 @@ export async function onRequestPost({ request, env }) {
     });
   } catch (err) {
     console.error("Chat function error:", err);
-    const quickAns = getQuickAnswer((body && body.message) || "");
+    const quickAns = getQuickAnswer(String(body.message || ""));
     return new Response(
       JSON.stringify({
         reply: quickAns || "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"

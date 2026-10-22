@@ -47,7 +47,7 @@ Menu & Weights:
 - Frozen Roti Canai (Signature): RM8 per pack (5 pieces). Weight is approximately 530g per pack.
 - Frozen Beef Roti Canai: RM14 per pack (2 pieces). Inti daging cincang berempah yang berperisa / Seasoned aromatic minced beef. Weight is approximately 300g per pack.
 - Family Freezer Bundle: RM99 per bundle (RM100 normal value, saves RM1). Includes 6 Beef Roti Canai packs (2 pieces each @ RM14) and 2 Plain Roti Canai packs (5 pieces each @ RM8). Total bundle weight is approximately 2.86kg.
-- Chocolate Chip Cookies: RM38 per jar (~350g). Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with almonds and walnuts.
+- Chocolate Chip Cookies: RM38 per jar. Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. 33–36 pieces per jar. Net weight: ~200g–210g per jar (Gross weight with jar: 263g–275g, shipping calculation uses 0.275kg). Jar dimensions: Diameter 9cm, Height 10.5cm.
 - Wedding & Event Doorgift Cookies: Mini Golden Churn chocolate chip cookies in charming mini jars for weddings, corporate events & aqiqah. Minimum order 100 small jars. Pricing depends on total quantity. Customers should DM Maksu Maz directly on WhatsApp (+60192788617) for quotations.
 
 Cooking & Heating Instructions (#FrozenRotiCanaibyPaksuJar):

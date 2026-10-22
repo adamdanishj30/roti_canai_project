@@ -9,7 +9,7 @@ Menu & Weights:
 - Frozen Roti Canai (Signature): RM8 per pack (5 pieces). Weight is approximately 530g per pack.
 - Frozen Beef Roti Canai: RM14 per pack (2 pieces). Inti daging cincang berempah yang berperisa / Seasoned aromatic minced beef. Weight is approximately 300g per pack.
 - Family Freezer Bundle: RM99 per bundle (RM100 normal value, saves RM1). Includes 6 Beef Roti Canai packs (2 pieces each @ RM14) and 2 Plain Roti Canai packs (5 pieces each @ RM8). Total bundle weight is approximately 2.86kg.
-- Chocolate Chip Cookies: RM38 per jar (~350g). Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with almonds and walnuts.
+- Chocolate Chip Cookies: RM38 per jar. Made with premium Golden Churn Butter and Beryl's chocolate chips, loaded with crunchy almonds and walnuts. 33–36 pieces per jar. Net weight: ~200g–210g per jar (Gross weight with jar: 263g–275g, physical shipping rate uses 0.275kg). Jar dimensions: Diameter 9cm, Height 10.5cm.
 - Wedding & Event Doorgift Cookies: Mini Golden Churn chocolate chip cookies in charming mini jars for weddings, corporate events & aqiqah. Minimum order 100 small jars. Pricing depends on total quantity. Customers should DM Maksu Maz directly on WhatsApp (+60192788617) for quotations.
 
 Cooking & Heating Instructions (#FrozenRotiCanaibyPaksuJar):
@@ -172,8 +172,8 @@ function getQuickAnswer(msg) {
 
   if (/menu|harga|price|pricing|cost|senarai|berapa/i.test(q)) {
     return isMs
-      ? "📋 Senarai Harga Jar & Maz Homemade:\n1. Frozen Roti Canai Biasa (5 kpg) — RM8.00\n2. Frozen Beef Roti Canai (2 kpg) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Biasa) — RM99.00 (Jimat RM1!)\n4. Biskut Coklat Cip Golden Churn (~350g) — RM38.00\n\nPenghantaran PERCUMA untuk seluruh kawasan Putra Heights (47650)!"
-      : "📋 Jar & Maz Homemade Menu & Pricing:\n1. Frozen Plain Roti Canai (5 pcs) — RM8.00\n2. Frozen Beef Roti Canai (2 pcs) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Plain) — RM99.00 (Save RM1!)\n4. Golden Churn Chocolate Chip Cookies (~350g) — RM38.00\n\n100% FREE delivery within Putra Heights (47650)!";
+      ? "📋 Senarai Harga Jar & Maz Homemade:\n1. Frozen Roti Canai Biasa (5 kpg) — RM8.00\n2. Frozen Beef Roti Canai (2 kpg) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Biasa) — RM99.00 (Jimat RM1!)\n4. Biskut Coklat Cip Golden Churn (33–36 kpg, Nett ~200g–210g) — RM38.00\n\nPenghantaran PERCUMA untuk seluruh kawasan Putra Heights (47650)!"
+      : "📋 Jar & Maz Homemade Menu & Pricing:\n1. Frozen Plain Roti Canai (5 pcs) — RM8.00\n2. Frozen Beef Roti Canai (2 pcs) — RM14.00\n3. Family Freezer Bundle (6 Beef + 2 Plain) — RM99.00 (Save RM1!)\n4. Golden Churn Chocolate Chip Cookies (33–36 pcs, Nett ~200g–210g) — RM38.00\n\n100% FREE delivery within Putra Heights (47650)!";
   }
 
   if (/\b(deliver|delivery|hantar|pos|pickup|ambil|grab|lalamove|shipping|ongkir)\b|putra heights/i.test(q)) {
@@ -186,6 +186,7 @@ function getQuickAnswer(msg) {
 }
 
 export async function onRequestPost({ request, env }) {
+  let body = {};
   try {
     const apiKey = env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -198,8 +199,8 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    const body = await request.json().catch(() => ({}));
-    const userMessage = (body.message || "").trim();
+    body = (await request.json().catch(() => null)) || {};
+    const userMessage = String(body.message || "").trim();
 
     if (!userMessage) {
       return new Response(
@@ -229,7 +230,7 @@ export async function onRequestPost({ request, env }) {
 
     for (const model of candidateModels) {
       try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
         const geminiPayload = {
           system_instruction: {
             parts: [{ text: SYSTEM_INSTRUCTION }],
@@ -251,7 +252,7 @@ export async function onRequestPost({ request, env }) {
 
         const res = await fetch(geminiUrl, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
           body: JSON.stringify(geminiPayload),
           signal: controller.signal,
         }).catch(() => null);
@@ -286,7 +287,7 @@ export async function onRequestPost({ request, env }) {
     });
   } catch (err) {
     console.error("Chat function error:", err);
-    const quickAns = getQuickAnswer((body && body.message) || "");
+    const quickAns = getQuickAnswer(String(body.message || ""));
     return new Response(
       JSON.stringify({
         reply: quickAns || "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"

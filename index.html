@@ -1247,15 +1247,16 @@ function isPutraHeights(addr){
 function isOutstationAddress(addr){
   if(!addr)return false;
   const s=addr.toLowerCase();
-  const outstationRe=/\b(johor|jb|johor bahru|batu pahat|muar|kluang|kulai|segamat|pontian|kota tinggi|mersing|kedah|alor setar|sungai petani|kulim|langkawi|kelantan|kota bharu|tumpat|pasir mas|melaka|malacca|alor gajah|jasin|negeri sembilan|seremban|port dickson|nilai|pahang|kuantan|temerloh|bentong|pekan|perak|ipoh|taiping|teluk intan|kampar|lumut|manjung|perlis|kangar|arau|penang|pulau pinang|georgetown|butterworth|bukit mertajam|seberang perai|terengganu|kuala terengganu|kemaman|dungun|sabah|kota kinabalu|sandakan|tawau|sarawak|kuching|miri|sibu|bintulu)\b/i;
-  if(outstationRe.test(s))return true;
+  const outstationRe=/\b(johor|jb|johor bahru|batu pahat|muar|kluang|kulai|segamat|pontian|kota tinggi|mersing|kedah|alor setar|sungai petani|kulim|langkawi|kelantan|kota bharu|tumpat|pasir mas|melaka|malacca|alor gajah|jasin|negeri sembilan|seremban|port dickson|nilai|pahang|kuantan|temerloh|bentong|perak|ipoh|taiping|teluk intan|kampar|lumut|manjung|perlis|kangar|arau|penang|pulau pinang|georgetown|butterworth|bukit mertajam|seberang perai|terengganu|kuala terengganu|kemaman|dungun|sabah|kota kinabalu|sandakan|tawau|sarawak|kuching|miri|sibu|bintulu)\b/i;
+  // A postcode is the most reliable signal, so check it before place names.
   const m=s.match(/\b\d{5}\b/);
   if(m){
     const pc=parseInt(m[0],10);
     const isKV=(pc>=40000&&pc<=48300)||(pc>=50000&&pc<=60000)||(pc>=62000&&pc<=68100);
-    if(!isKV)return true;
+    return !isKV;
   }
-  return false;
+  // Ignore street names such as "Jalan Ipoh" or "Jalan Perak" in KL so they don't read as outstation.
+  return outstationRe.test(s.replace(/\b(jalan|jln|lorong|lrg|persiaran|lebuh|lebuhraya)\s+[a-z]+/g,' '));
 }
 function calcGrabFares(km){
   return {
@@ -1429,7 +1430,7 @@ async function geo(q){
       const j=await r.json();
       if(j&&j[0])return{lat:+j[0].lat,lng:+j[0].lon,matched:candidates[i]};
     }catch(err){}
-    if(i<candidates.length-1)await sleep(600);
+    if(i<candidates.length-1)await sleep(1100);
   }
   throw new Error('nf');
 }
