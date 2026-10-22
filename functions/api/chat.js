@@ -52,7 +52,7 @@ Fulfillment & Delivery Options:
 3. Klang Valley & Shah Alam (Local Delivery by Paksu Jar):
    - Covers all Klang Valley and Shah Alam areas (e.g. Subang Jaya, Shah Alam, Petaling Jaya, Bandar Utama, Damansara, Puchong, Kuala Lumpur, Cheras, Ampang, etc.).
    - IMPORTANT: Delivery is done personally by Paksu Jar. NEVER use or quote Cold Chain for Klang Valley or Shah Alam! Do NOT quote cold chain rates or thermal packaging box fees.
-   - Klang Valley delivery rate is affordable and estimated by distance from Putra Heights: Base fare RM5.00 + RM0.60 per km.
+   - Klang Valley delivery rate is affordable and estimated by distance from Putra Heights: Base fare RM5.00 + RM0.50 per km.
    - For example: nearby areas like Subang Jaya/Shah Alam are around RM7-RM10. Areas like Petaling Jaya, Bandar Utama, Damansara, or KL are around RM11-RM15.
    - Unlike cold chain, order weight does not increase this local delivery fee.
    - Order Confirmation by Maksu Maz: The WhatsApp phone number (+60192788617) belongs to Maksu Maz (customers will see Maksu Maz's profile picture on WhatsApp). After the customer places an order on the website, Maksu Maz will contact them on WhatsApp to confirm the order, delivery timing, and final fee before preparation.
@@ -135,7 +135,7 @@ Reply rules:
   3. Roti Canai Telor: Pecahkan telur atas roti canai dan panaskan, atau makan dengan telur separuh masak.
   4. Roti Canai Gulong: Letak leftovers kuah kari, rendang, atau sambal atas roti canai dan gulung kemas.
   5. Roti Canai Philly Cheesesteak: Cebisan daging yang dah dimasak atas kuali bersama black pepper, garam, cendawan dan cheese, lalu panaskan.
-- When asked for delivery to Klang Valley or Shah Alam locations (such as Bandar Utama, Section 11 PJ, Subang Jaya, Damansara, Puchong, KL, etc.), NEVER quote cold chain or packaging box fees! State clearly that delivery is done personally by Paksu Jar at an affordable local distance rate (estimate around RM5 base + RM0.60/km, typically around RM10-RM15 depending on distance), or free if in Putra Heights, and that Maksu Maz will contact them via WhatsApp to confirm the order details.
+- When asked for delivery to Klang Valley or Shah Alam locations (such as Bandar Utama, Section 11 PJ, Subang Jaya, Damansara, Puchong, KL, etc.), NEVER quote cold chain or packaging box fees! State clearly that delivery is done personally by Paksu Jar at an affordable local distance rate (estimate around RM5 base + RM0.50/km, typically around RM10-RM15 depending on distance), or free if in Putra Heights, and that Maksu Maz will contact them via WhatsApp to confirm the order details.
 - If the customer asks about delivery costs, finds delivery expensive, or asks how to save money on shipping, always suggest Self-pickup from Putra Heights (47650) as a 100% free option (RM0 delivery cost) that completely removes the delivery fee.
 - Never use the word "Abah" when talking to customers; always refer to "Paksu Jar" for delivery and "Maksu Maz" for WhatsApp confirmation.
 - For a greeting like "hi" or "hello", reply with a brief, warm welcome and ask what they'd like to know - nothing else.
@@ -178,8 +178,8 @@ function getQuickAnswer(msg) {
 
   if (/\b(deliver|delivery|hantar|pos|pickup|ambil|grab|lalamove|shipping|ongkir)\b|putra heights/i.test(q)) {
     return isMs
-      ? "🚚 Pilihan Penghantaran:\n1. Putra Heights (47650): 100% PERCUMA terus ke pintu rumah oleh Paksu Jar.\n2. Lembah Klang & Shah Alam: Penghantaran terus oleh Paksu Jar dalam cooler box (kadar tetap ikut jarak: RM5 asas + RM0.60/km).\n3. GrabExpress / Runner Sendiri: Pilihan tersedia mengikut kadar rasmi.\n4. Luar Lembah Klang: Ninja Van Cold Chain frozen delivery."
-      : "🚚 Delivery Options:\n1. Putra Heights (47650): 100% FREE doorstep delivery by Paksu Jar.\n2. Klang Valley & Shah Alam: Personal cooler box delivery by Paksu Jar (affordable distance rate: RM5 base + RM0.60/km).\n3. GrabExpress / Self Runner: Live app rates or use own vouchers.\n4. Outstation: Ninja Van Cold Chain dedicated frozen delivery.";
+      ? "🚚 Pilihan Penghantaran:\n1. Putra Heights (47650): 100% PERCUMA terus ke pintu rumah oleh Paksu Jar.\n2. Lembah Klang & Shah Alam: Penghantaran terus oleh Paksu Jar dalam cooler box (kadar tetap ikut jarak: RM5 asas + RM0.50/km).\n3. GrabExpress / Runner Sendiri: Pilihan tersedia mengikut kadar rasmi.\n4. Luar Lembah Klang: Ninja Van Cold Chain frozen delivery."
+      : "🚚 Delivery Options:\n1. Putra Heights (47650): 100% FREE doorstep delivery by Paksu Jar.\n2. Klang Valley & Shah Alam: Personal cooler box delivery by Paksu Jar (affordable distance rate: RM5 base + RM0.50/km).\n3. GrabExpress / Self Runner: Live app rates or use own vouchers.\n4. Outstation: Ninja Van Cold Chain dedicated frozen delivery.";
   }
 
   return null;

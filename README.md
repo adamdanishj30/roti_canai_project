@@ -23,7 +23,7 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 - **Product Catalog & Cart**: Handcrafted Signature Frozen Plain Roti Canai (RM8), Frozen Beef Roti Canai (RM14), Family Combo Bundles (RM99), and Golden Churn Butter Chocolate Chip Cookies (RM38).
 - **Multi-Option Delivery Calculator**:
   - **Putra Heights (47650)**: 100% Free doorstep delivery by Paksu Jar.
-  - **Klang Valley & Shah Alam**: Local personal delivery in thermal cooler boxes calculated by distance (base RM5.00 + RM0.60/km).
+  - **Klang Valley & Shah Alam**: Local personal delivery in thermal cooler boxes calculated by distance (base RM5.00 + RM0.50/km).
   - **GrabExpress**: Live app rate with zero markup (WhatsApp receipt verification).
   - **Self-Pickup**: Free collection at Putra Heights (47650).
   - **Peninsular Outstation**: Ninja Van Cold Chain frozen delivery with SST calculation.
