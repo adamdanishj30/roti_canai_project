@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /orders.html
+Disallow: /archive/
+Disallow: /backend/
+Disallow: /docs/
 
 Sitemap: https://jarmazhomemade.com/sitemap.xml

@@ -52,7 +52,7 @@ Fulfillment & Delivery Options:
 3. Klang Valley & Shah Alam (Local Delivery by Paksu Jar):
    - Covers all Klang Valley and Shah Alam areas (e.g. Subang Jaya, Shah Alam, Petaling Jaya, Bandar Utama, Damansara, Puchong, Kuala Lumpur, Cheras, Ampang, etc.).
    - IMPORTANT: Delivery is done personally by Paksu Jar. NEVER use or quote Cold Chain for Klang Valley or Shah Alam! Do NOT quote cold chain rates or thermal packaging box fees.
-   - Klang Valley delivery rate is affordable and estimated by distance from Putra Heights: Base fare RM5.00 + RM0.60 per km.
+   - Klang Valley delivery rate is affordable and estimated by distance from Putra Heights: Base fare RM5.00 + RM0.50 per km.
    - For example: nearby areas like Subang Jaya/Shah Alam are around RM7-RM10. Areas like Petaling Jaya, Bandar Utama, Damansara, or KL are around RM11-RM15.
    - Unlike cold chain, order weight does not increase this local delivery fee.
    - Order Confirmation by Maksu Maz: The WhatsApp phone number (+60192788617) belongs to Maksu Maz (customers will see Maksu Maz's profile picture on WhatsApp). After the customer places an order on the website, Maksu Maz will contact them on WhatsApp to confirm the order, delivery timing, and final fee before preparation.
@@ -135,12 +135,12 @@ Reply rules:
   3. Roti Canai Telor: Pecahkan telur atas roti canai dan panaskan, atau makan dengan telur separuh masak.
   4. Roti Canai Gulong: Letak leftovers kuah kari, rendang, atau sambal atas roti canai dan gulung kemas.
   5. Roti Canai Philly Cheesesteak: Cebisan daging yang dah dimasak atas kuali bersama black pepper, garam, cendawan dan cheese, lalu panaskan.
-- When asked for delivery to Klang Valley or Shah Alam locations (such as Bandar Utama, Section 11 PJ, Subang Jaya, Damansara, Puchong, KL, etc.), NEVER quote cold chain or packaging box fees! State clearly that delivery is done personally by Paksu Jar at an affordable local distance rate (estimate around RM5 base + RM0.60/km, typically around RM10-RM15 depending on distance), or free if in Putra Heights, and that Maksu Maz will contact them via WhatsApp to confirm the order details.
+- When asked for delivery to Klang Valley or Shah Alam locations (such as Bandar Utama, Section 11 PJ, Subang Jaya, Damansara, Puchong, KL, etc.), NEVER quote cold chain or packaging box fees! State clearly that delivery is done personally by Paksu Jar at an affordable local distance rate (estimate around RM5 base + RM0.50/km, typically around RM10-RM15 depending on distance), or free if in Putra Heights, and that Maksu Maz will contact them via WhatsApp to confirm the order details.
 - If the customer asks about delivery costs, finds delivery expensive, or asks how to save money on shipping, always suggest Self-pickup from Putra Heights (47650) as a 100% free option (RM0 delivery cost) that completely removes the delivery fee.
 - Never use the word "Abah" when talking to customers; always refer to "Paksu Jar" for delivery and "Maksu Maz" for WhatsApp confirmation.
 - For a greeting like "hi" or "hello", reply with a brief, warm welcome and ask what they'd like to know - nothing else.
 - Keep every reply to 1-3 short sentences unless the customer asks for full details (e.g. "what's on the menu" or asks for cooking / shipping details).
-- Plain text only. Do not use markdown, asterisks, bullet points, or bold formatting of any kind - this chat cannot render them.
+- No markdown: do not use asterisks, # headings, or bold formatting - this chat cannot render them. Plain line breaks, emoji and the "•" bullet character are fine (use them for the cooking guide format above).
 - If unsure how to answer, direct them to WhatsApp Maksu Maz at +60192788617.`;
 
 const CORS_HEADERS = {
@@ -184,14 +184,23 @@ function getQuickAnswer(msg) {
 
   if (/\b(deliver|delivery|hantar|pos|pickup|ambil|grab|lalamove|shipping|ongkir)\b|putra heights/i.test(q)) {
     return isMs
-      ? "🚚 Pilihan Penghantaran:\n1. Putra Heights (47650): 100% PERCUMA terus ke pintu rumah oleh Paksu Jar.\n2. Lembah Klang & Shah Alam: Penghantaran terus oleh Paksu Jar dalam cooler box (kadar tetap ikut jarak: RM5 asas + RM0.60/km).\n3. GrabExpress / Runner Sendiri: Pilihan tersedia mengikut kadar rasmi.\n4. Luar Lembah Klang: Ninja Van Cold Chain frozen delivery."
-      : "🚚 Delivery Options:\n1. Putra Heights (47650): 100% FREE doorstep delivery by Paksu Jar.\n2. Klang Valley & Shah Alam: Personal cooler box delivery by Paksu Jar (affordable distance rate: RM5 base + RM0.60/km).\n3. GrabExpress / Self Runner: Live app rates or use own vouchers.\n4. Outstation: Ninja Van Cold Chain dedicated frozen delivery.";
+      ? "🚚 Pilihan Penghantaran:\n1. Putra Heights (47650): 100% PERCUMA terus ke pintu rumah oleh Paksu Jar.\n2. Lembah Klang & Shah Alam: Penghantaran terus oleh Paksu Jar dalam cooler box (kadar tetap ikut jarak: RM5 asas + RM0.50/km).\n3. GrabExpress / Runner Sendiri: Pilihan tersedia mengikut kadar rasmi.\n4. Luar Lembah Klang: Ninja Van Cold Chain frozen delivery."
+      : "🚚 Delivery Options:\n1. Putra Heights (47650): 100% FREE doorstep delivery by Paksu Jar.\n2. Klang Valley & Shah Alam: Personal cooler box delivery by Paksu Jar (affordable distance rate: RM5 base + RM0.50/km).\n3. GrabExpress / Self Runner: Live app rates or use own vouchers.\n4. Outstation: Ninja Van Cold Chain dedicated frozen delivery.";
   }
 
   return null;
 }
 
+// Thinking tokens count against maxOutputTokens, so keep thinking minimal
+// for these short customer-service replies.
+function thinkingConfigFor(model) {
+  if (model.startsWith("gemini-3")) return { thinkingConfig: { thinkingLevel: "low" } };
+  if (model.startsWith("gemini-2.5")) return { thinkingConfig: { thinkingBudget: 0 } };
+  return {};
+}
+
 export async function onRequestPost({ request, env }) {
+  let body = {};
   try {
     const apiKey = env.GEMINI_API_KEY;
     if (!apiKey) {
@@ -204,8 +213,8 @@ export async function onRequestPost({ request, env }) {
       );
     }
 
-    const body = await request.json().catch(() => ({}));
-    const userMessage = (body.message || "").trim();
+    body = (await request.json().catch(() => null)) || {};
+    const userMessage = String(body.message || "").trim();
 
     if (!userMessage) {
       return new Response(
@@ -222,20 +231,23 @@ export async function onRequestPost({ request, env }) {
     }
 
     // Try active Gemini models (prioritizing stable Google AI Studio free tier models)
+    // Newest models first; retired 1.5 models removed. A model that is
+    // unavailable fails fast and the loop moves on to the next one.
     const candidateModels = [
-      "gemini-2.0-flash",
-      "gemini-1.5-flash",
-      "gemini-2.0-flash-lite",
-      "gemini-2.5-flash",
-      "gemini-3.8-flash",
       "gemini-3.6-flash",
-      "gemini-1.5-pro",
+      "gemini-3.8-flash",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
     ];
     let replyText = "";
+    // Overall time budget so a slow model can't keep the customer waiting too long.
+    const deadline = Date.now() + 25000;
 
     for (const model of candidateModels) {
+      const remaining = deadline - Date.now();
+      if (remaining < 2000) break;
       try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
         const geminiPayload = {
           system_instruction: {
             parts: [{ text: SYSTEM_INSTRUCTION }],
@@ -248,16 +260,18 @@ export async function onRequestPost({ request, env }) {
           ],
           generationConfig: {
             temperature: 0.4,
-            maxOutputTokens: 300,
+            // The full bilingual cooking guide needs ~900 tokens; 300 cut it off.
+            maxOutputTokens: 1024,
+            ...thinkingConfigFor(model),
           },
         };
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        const timeoutId = setTimeout(() => controller.abort(), Math.min(12000, remaining));
 
         const res = await fetch(geminiUrl, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
           body: JSON.stringify(geminiPayload),
           signal: controller.signal,
         }).catch(() => null);
@@ -292,7 +306,7 @@ export async function onRequestPost({ request, env }) {
     });
   } catch (err) {
     console.error("Chat function error:", err);
-    const quickAns = getQuickAnswer((body && body.message) || "");
+    const quickAns = getQuickAnswer(String(body.message || ""));
     return new Response(
       JSON.stringify({
         reply: quickAns || "Maaf, sistem pembantu AI kami sedang sibuk atau mengalami gangguan teknikal seketika. Sila hubungi Maksu Maz di WhatsApp (+6019-278 8617) dan kami akan bantu anda segera!"

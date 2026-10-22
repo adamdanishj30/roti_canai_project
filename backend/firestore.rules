@@ -2,19 +2,15 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: Only authenticated users with family email addresses are granted access.
+    // Helper: only the listed family accounts are granted access.
+    // Exact email match only (no domain wildcard), so nobody can sign up
+    // a lookalike address to read customer orders.
     function isFamilyMember() {
-      return request.auth != null 
-        && request.auth.token.email != null
-        && (
-          request.auth.token.email in [
-            'family@roticanai.com'
-            // Add any other family member emails below:
-            // 'paksujar@roticanai.com',
-            // 'maksumaz@roticanai.com'
-          ] 
-          || request.auth.token.email.matches('.*@roticanai[.]com$')
-        );
+      return request.auth != null
+        && request.auth.token.email in [
+          'roticanai@gmail.com'
+          // Add more family accounts here later.
+        ];
     }
 
     // 1. Orders Collection: Contains customer names, phone numbers, and addresses.

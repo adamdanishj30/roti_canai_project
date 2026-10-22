@@ -11,9 +11,9 @@ Official web storefront, order management dashboard, and AI customer service ass
 This repository powers the complete digital operations of **Jar & Maz Homemade**:
 1. **Interactive Customer Storefront (`index.html`)**: Menu browsing, shopping cart, smart delivery fee estimator, interactive cooking guide, and bilingual Malay/English support.
 2. **Serverless AI Assistant (`functions/api/chat.js`)**: An edge-deployed AI customer service assistant ("Roti Helper AI") powered by Google Gemini, equipped with business rules, cooking instructions, pricing, and delivery logic.
-3. **Kitchen & Orders Portal (`orders.html`)**: Real-time order tracker and fulfillment dashboard for the family kitchen, synchronized via Firebase Realtime Database.
+3. **Kitchen & Orders Portal (`orders.html`)**: Real-time order tracker and fulfillment dashboard for the family kitchen, synchronized via Cloud Firestore (Firebase Auth login).
 4. **Customer Reviews & Testimonials (`feedback.html`)**: Story and customer feedback portal.
-5. **Alternative Python Backend (`deploy/backend/main.py`)**: A production-ready FastAPI backend with Google GenAI SDK, rate limiting, and HTTP Basic Authentication (designed for Render/VPS deployments).
+5. **Alternative Python Backend (`backend/main.py`)**: A production-ready FastAPI backend with Google GenAI SDK, rate limiting, and HTTP Basic Authentication (designed for Render/VPS deployments).
 
 ---
 
@@ -23,7 +23,7 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 - **Product Catalog & Cart**: Handcrafted Signature Frozen Plain Roti Canai (RM8), Frozen Beef Roti Canai (RM14), Family Combo Bundles (RM99), and Golden Churn Butter Chocolate Chip Cookies (RM38).
 - **Multi-Option Delivery Calculator**:
   - **Putra Heights (47650)**: 100% Free doorstep delivery by Paksu Jar.
-  - **Klang Valley & Shah Alam**: Local personal delivery in thermal cooler boxes calculated by distance (base RM5.00 + RM0.60/km).
+  - **Klang Valley & Shah Alam**: Local personal delivery in thermal cooler boxes calculated by distance (base RM5.00 + RM0.50/km).
   - **GrabExpress**: Live app rate with zero markup (WhatsApp receipt verification).
   - **Self-Pickup**: Free collection at Putra Heights (47650).
   - **Peninsular Outstation**: Ninja Van Cold Chain frozen delivery with SST calculation.
@@ -38,9 +38,8 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 - **Model Redundancy**: Multi-tier cascade through active Google Gemini models:
   - `gemini-3.6-flash`
   - `gemini-3.8-flash`
-  - `gemini-3.7-flash`
-  - `gemini-3.5-flash`
-  - `gemini-2.5-pro`
+  - `gemini-2.5-flash`
+  - `gemini-2.0-flash`
 - **Instant Client-Side Fallback Engine**: If the Gemini API is temporarily offline, rate-limited, or unreachable, the frontend automatically intercepts queries and answers FAQs (pricing, cooking, delivery, recipes) locally without dead ends.
 
 ### 📋 3. Kitchen & Order Dashboard (`orders.html`)
@@ -53,34 +52,28 @@ This repository powers the complete digital operations of **Jar & Maz Homemade**
 
 ## 📁 Repository Structure
 
+> 🤖 **AI assistants / new contributors:** start with [`AGENTS.md`](AGENTS.md) (whole-project guide) and [`docs/index-html.md`](docs/index-html.md) (storefront internals).
+
 ```text
 roti_canai_project/
-├── index.html                  # Main customer-facing storefront and chat interface
-├── orders.html                 # Family kitchen orders and management portal
-├── feedback.html               # Customer review and brand story page
-├── favicon.ico / favicon.png   # Website branding favicons
-├── functions/                  # Cloudflare Pages Functions (Edge API)
-│   └── api/
-│       └── chat.js             # Serverless Gemini AI chatbot endpoint (POST /api/chat)
-├── assets/                     # Media and static assets
-│   ├── logo.jpg                # Jar & Maz brand logo
-│   ├── roti_canai.jpg          # Signature Plain Roti Canai image
-│   ├── roti_beef.jpg           # Beef Roti Canai image
-│   ├── cookies.jpg / .png      # Golden Churn Cookies imagery
-│   ├── doorgift.jpg / .png     # Wedding doorgift samples
-│   ├── bundle_hero.png         # Family bundle promotional graphic
-│   └── qr_code.svg             # Quick-access QR code
-└── deploy/                     # Backend deployment configurations
-    ├── backend/
-    │   ├── main.py             # FastAPI backend (alternative to Cloudflare Functions)
-    │   ├── requirements.txt    # Python dependencies (fastapi, uvicorn, google-genai)
-    │   ├── Procfile            # Render / Railway startup command
-    │   ├── .env.example        # Environment variable templates
-    │   └── orders.html         # Protected portal file for Python backend
-    └── functions/
-        └── api/
-            └── chat.js         # Deployment mirror for edge functions
+├── index.html              # Customer storefront, cart, delivery estimator, chat widget (EN/BM)
+├── orders.html             # Family kitchen & orders portal (Firebase Auth + Firestore)
+├── feedback.html           # Customer reviews & family story page
+├── robots.txt, sitemap.xml # SEO
+├── favicon.ico
+├── functions/api/chat.js   # Cloudflare Pages Function: POST /api/chat -> Gemini
+├── assets/                 # Images, favicons, enhance.js/.css (motion layer)
+├── backend/                # Alternative FastAPI backend (Render) + firestore.rules
+│   ├── main.py, requirements.txt, Procfile, render.yaml
+│   ├── orders.html         # Copy of the portal served by FastAPI (keep in sync with root)
+│   └── firestore.rules     # Firestore security rules (publish via Firebase console)
+├── docs/index-html.md      # Detailed guide to index.html
+├── archive/                # Unused files kept for reference (see archive/README.md)
+├── AGENTS.md               # Project guide for AI tools (CLAUDE.md imports it)
+└── README.md
 ```
+
+> ⚠️ Cloudflare Pages serves the repository root as-is, so every file here is public. Never commit `.env` or other secrets.
 
 ---
 
@@ -94,14 +87,11 @@ Set the following in your **Cloudflare Dashboard > Pages > Settings > Environmen
 | :--- | :--- | :--- |
 | `GEMINI_API_KEY` | Google AI Studio Gemini API Key | **Yes** (for AI chatbot) |
 
-### Alternative FastAPI Deployment (`deploy/backend`)
+### Alternative FastAPI Deployment (`backend/`)
 
 If hosting the backend on Render, Railway, or VPS:
 
-```bash
-# Copy template
-cp deploy/backend/.env.example deploy/backend/.env
-```
+Create a `.env` file in the backend folder (it is git-ignored) with the variables below.
 
 | Variable | Description | Default |
 | :--- | :--- | :--- |
@@ -140,7 +130,7 @@ npx wrangler pages dev . --binding GEMINI_API_KEY="your_api_key_here"
 If developing or testing the Python backend:
 
 ```bash
-cd deploy/backend
+cd backend
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
