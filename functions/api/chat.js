@@ -143,15 +143,36 @@ Reply rules:
 - No markdown: do not use asterisks, # headings, or bold formatting - this chat cannot render them. Plain line breaks, emoji and the "•" bullet character are fine (use them for the cooking guide format above).
 - If unsure how to answer, direct them to WhatsApp Maksu Maz at +60192788617.`;
 
+// The storefront calls /api/chat from the same site, so no cross-site
+// access is needed. Other websites can't use this endpoint (and our Gemini
+// quota) from their visitors' browsers.
 const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Origin": "https://jarmazhomemade.com",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
+  "Vary": "Origin",
   "Content-Type": "application/json; charset=utf-8",
+  "Cache-Control": "no-store",
 };
 
+// Browsers always send an Origin header on POST. Accept only requests from
+// this same site (jarmazhomemade.com or a branch preview). This stops other
+// sites and casual scripts; a Cloudflare rate-limiting rule is still the
+// real protection against someone looping requests on purpose.
+function isAllowedOrigin(request) {
+  const origin = request.headers.get("Origin");
+  if (!origin) return false;
+  try {
+    const o = new URL(origin);
+    if (o.host === new URL(request.url).host) return true;
+    return o.protocol === "https:" && /(^|\.)jarmazhomemade\.com$/.test(o.hostname);
+  } catch (e) {
+    return false;
+  }
+}
+
 export async function onRequestOptions() {
-  return new Response(null, { headers: CORS_HEADERS });
+  return new Response(null, { status: 204, headers: CORS_HEADERS });
 }
 
 function getQuickAnswer(msg) {
@@ -201,13 +222,16 @@ function thinkingConfigFor(model) {
 
 export async function onRequestPost({ request, env }) {
   let body = {};
+  if (!isAllowedOrigin(request)) {
+    return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: CORS_HEADERS });
+  }
   try {
     const apiKey = env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error("GEMINI_API_KEY is missing in Cloudflare environment variables.");
       return new Response(
         JSON.stringify({
-          reply: "Chatbot setup in progress: GEMINI_API_KEY environment variable is not configured."
+          reply: "Chatbot setup in progress. Please WhatsApp Maksu Maz at +60192788617."
         }),
         { status: 500, headers: CORS_HEADERS }
       );

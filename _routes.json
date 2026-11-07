@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "include": [
+    "/api/*",
+    "/backend/*",
+    "/archive/*",
+    "/docs/*",
+    "/README.md",
+    "/AGENTS.md",
+    "/CLAUDE.md",
+    "/_headers",
+    "/_routes.json",
+    "/.gitignore"
+  ],
+  "exclude": []
+}
