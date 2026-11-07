@@ -1494,7 +1494,7 @@ function updateKitchenSummary(orders) {
     el.innerHTML = '<span class="kitchen-summary-empty">No pending orders today</span>' + (alertBadges ? " " + alertBadges : "");
     return;
   }
-  el.innerHTML = entries.map(([n, q]) => '<span class="kitchen-summary-item">' + q + "x " + n + '</span>').join("") + (alertBadges ? " " + alertBadges : "");
+  el.innerHTML = entries.map(([n, q]) => '<span class="kitchen-summary-item">' + esc(q) + "x " + esc(n) + '</span>').join("") + (alertBadges ? " " + alertBadges : "");
 }
 
 /* ── Entry form ── */
@@ -4265,6 +4265,24 @@ auth.onAuthStateChanged(user => {
   const mainApp = document.getElementById("mainApp");
   const errEl = document.getElementById("authError");
   if (errEl) errEl.style.display = "none";
+
+  // The Firestore rules only accept accounts with a verified email address.
+  // An unverified account gets a verification link and is signed out, so
+  // nobody can get in by signing up an unverified copy of the family email.
+  if (user && !user.emailVerified) {
+    const unverifiedEmail = user.email;
+    // Send the link before signing out, then show the message after sign-out,
+    // because the signed-out callback hides errors.
+    user.sendEmailVerification()
+      .catch(err => console.warn("Verification email failed:", err))
+      .then(() => auth.signOut())
+      .then(() => {
+        if (!errEl) return;
+        errEl.textContent = "This account's email is not verified yet. We sent a verification link to " + unverifiedEmail + ". Open it, then sign in again.";
+        errEl.style.display = "block";
+      });
+    return;
+  }
 
   if (user) {
     overlay.style.display = "none";

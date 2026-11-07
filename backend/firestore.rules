@@ -7,6 +7,9 @@ service cloud.firestore {
     // a lookalike address to read customer orders.
     function isFamilyMember() {
       return request.auth != null
+        // Email/password sign-up does not prove the person owns the inbox,
+        // so only accept addresses Firebase has verified.
+        && request.auth.token.email_verified == true
         && request.auth.token.email in [
           'roticanai@gmail.com'
           // Add more family accounts here later.

@@ -1,0 +1,18 @@
+# Security headers for every page Cloudflare Pages serves from this folder.
+# When two rules match, Cloudflare joins their values, so each header is set
+# in one place only (the second CSP below adds a stricter policy on top).
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), payment=(), usb=()
+  Content-Security-Policy: frame-ancestors 'self'; base-uri 'self'; object-src 'none'
+
+# The kitchen portal holds customer details: never allow it inside a frame
+# (stops click-jacking) and keep it out of search engines.
+/orders.html
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Robots-Tag: noindex, nofollow
+/orders
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Robots-Tag: noindex, nofollow

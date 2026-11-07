@@ -104,6 +104,13 @@ Family ──orders.html──► Firebase Auth (email/password) ──► Fires
 - **Bilingual:** every customer-facing string exists in English and Bahasa Malaysia. `L.en` / `L.ms` in index.html, and both languages in the chatbot quick answers.
 - The chatbot prompt must keep its rules: answer only what was asked, no markdown asterisks or bold, use Paksu Jar / Maksu Maz names, and suggest free self-pickup when someone thinks delivery costs too much.
 
+## Security setup (2026-11-07)
+- `_routes.json` + `functions/_middleware.js` return 404 for `/backend/`, `/archive/`, `/docs/` and the `.md` guides, so the source and notes in this repo are not public downloads. If you add another private folder, add it to both files.
+- `_headers` sets HSTS, nosniff, referrer and permissions policies, and blocks framing (`orders.html` can never be framed).
+- `/api/chat` only accepts requests whose `Origin` is this site (jarmazhomemade.com, www, or a branch preview). It is not a rate limit.
+- `firestore.rules` require a **verified** email in the allowlist, and `orders.html` signs out unverified accounts after sending them a verification link. Email/password sign-up does not prove inbox ownership, so never allow by domain (`*@roticanai.com`) or by unverified email.
+- Firebase console settings to keep: Authentication > Settings > User actions > "Enable create (sign-up)" **off**; email enumeration protection on.
+
 ## Known open items (2026-10-22)
 - Publish the Firestore rules, and add more family accounts later. On hold by Adam.
 - `/api/chat` has no rate limit. A Cloudflare dashboard rate-limiting rule is recommended.
