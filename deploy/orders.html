@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>jar&amp;maz homemade</title>
+<meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -551,19 +552,9 @@ textarea{resize:vertical;min-height:50px}
   <div class="auth-card">
     <div class="auth-logo">jar&amp;maz <span>homemade</span></div>
     <div class="auth-subtitle">Family Portal &bull; Sign in to access kitchen & orders</div>
-    <form id="authForm" novalidate>
-      <div class="auth-field">
-        <label for="authEmail">Family Username or Email</label>
-        <input type="text" id="authEmail" required placeholder="family (or family@roticanai.com)" autocomplete="username">
-      </div>
-      <div class="auth-field">
-        <label for="authPassword">Password</label>
-        <input type="password" id="authPassword" required placeholder="••••••••" autocomplete="current-password">
-      </div>
-      <div id="authError" class="auth-error" style="display:none"></div>
-      <button type="submit" class="auth-submit" id="authSubmitBtn">Sign in to Kitchen</button>
-    </form>
-    <div class="auth-hint">🔒 Protected by Firebase Authentication</div>
+    <div id="authError" class="auth-error" style="display:none"></div>
+    <button type="button" class="auth-submit" id="authSubmitBtn">Sign in with Google</button>
+    <div class="auth-hint">🔒 Only family Google accounts can open this page</div>
   </div>
 </div>
 
@@ -1096,15 +1087,25 @@ textarea{resize:vertical;min-height:50px}
 </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-auth.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.js" integrity="sha384-v3Z/Xdw1sCeo6M/geW7sn1Lt9obIm7MhAk8laVV+rvYFmzuWDELOiygx7dVte2dX" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-auth.js" integrity="sha384-p62xBRve8PdqGDGASZtZMuHgPsyPcT5VsFwgmz2p4zaFdEtt5ZzNqxK+CLzQS7xP" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.js" integrity="sha384-3LctmFHtNDZwkVOSZ0fvJZJD9XR5Og5ol/MVEfNt36gUUnSYBRJN0iFjIMbFecOg" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" integrity="sha384-JUh163oCRItcbPme8pYnROHQMC6fNKTBWtRG3I3I0erJkzNgL7uxKlNwcrcFKeqF" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
 
 firebase.initializeApp({apiKey:"AIzaSyAi3neeFwR96ORrWxeRzuWnA7yYFtNl6mU",authDomain:"roti-canai-project.firebaseapp.com",projectId:"roti-canai-project",storageBucket:"roti-canai-project.firebasestorage.app",messagingSenderId:"416380583136",appId:"1:416380583136:web:fdf2c2a8f6e7049273a485"});
 const auth=firebase.auth(),db=firebase.firestore(),ordersRef=db.collection("orders");
-auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+// Forget the login when the browser tab/window is closed, so a shared
+// phone or tablet does not stay signed in to customer data.
+auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
+
+// Only verified Google logins are accepted. Which Google accounts may read
+// the data is decided by the Firestore rules (published in the Firebase
+// console), not by this page, so family emails are never shown to the public.
+function isAllowedUser(user) {
+  if (!user || !user.email || !user.emailVerified) return false;
+  return (user.providerData || []).some(p => p && p.providerId === "google.com");
+}
 const invRef=db.collection("inventory_logs");
 let allInvLogs=[];
 const PRICES={signature:{name:"Signature",price:8},beef:{name:"Beef",price:14},bundle:{name:"Family Freezer Bundle",price:99,bundlePieces:{signature:2,beef:6}},cookies:{name:"Almond Walnut Chocolate Chip Cookies",price:38}};
@@ -4204,12 +4205,11 @@ function startOrdersListener() {
     err => {
       console.error("Firestore listener error:", err);
       setConn(false);
-      if (err && err.code === "permission-denied") {
-        const errEl = document.getElementById("authError");
-        if (errEl) {
-          errEl.textContent = "Database access denied. Check your Firestore Security Rules in Firebase Console.";
-          errEl.style.display = "block";
-        }
+      // The Firestore rules refused this account: it is not a family
+      // account, so sign it out instead of showing an empty portal.
+      if (err && err.code === "permission-denied" && auth.currentUser) {
+        pendingAuthError = (auth.currentUser.email || "This account") + " is not allowed to open the Family Portal. Sign in with a family Google account.";
+        auth.signOut();
       }
     }
   );
@@ -4231,6 +4231,9 @@ if (window.matchMedia) {
   });
 }
 
+// Message to show on the sign-in screen after the next sign-out.
+let pendingAuthError = "";
+
 /* ── Inactivity Auto-Lock (30 Minutes) ── */
 const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000;
 let inactivityTimer = null;
@@ -4241,12 +4244,8 @@ function resetInactivityTimer() {
     inactivityTimer = setTimeout(async () => {
       console.warn("Session auto-locked after 30 minutes of inactivity.");
       try {
+        pendingAuthError = "Session auto-locked after 30 minutes of inactivity. Please sign in again.";
         await auth.signOut();
-        const errEl = document.getElementById("authError");
-        if (errEl) {
-          errEl.textContent = "Session auto-locked after 30 minutes of inactivity. Please sign in again.";
-          errEl.style.display = "block";
-        }
       } catch (e) {
         console.error("Auto sign-out error:", e);
       }
@@ -4265,6 +4264,13 @@ auth.onAuthStateChanged(user => {
   const errEl = document.getElementById("authError");
   if (errEl) errEl.style.display = "none";
 
+  // Signed in, but not one of the family accounts: sign straight out.
+  if (user && !isAllowedUser(user)) {
+    pendingAuthError = (user.email || "This account") + " is not allowed to open the Family Portal. Sign in with a family Google account.";
+    auth.signOut();
+    return;
+  }
+
   if (user) {
     overlay.style.display = "none";
     mainApp.style.display = "";
@@ -4278,55 +4284,60 @@ auth.onAuthStateChanged(user => {
     stopInventoryListener();
     mainApp.style.display = "none";
     overlay.style.display = "flex";
+    if (pendingAuthError && errEl) {
+      errEl.textContent = pendingAuthError;
+      errEl.style.display = "block";
+      pendingAuthError = "";
+    }
   }
 });
 
-/* ── Auth Form Sign In ── */
-document.getElementById("authForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  let email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+/* ── Google Sign In ── */
+function showAuthError(msg) {
+  const errEl = document.getElementById("authError");
+  errEl.textContent = msg;
+  errEl.style.display = "block";
+}
+function authErrorMessage(err) {
+  switch (err && err.code) {
+    case "auth/popup-closed-by-user":
+    case "auth/cancelled-popup-request": return "";
+    case "auth/operation-not-allowed": return "Google sign-in is not switched on in Firebase (Authentication > Sign-in method > Google).";
+    case "auth/unauthorized-domain": return "This website is not on Firebase's authorized domains list (Authentication > Settings > Authorized domains).";
+    case "auth/network-request-failed": return "Network connection error. Check your internet connection.";
+    case "auth/too-many-requests": return "Too many attempts. Please wait a few minutes and try again.";
+    case "auth/admin-restricted-operation": return "New sign-ups are switched off in Firebase, so this Google account can't sign in for the first time. Turn on Authentication > Settings > User actions > Enable create (sign-up), sign in once, then turn it off again.";
+    default: return "Sign-in failed (" + ((err && err.code) || "unknown error") + "). Please try again.";
+  }
+}
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
+
+// Finish a redirect sign-in (used when the popup is blocked).
+auth.getRedirectResult().catch(err => {
+  const msg = authErrorMessage(err);
+  if (msg) showAuthError(msg);
+});
+
+document.getElementById("authSubmitBtn").addEventListener("click", async () => {
   const errEl = document.getElementById("authError");
   const submitBtn = document.getElementById("authSubmitBtn");
-
-  if (!email || !password) {
-    errEl.textContent = "Please enter both username/email and password.";
-    errEl.style.display = "block";
-    return;
-  }
-
-  // If user just types "family" or username without '@', auto-append @roticanai.com
-  if (!email.includes("@")) {
-    email = email.toLowerCase() + "@roticanai.com";
-  }
-
   errEl.style.display = "none";
   submitBtn.disabled = true;
   submitBtn.textContent = "Signing in...";
-
   try {
-    await auth.signInWithEmailAndPassword(email, password);
+    await auth.signInWithPopup(googleProvider);
   } catch (err) {
-    console.error("Firebase sign in failed:", err);
-    let msg = "Invalid login credentials. Please try again.";
-    if (err.code === "auth/invalid-email") {
-      msg = "Invalid email format. Try typing just 'family' or a full email.";
-    } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
-      msg = `Account "${email}" not found or password incorrect. Make sure you created this user in Firebase Console > Authentication > Users.`;
-    } else if (err.code === "auth/operation-not-allowed") {
-      msg = "Email/Password sign-in is disabled in your Firebase Console. Enable it in Authentication > Sign-in method.";
-    } else if (err.code === "auth/too-many-requests") {
-      msg = "Too many failed attempts. Please wait a few moments and try again.";
-    } else if (err.code === "auth/network-request-failed") {
-      msg = "Network connection error. Check your internet connection.";
-    } else if (err.message) {
-      msg = err.message;
+    if (err && (err.code === "auth/popup-blocked" || err.code === "auth/operation-not-supported-in-this-environment")) {
+      await auth.signInWithRedirect(googleProvider);
+      return;
     }
-    errEl.textContent = msg;
-    errEl.style.display = "block";
+    console.error("Google sign in failed:", err);
+    const msg = authErrorMessage(err);
+    if (msg) showAuthError(msg);
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Sign in to Kitchen";
+    submitBtn.textContent = "Sign in with Google";
   }
 });
 
