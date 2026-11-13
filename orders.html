@@ -4306,7 +4306,8 @@ function authErrorMessage(err) {
     case "auth/unauthorized-domain": return "This website is not on Firebase's authorized domains list (Authentication > Settings > Authorized domains).";
     case "auth/network-request-failed": return "Network connection error. Check your internet connection.";
     case "auth/too-many-requests": return "Too many attempts. Please wait a few minutes and try again.";
-    default: return "Sign-in failed. Please try again.";
+    case "auth/admin-restricted-operation": return "New sign-ups are switched off in Firebase, so this Google account can't sign in for the first time. Turn on Authentication > Settings > User actions > Enable create (sign-up), sign in once, then turn it off again.";
+    default: return "Sign-in failed (" + ((err && err.code) || "unknown error") + "). Please try again.";
   }
 }
 const googleProvider = new firebase.auth.GoogleAuthProvider();
