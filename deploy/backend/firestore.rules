@@ -2,33 +2,39 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: Only authenticated users with family email addresses are granted access.
+    // Only the listed family accounts can read or change anything.
+    // - Exact email match (no domain wildcard), so nobody can sign up a
+    //   lookalike address.
+    // - The email must be verified, and the login must come from Google
+    //   sign-in. Email/password accounts are rejected, so a guessed or
+    //   leaked password is useless, and Google's 2-step verification
+    //   protects the account.
+    //
+    // This repo is public, so the real family emails are NOT written here.
+    // Before publishing in Firebase console > Firestore > Rules, replace the
+    // placeholder below with the family's own Gmail addresses (lowercase).
+    // With the placeholder left in, nobody can get in.
     function isFamilyMember() {
-      return request.auth != null 
-        && request.auth.token.email != null
-        && (
-          request.auth.token.email in [
-            'family@roticanai.com'
-            // Add any other family member emails below:
-            // 'paksujar@roticanai.com',
-            // 'maksumaz@roticanai.com'
-          ] 
-          || request.auth.token.email.matches('.*@roticanai[.]com$')
-        );
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == 'google.com'
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'family-gmail-1@example.invalid'
+          // , 'family-gmail-2@example.invalid'
+        ];
     }
 
-    // 1. Orders Collection: Contains customer names, phone numbers, and addresses.
-    // Strictly restricted to authenticated family members.
+    // 1. Orders: customer names, phone numbers and addresses.
     match /orders/{orderId} {
       allow read, write: if isFamilyMember();
     }
 
-    // 2. Inventory Logs Collection: Contains stock recounts and production records.
+    // 2. Inventory logs: stock recounts and production records.
     match /inventory_logs/{logId} {
       allow read, write: if isFamilyMember();
     }
 
-    // 3. Fallback: Block all other documents by default.
+    // 3. Everything else is blocked.
     match /{document=**} {
       allow read, write: if false;
     }
