@@ -554,7 +554,7 @@ textarea{resize:vertical;min-height:50px}
     <div class="auth-subtitle">Family Portal &bull; Sign in to access kitchen & orders</div>
     <div id="authError" class="auth-error" style="display:none"></div>
     <button type="button" class="auth-submit" id="authSubmitBtn">Sign in with Google</button>
-    <div class="auth-hint">🔒 Only the family Google account can open this page</div>
+    <div class="auth-hint">🔒 Only family Google accounts can open this page</div>
   </div>
 </div>
 
@@ -1099,14 +1099,12 @@ const auth=firebase.auth(),db=firebase.firestore(),ordersRef=db.collection("orde
 // phone or tablet does not stay signed in to customer data.
 auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
-// Family accounts allowed into the portal. The real check is in
-// backend/firestore.rules (keep both lists the same); this copy only
-// stops the page from opening for anyone else.
-const ALLOWED_EMAILS = ["roticanai@gmail.com"];
+// Only verified Google logins are accepted. Which Google accounts may read
+// the data is decided by the Firestore rules (published in the Firebase
+// console), not by this page, so family emails are never shown to the public.
 function isAllowedUser(user) {
   if (!user || !user.email || !user.emailVerified) return false;
-  const viaGoogle = (user.providerData || []).some(p => p && p.providerId === "google.com");
-  return viaGoogle && ALLOWED_EMAILS.includes(user.email.toLowerCase());
+  return (user.providerData || []).some(p => p && p.providerId === "google.com");
 }
 const invRef=db.collection("inventory_logs");
 let allInvLogs=[];
@@ -4207,12 +4205,11 @@ function startOrdersListener() {
     err => {
       console.error("Firestore listener error:", err);
       setConn(false);
-      if (err && err.code === "permission-denied") {
-        const errEl = document.getElementById("authError");
-        if (errEl) {
-          errEl.textContent = "Database access denied. Check your Firestore Security Rules in Firebase Console.";
-          errEl.style.display = "block";
-        }
+      // The Firestore rules refused this account: it is not a family
+      // account, so sign it out instead of showing an empty portal.
+      if (err && err.code === "permission-denied" && auth.currentUser) {
+        pendingAuthError = (auth.currentUser.email || "This account") + " is not allowed to open the Family Portal. Sign in with a family Google account.";
+        auth.signOut();
       }
     }
   );
@@ -4269,7 +4266,7 @@ auth.onAuthStateChanged(user => {
 
   // Signed in, but not one of the family accounts: sign straight out.
   if (user && !isAllowedUser(user)) {
-    pendingAuthError = (user.email || "This account") + " is not allowed to open the Family Portal. Sign in with the family Google account.";
+    pendingAuthError = (user.email || "This account") + " is not allowed to open the Family Portal. Sign in with a family Google account.";
     auth.signOut();
     return;
   }
@@ -4313,7 +4310,7 @@ function authErrorMessage(err) {
   }
 }
 const googleProvider = new firebase.auth.GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account", login_hint: ALLOWED_EMAILS[0] });
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 // Finish a redirect sign-in (used when the popup is blocked).
 auth.getRedirectResult().catch(err => {

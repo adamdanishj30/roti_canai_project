@@ -9,14 +9,18 @@ service cloud.firestore {
     //   sign-in. Email/password accounts are rejected, so a guessed or
     //   leaked password is useless, and Google's 2-step verification
     //   protects the account.
-    // Keep this list the same as ALLOWED_EMAILS in orders.html.
+    //
+    // This repo is public, so the real family emails are NOT written here.
+    // Before publishing in Firebase console > Firestore > Rules, replace the
+    // placeholder below with the family's own Gmail addresses (lowercase).
+    // With the placeholder left in, nobody can get in.
     function isFamilyMember() {
       return request.auth != null
         && request.auth.token.firebase.sign_in_provider == 'google.com'
         && request.auth.token.email_verified == true
         && request.auth.token.email in [
-          'roticanai@gmail.com'
-          // Add more family Google accounts here later.
+          'family-gmail-1@example.invalid'
+          // , 'family-gmail-2@example.invalid'
         ];
     }
 
